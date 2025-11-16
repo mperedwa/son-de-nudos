@@ -75,4 +75,16 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Documentar sistema i18n en README	README.md actualizado con sección completa: características i18n, tabla de idiomas soportados, estructura de archivos, ejemplos de uso del hook, configuración del detector	2025-11-15
 ✅	Configurar puerto permanente 5174	vite.config.ts actualizado con puerto 5174 y strictPort: true, .env creado, .env.example documentado, CLAUDE.md con advertencia permanente para NUNCA usar puerto 5173	2025-11-15
 
+Hito 9 - Deployment a Producción ✅ COMPLETADO (16-Nov-2025)
+
+Estado	Tarea	Criterios de aceptación	Fecha objetivo
+✅	Corregir errores de TypeScript en build	Estandarizado CartItem.quantity (eliminado qty), actualizada API de Stripe a versión correcta, corregido método redirectToCheckout, build exitoso sin errores	2025-11-16
+✅	Crear/verificar .gitignore completo	.gitignore actualizado con entradas para: .vercel, *.tsbuildinfo, coverage, variables de entorno, archivos temporales, configuración de editores	2025-11-16
+✅	Inicializar repositorio Git local	Repositorio Git inicializado, commit inicial creado con mensaje descriptivo, 71 archivos (16,860 líneas) añadidos exitosamente	2025-11-16
+✅	Crear repositorio en GitHub	Repositorio público creado en https://github.com/mperedwa/son-de-nudos con descripción y tags apropiados	2025-11-16
+✅	Push del código a GitHub	Código subido exitosamente a GitHub con historial completo, branch main configurado como default	2025-11-16
+✅	Deployment a Vercel	Proyecto desplegado en https://son-de-nudos-9uxsc5fhj-mario-perez-edwards-projects.vercel.app, build exitoso (340KB bundle), CI/CD automático configurado	2025-11-16
+✅	Verificar sitio en producción	Deployment verificado con estado "Ready", configuración automática de Vite detectada correctamente, protección de acceso activada por defecto	2025-11-16
+✅	Actualizar documentación con URLs	README.md actualizado con URLs de GitHub y Vercel, sección de deployment expandida con CI/CD, instrucciones para desactivar protección	2025-11-16
+
 ⸻
