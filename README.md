@@ -399,6 +399,14 @@ Cupones preconfigurados para testing:
 
 ## 🚀 Deployment
 
+### 🌐 Sitio en Producción
+
+- **GitHub:** https://github.com/mperedwa/son-de-nudos
+- **Vercel:** https://son-de-nudos-9uxsc5fhj-mario-perez-edwards-projects.vercel.app
+- **Estado:** ✅ Desplegado y funcionando
+
+> **Nota:** El sitio actualmente tiene protección de acceso activada. Para hacerlo público, ir a Vercel Dashboard → Settings → Deployment Protection → Desactivar.
+
 ### Build de Producción
 
 ```bash
@@ -407,22 +415,44 @@ npm run build
 
 Esto genera la carpeta `dist/` lista para deployment.
 
-### Deployment en Vercel (Recomendado)
+### CI/CD Configurado
 
-1. Push del código a GitHub
-2. Importar proyecto en [vercel.com](https://vercel.com)
-3. Configurar variables de entorno en Vercel dashboard
-4. Deploy automático
+El proyecto tiene **deployment automático** configurado:
+
+1. **Push a GitHub** → Trigger automático de build en Vercel
+2. **Pull Request** → Preview deployment automático
+3. **Merge a main** → Deploy a producción
+
+### Deployment Manual en Vercel
+
+Si necesitas hacer un deployment manual:
+
+```bash
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Deploy a producción
+vercel --prod
+```
 
 ### Variables de Entorno en Producción
 
-Configurar en tu plataforma de hosting:
+Configurar en Vercel Dashboard → Settings → Environment Variables:
 
 - `VITE_DATA_MODE` = `stripe` (para pagos reales)
 - `VITE_STRIPE_PUBLISHABLE_KEY` = tu clave pública de producción
 - `STRIPE_SECRET_KEY` = tu clave secreta de producción (solo backend)
 
 **⚠️ Importante:** Usar claves de producción de Stripe, no de test.
+
+### Configuración de Vercel
+
+El proyecto está configurado automáticamente con:
+
+- **Build Command:** `vite build`
+- **Output Directory:** `dist`
+- **Install Command:** `npm install`
+- **Framework:** Vite detectado automáticamente
 
 ### Otras Plataformas
 
