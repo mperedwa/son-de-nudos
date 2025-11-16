@@ -1,0 +1,18 @@
+{
+  "shop": "Shop",
+  "aboutMe": "About Me",
+  "contact": "Contact",
+  "faq": "FAQ",
+  "privacyPolicy": "Privacy Policy",
+  "termsAndConditions": "Terms & Conditions",
+  "shippingAndReturns": "Shipping & Returns",
+  "productCare": "Product Care",
+  "more": "More",
+  "less": "Less",
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "breadcrumb": "Breadcrumb"
+}

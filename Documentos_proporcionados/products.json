@@ -1,0 +1,1890 @@
+[
+  {
+    "id": "prod-golden-shore",
+    "handle": "golden-shore",
+    "title": "Golden Shore Statement Necklace",
+    "descriptionHtml": "<p>Golden Shore Statement Necklace con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/golden-shore_1.jpg",
+      "/images/necklaces/golden-shore_2.jpg"
+    ],
+    "price": {
+      "amount": 189,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 219,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-golden-shore-1",
+        "title": "16 in, Acero inoxidable, Dorado",
+        "sku": "SKU-GOLDEN-SHORE-001",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/golden-shore_1.jpg"
+      },
+      {
+        "id": "var-golden-shore-2",
+        "title": "16 in, Laton, Dorado",
+        "sku": "SKU-GOLDEN-SHORE-002",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Laton",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/golden-shore_1.jpg"
+      },
+      {
+        "id": "var-golden-shore-3",
+        "title": "18 in, Acero inoxidable, Dorado",
+        "sku": "SKU-GOLDEN-SHORE-003",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/golden-shore_1.jpg"
+      },
+      {
+        "id": "var-golden-shore-4",
+        "title": "18 in, Laton, Dorado",
+        "sku": "SKU-GOLDEN-SHORE-004",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Laton",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/golden-shore_1.jpg"
+      }
+    ],
+    "tags": [
+      "statement",
+      "dorado"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-02T00:00:00"
+  },
+  {
+    "id": "prod-ivory-baroque-pearl",
+    "handle": "ivory-baroque-pearl",
+    "title": "Ivory Baroque Pearl Necklace",
+    "descriptionHtml": "<p>Ivory Baroque Pearl Necklace con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/ivory-baroque-pearl_1.jpg",
+      "/images/necklaces/ivory-baroque-pearl_2.jpg"
+    ],
+    "price": {
+      "amount": 329,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 389,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-ivory-baroque-pearl-1",
+        "title": "16 in, Perlas, Marfil",
+        "sku": "SKU-IVORY-BAROQUE-PEARL-001",
+        "price": {
+          "amount": 329,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Perlas",
+          "Color": "Marfil"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/ivory-baroque-pearl_1.jpg"
+      },
+      {
+        "id": "var-ivory-baroque-pearl-2",
+        "title": "16 in, Acero inoxidable, Marfil",
+        "sku": "SKU-IVORY-BAROQUE-PEARL-002",
+        "price": {
+          "amount": 329,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Marfil"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/ivory-baroque-pearl_1.jpg"
+      },
+      {
+        "id": "var-ivory-baroque-pearl-3",
+        "title": "18 in, Perlas, Marfil",
+        "sku": "SKU-IVORY-BAROQUE-PEARL-003",
+        "price": {
+          "amount": 329,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Perlas",
+          "Color": "Marfil"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/ivory-baroque-pearl_1.jpg"
+      },
+      {
+        "id": "var-ivory-baroque-pearl-4",
+        "title": "18 in, Acero inoxidable, Marfil",
+        "sku": "SKU-IVORY-BAROQUE-PEARL-004",
+        "price": {
+          "amount": 329,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Marfil"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/ivory-baroque-pearl_1.jpg"
+      }
+    ],
+    "tags": [
+      "perlas",
+      "clasico"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-03T00:00:00"
+  },
+  {
+    "id": "prod-radiant-cross-pearl",
+    "handle": "radiant-cross-pearl",
+    "title": "Radiant Cross Pearl Necklace",
+    "descriptionHtml": "<p>Radiant Cross Pearl Necklace con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/radiant-cross-pearl_1.jpg",
+      "/images/necklaces/radiant-cross-pearl_2.jpg"
+    ],
+    "price": {
+      "amount": 149,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-radiant-cross-pearl-1",
+        "title": "16 in, Perlas, Blanco",
+        "sku": "SKU-RADIANT-CROSS-PEARL-001",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Perlas",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/radiant-cross-pearl_1.jpg"
+      },
+      {
+        "id": "var-radiant-cross-pearl-2",
+        "title": "16 in, Acero inoxidable, Blanco",
+        "sku": "SKU-RADIANT-CROSS-PEARL-002",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/radiant-cross-pearl_1.jpg"
+      },
+      {
+        "id": "var-radiant-cross-pearl-3",
+        "title": "20 in, Perlas, Blanco",
+        "sku": "SKU-RADIANT-CROSS-PEARL-003",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Perlas",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/radiant-cross-pearl_1.jpg"
+      },
+      {
+        "id": "var-radiant-cross-pearl-4",
+        "title": "20 in, Acero inoxidable, Blanco",
+        "sku": "SKU-RADIANT-CROSS-PEARL-004",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Acero inoxidable",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/radiant-cross-pearl_1.jpg"
+      }
+    ],
+    "tags": [
+      "cruz",
+      "perlas"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-04T00:00:00"
+  },
+  {
+    "id": "prod-triple-agate-power",
+    "handle": "triple-agate-power",
+    "title": "Triple Agate Power Necklace",
+    "descriptionHtml": "<p>Triple Agate Power Necklace con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/triple-agate-power_1.jpg",
+      "/images/necklaces/triple-agate-power_2.jpg"
+    ],
+    "price": {
+      "amount": 199,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 239,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-triple-agate-power-1",
+        "title": "18 in, Agata, Multicolor",
+        "sku": "SKU-TRIPLE-AGATE-POWER-001",
+        "price": {
+          "amount": 199,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 239,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Agata",
+          "Color": "Multicolor"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/triple-agate-power_1.jpg"
+      },
+      {
+        "id": "var-triple-agate-power-2",
+        "title": "18 in, Acero inoxidable, Multicolor",
+        "sku": "SKU-TRIPLE-AGATE-POWER-002",
+        "price": {
+          "amount": 199,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 239,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Multicolor"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/triple-agate-power_1.jpg"
+      },
+      {
+        "id": "var-triple-agate-power-3",
+        "title": "20 in, Agata, Multicolor",
+        "sku": "SKU-TRIPLE-AGATE-POWER-003",
+        "price": {
+          "amount": 199,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 239,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Agata",
+          "Color": "Multicolor"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/triple-agate-power_1.jpg"
+      },
+      {
+        "id": "var-triple-agate-power-4",
+        "title": "20 in, Acero inoxidable, Multicolor",
+        "sku": "SKU-TRIPLE-AGATE-POWER-004",
+        "price": {
+          "amount": 199,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 239,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Acero inoxidable",
+          "Color": "Multicolor"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/triple-agate-power_1.jpg"
+      }
+    ],
+    "tags": [
+      "agate",
+      "piedras"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-05T00:00:00"
+  },
+  {
+    "id": "prod-coral-reef-charm",
+    "handle": "coral-reef-charm",
+    "title": "Coral Reef Charm Necklace",
+    "descriptionHtml": "<p>Coral Reef Charm Necklace con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/coral-reef-charm_1.jpg",
+      "/images/necklaces/coral-reef-charm_2.jpg"
+    ],
+    "price": {
+      "amount": 259,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 299,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-coral-reef-charm-1",
+        "title": "16 in, Coral, Coral",
+        "sku": "SKU-CORAL-REEF-CHARM-001",
+        "price": {
+          "amount": 259,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 299,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Coral",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/coral-reef-charm_1.jpg"
+      },
+      {
+        "id": "var-coral-reef-charm-2",
+        "title": "16 in, Laton, Coral",
+        "sku": "SKU-CORAL-REEF-CHARM-002",
+        "price": {
+          "amount": 259,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 299,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Laton",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/coral-reef-charm_1.jpg"
+      },
+      {
+        "id": "var-coral-reef-charm-3",
+        "title": "18 in, Coral, Coral",
+        "sku": "SKU-CORAL-REEF-CHARM-003",
+        "price": {
+          "amount": 259,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 299,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Coral",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/coral-reef-charm_1.jpg"
+      },
+      {
+        "id": "var-coral-reef-charm-4",
+        "title": "18 in, Laton, Coral",
+        "sku": "SKU-CORAL-REEF-CHARM-004",
+        "price": {
+          "amount": 259,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 299,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Laton",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/coral-reef-charm_1.jpg"
+      }
+    ],
+    "tags": [
+      "coral",
+      "playa"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-06T00:00:00"
+  },
+  {
+    "id": "prod-sunlit-coin",
+    "handle": "sunlit-coin",
+    "title": "Sunlit Coin Pendant",
+    "descriptionHtml": "<p>Sunlit Coin Pendant con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/sunlit-coin_1.jpg",
+      "/images/necklaces/sunlit-coin_2.jpg"
+    ],
+    "price": {
+      "amount": 129,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-sunlit-coin-1",
+        "title": "16 in, Acero inoxidable, Dorado",
+        "sku": "SKU-SUNLIT-COIN-001",
+        "price": {
+          "amount": 129,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/sunlit-coin_1.jpg"
+      },
+      {
+        "id": "var-sunlit-coin-2",
+        "title": "18 in, Acero inoxidable, Dorado",
+        "sku": "SKU-SUNLIT-COIN-002",
+        "price": {
+          "amount": 129,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/sunlit-coin_1.jpg"
+      },
+      {
+        "id": "var-sunlit-coin-3",
+        "title": "20 in, Acero inoxidable, Dorado",
+        "sku": "SKU-SUNLIT-COIN-003",
+        "price": {
+          "amount": 129,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/sunlit-coin_1.jpg"
+      }
+    ],
+    "tags": [
+      "minimal",
+      "medallon"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-07T00:00:00"
+  },
+  {
+    "id": "prod-midnight-onyx",
+    "handle": "midnight-onyx",
+    "title": "Midnight Onyx Strand",
+    "descriptionHtml": "<p>Midnight Onyx Strand con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/midnight-onyx_1.jpg",
+      "/images/necklaces/midnight-onyx_2.jpg"
+    ],
+    "price": {
+      "amount": 179,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 209,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-midnight-onyx-1",
+        "title": "18 in, Onix, Negro",
+        "sku": "SKU-MIDNIGHT-ONYX-001",
+        "price": {
+          "amount": 179,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 209,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Onix",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/midnight-onyx_1.jpg"
+      },
+      {
+        "id": "var-midnight-onyx-2",
+        "title": "18 in, Acero inoxidable, Negro",
+        "sku": "SKU-MIDNIGHT-ONYX-002",
+        "price": {
+          "amount": 179,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 209,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/midnight-onyx_1.jpg"
+      },
+      {
+        "id": "var-midnight-onyx-3",
+        "title": "20 in, Onix, Negro",
+        "sku": "SKU-MIDNIGHT-ONYX-003",
+        "price": {
+          "amount": 179,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 209,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Onix",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/midnight-onyx_1.jpg"
+      },
+      {
+        "id": "var-midnight-onyx-4",
+        "title": "20 in, Acero inoxidable, Negro",
+        "sku": "SKU-MIDNIGHT-ONYX-004",
+        "price": {
+          "amount": 179,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 209,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Acero inoxidable",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/midnight-onyx_1.jpg"
+      }
+    ],
+    "tags": [
+      "onyx",
+      "negro"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-08T00:00:00"
+  },
+  {
+    "id": "prod-sea-glass-cascade",
+    "handle": "sea-glass-cascade",
+    "title": "Sea Glass Cascade",
+    "descriptionHtml": "<p>Sea Glass Cascade con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/sea-glass-cascade_1.jpg",
+      "/images/necklaces/sea-glass-cascade_2.jpg"
+    ],
+    "price": {
+      "amount": 169,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-sea-glass-cascade-1",
+        "title": "16 in, Vidrio marino, Turquesa",
+        "sku": "SKU-SEA-GLASS-CASCADE-001",
+        "price": {
+          "amount": 169,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Vidrio marino",
+          "Color": "Turquesa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/sea-glass-cascade_1.jpg"
+      },
+      {
+        "id": "var-sea-glass-cascade-2",
+        "title": "16 in, Laton, Turquesa",
+        "sku": "SKU-SEA-GLASS-CASCADE-002",
+        "price": {
+          "amount": 169,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Laton",
+          "Color": "Turquesa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/sea-glass-cascade_1.jpg"
+      },
+      {
+        "id": "var-sea-glass-cascade-3",
+        "title": "18 in, Vidrio marino, Turquesa",
+        "sku": "SKU-SEA-GLASS-CASCADE-003",
+        "price": {
+          "amount": 169,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Vidrio marino",
+          "Color": "Turquesa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/sea-glass-cascade_1.jpg"
+      },
+      {
+        "id": "var-sea-glass-cascade-4",
+        "title": "18 in, Laton, Turquesa",
+        "sku": "SKU-SEA-GLASS-CASCADE-004",
+        "price": {
+          "amount": 169,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Laton",
+          "Color": "Turquesa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/sea-glass-cascade_1.jpg"
+      }
+    ],
+    "tags": [
+      "vidrio mar",
+      "turquesa"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-09T00:00:00"
+  },
+  {
+    "id": "prod-rose-quartz-aura",
+    "handle": "rose-quartz-aura",
+    "title": "Rose Quartz Aura",
+    "descriptionHtml": "<p>Rose Quartz Aura con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/rose-quartz-aura_1.jpg",
+      "/images/necklaces/rose-quartz-aura_2.jpg"
+    ],
+    "price": {
+      "amount": 189,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 219,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-rose-quartz-aura-1",
+        "title": "16 in, Cuarzo rosa, Rosa",
+        "sku": "SKU-ROSE-QUARTZ-AURA-001",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Cuarzo rosa",
+          "Color": "Rosa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/rose-quartz-aura_1.jpg"
+      },
+      {
+        "id": "var-rose-quartz-aura-2",
+        "title": "16 in, Acero inoxidable, Rosa",
+        "sku": "SKU-ROSE-QUARTZ-AURA-002",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Rosa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/rose-quartz-aura_1.jpg"
+      },
+      {
+        "id": "var-rose-quartz-aura-3",
+        "title": "18 in, Cuarzo rosa, Rosa",
+        "sku": "SKU-ROSE-QUARTZ-AURA-003",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Cuarzo rosa",
+          "Color": "Rosa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/rose-quartz-aura_1.jpg"
+      },
+      {
+        "id": "var-rose-quartz-aura-4",
+        "title": "18 in, Acero inoxidable, Rosa",
+        "sku": "SKU-ROSE-QUARTZ-AURA-004",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Rosa"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/rose-quartz-aura_1.jpg"
+      }
+    ],
+    "tags": [
+      "cuarzo rosa",
+      "romantico"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-10T00:00:00"
+  },
+  {
+    "id": "prod-luna-pearl-lariat",
+    "handle": "luna-pearl-lariat",
+    "title": "Luna Pearl Lariat",
+    "descriptionHtml": "<p>Luna Pearl Lariat con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/luna-pearl-lariat_1.jpg",
+      "/images/necklaces/luna-pearl-lariat_2.jpg"
+    ],
+    "price": {
+      "amount": 229,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 269,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-luna-pearl-lariat-1",
+        "title": "20 in, Perlas, Blanco",
+        "sku": "SKU-LUNA-PEARL-LARIAT-001",
+        "price": {
+          "amount": 229,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 269,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Perlas",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/luna-pearl-lariat_1.jpg"
+      },
+      {
+        "id": "var-luna-pearl-lariat-2",
+        "title": "20 in, Plata 925, Blanco",
+        "sku": "SKU-LUNA-PEARL-LARIAT-002",
+        "price": {
+          "amount": 229,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 269,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Plata 925",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/luna-pearl-lariat_1.jpg"
+      }
+    ],
+    "tags": [
+      "perlas",
+      "lariat"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-11T00:00:00"
+  },
+  {
+    "id": "prod-emerald-tide-choker",
+    "handle": "emerald-tide-choker",
+    "title": "Emerald Tide Choker",
+    "descriptionHtml": "<p>Emerald Tide Choker con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/emerald-tide-choker_1.jpg",
+      "/images/necklaces/emerald-tide-choker_2.jpg"
+    ],
+    "price": {
+      "amount": 159,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-emerald-tide-choker-1",
+        "title": "14 in, Cuarzo verde, Verde",
+        "sku": "SKU-EMERALD-TIDE-CHOKER-001",
+        "price": {
+          "amount": 159,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "14 in",
+          "Material": "Cuarzo verde",
+          "Color": "Verde"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/emerald-tide-choker_1.jpg"
+      },
+      {
+        "id": "var-emerald-tide-choker-2",
+        "title": "14 in, Acero inoxidable, Verde",
+        "sku": "SKU-EMERALD-TIDE-CHOKER-002",
+        "price": {
+          "amount": 159,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "14 in",
+          "Material": "Acero inoxidable",
+          "Color": "Verde"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/emerald-tide-choker_1.jpg"
+      },
+      {
+        "id": "var-emerald-tide-choker-3",
+        "title": "16 in, Cuarzo verde, Verde",
+        "sku": "SKU-EMERALD-TIDE-CHOKER-003",
+        "price": {
+          "amount": 159,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Cuarzo verde",
+          "Color": "Verde"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/emerald-tide-choker_1.jpg"
+      },
+      {
+        "id": "var-emerald-tide-choker-4",
+        "title": "16 in, Acero inoxidable, Verde",
+        "sku": "SKU-EMERALD-TIDE-CHOKER-004",
+        "price": {
+          "amount": 159,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Verde"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/emerald-tide-choker_1.jpg"
+      }
+    ],
+    "tags": [
+      "choker",
+      "verde"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-12T00:00:00"
+  },
+  {
+    "id": "prod-golden-horizon-duo",
+    "handle": "golden-horizon-duo",
+    "title": "Golden Horizon Duo",
+    "descriptionHtml": "<p>Golden Horizon Duo con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/golden-horizon-duo_1.jpg",
+      "/images/necklaces/golden-horizon-duo_2.jpg"
+    ],
+    "price": {
+      "amount": 199,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 239,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-golden-horizon-duo-1",
+        "title": "16 in, Acero inoxidable, Dorado",
+        "sku": "SKU-GOLDEN-HORIZON-DUO-001",
+        "price": {
+          "amount": 199,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 239,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/golden-horizon-duo_1.jpg"
+      },
+      {
+        "id": "var-golden-horizon-duo-2",
+        "title": "18 in, Acero inoxidable, Dorado",
+        "sku": "SKU-GOLDEN-HORIZON-DUO-002",
+        "price": {
+          "amount": 199,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 239,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/golden-horizon-duo_1.jpg"
+      }
+    ],
+    "tags": [
+      "dorado",
+      "doble"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-13T00:00:00"
+  },
+  {
+    "id": "prod-pearl-coral-harmony",
+    "handle": "pearl-coral-harmony",
+    "title": "Pearl and Coral Harmony",
+    "descriptionHtml": "<p>Pearl and Coral Harmony con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/pearl-coral-harmony_1.jpg",
+      "/images/necklaces/pearl-coral-harmony_2.jpg"
+    ],
+    "price": {
+      "amount": 389,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 459,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-pearl-coral-harmony-1",
+        "title": "18 in, Perlas, Blanco",
+        "sku": "SKU-PEARL-CORAL-HARMONY-001",
+        "price": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 459,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Perlas",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/pearl-coral-harmony_1.jpg"
+      },
+      {
+        "id": "var-pearl-coral-harmony-2",
+        "title": "18 in, Perlas, Coral",
+        "sku": "SKU-PEARL-CORAL-HARMONY-002",
+        "price": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 459,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Perlas",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/pearl-coral-harmony_1.jpg"
+      },
+      {
+        "id": "var-pearl-coral-harmony-3",
+        "title": "18 in, Coral, Blanco",
+        "sku": "SKU-PEARL-CORAL-HARMONY-003",
+        "price": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 459,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Coral",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/pearl-coral-harmony_1.jpg"
+      },
+      {
+        "id": "var-pearl-coral-harmony-4",
+        "title": "18 in, Coral, Coral",
+        "sku": "SKU-PEARL-CORAL-HARMONY-004",
+        "price": {
+          "amount": 389,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 459,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Coral",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/pearl-coral-harmony_1.jpg"
+      }
+    ],
+    "tags": [
+      "perlas",
+      "coral",
+      "premium"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-14T00:00:00"
+  },
+  {
+    "id": "prod-azure-bead-line",
+    "handle": "azure-bead-line",
+    "title": "Azure Bead Line",
+    "descriptionHtml": "<p>Azure Bead Line con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/azure-bead-line_1.jpg",
+      "/images/necklaces/azure-bead-line_2.jpg"
+    ],
+    "price": {
+      "amount": 139,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-azure-bead-line-1",
+        "title": "16 in, Cuentas azules, Azul",
+        "sku": "SKU-AZURE-BEAD-LINE-001",
+        "price": {
+          "amount": 139,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Cuentas azules",
+          "Color": "Azul"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/azure-bead-line_1.jpg"
+      },
+      {
+        "id": "var-azure-bead-line-2",
+        "title": "16 in, Laton, Azul",
+        "sku": "SKU-AZURE-BEAD-LINE-002",
+        "price": {
+          "amount": 139,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Laton",
+          "Color": "Azul"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/azure-bead-line_1.jpg"
+      },
+      {
+        "id": "var-azure-bead-line-3",
+        "title": "18 in, Cuentas azules, Azul",
+        "sku": "SKU-AZURE-BEAD-LINE-003",
+        "price": {
+          "amount": 139,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Cuentas azules",
+          "Color": "Azul"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/azure-bead-line_1.jpg"
+      },
+      {
+        "id": "var-azure-bead-line-4",
+        "title": "18 in, Laton, Azul",
+        "sku": "SKU-AZURE-BEAD-LINE-004",
+        "price": {
+          "amount": 139,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Laton",
+          "Color": "Azul"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/azure-bead-line_1.jpg"
+      }
+    ],
+    "tags": [
+      "azul",
+      "cuentas"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-15T00:00:00"
+  },
+  {
+    "id": "prod-gilded-leaf",
+    "handle": "gilded-leaf",
+    "title": "Gilded Leaf Pendant",
+    "descriptionHtml": "<p>Gilded Leaf Pendant con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/gilded-leaf_1.jpg",
+      "/images/necklaces/gilded-leaf_2.jpg"
+    ],
+    "price": {
+      "amount": 169,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-gilded-leaf-1",
+        "title": "18 in, Acero inoxidable, Dorado",
+        "sku": "SKU-GILDED-LEAF-001",
+        "price": {
+          "amount": 169,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/gilded-leaf_1.jpg"
+      },
+      {
+        "id": "var-gilded-leaf-2",
+        "title": "20 in, Acero inoxidable, Dorado",
+        "sku": "SKU-GILDED-LEAF-002",
+        "price": {
+          "amount": 169,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Acero inoxidable",
+          "Color": "Dorado"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/gilded-leaf_1.jpg"
+      }
+    ],
+    "tags": [
+      "hoja",
+      "dorado"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-16T00:00:00"
+  },
+  {
+    "id": "prod-tidal-pearl-collar",
+    "handle": "tidal-pearl-collar",
+    "title": "Tidal Pearl Collar",
+    "descriptionHtml": "<p>Tidal Pearl Collar con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/tidal-pearl-collar_1.jpg",
+      "/images/necklaces/tidal-pearl-collar_2.jpg"
+    ],
+    "price": {
+      "amount": 279,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 319,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-tidal-pearl-collar-1",
+        "title": "16 in, Perlas, Blanco",
+        "sku": "SKU-TIDAL-PEARL-COLLAR-001",
+        "price": {
+          "amount": 279,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 319,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Perlas",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/tidal-pearl-collar_1.jpg"
+      },
+      {
+        "id": "var-tidal-pearl-collar-2",
+        "title": "16 in, Acero inoxidable, Blanco",
+        "sku": "SKU-TIDAL-PEARL-COLLAR-002",
+        "price": {
+          "amount": 279,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 319,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/tidal-pearl-collar_1.jpg"
+      },
+      {
+        "id": "var-tidal-pearl-collar-3",
+        "title": "18 in, Perlas, Blanco",
+        "sku": "SKU-TIDAL-PEARL-COLLAR-003",
+        "price": {
+          "amount": 279,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 319,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Perlas",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/tidal-pearl-collar_1.jpg"
+      },
+      {
+        "id": "var-tidal-pearl-collar-4",
+        "title": "18 in, Acero inoxidable, Blanco",
+        "sku": "SKU-TIDAL-PEARL-COLLAR-004",
+        "price": {
+          "amount": 279,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 319,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/tidal-pearl-collar_1.jpg"
+      }
+    ],
+    "tags": [
+      "perlas",
+      "collar"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-17T00:00:00"
+  },
+  {
+    "id": "prod-citrine-sun-path",
+    "handle": "citrine-sun-path",
+    "title": "Citrine Sun Path",
+    "descriptionHtml": "<p>Citrine Sun Path con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/citrine-sun-path_1.jpg",
+      "/images/necklaces/citrine-sun-path_2.jpg"
+    ],
+    "price": {
+      "amount": 189,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 219,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-citrine-sun-path-1",
+        "title": "18 in, Citrino, Amarillo",
+        "sku": "SKU-CITRINE-SUN-PATH-001",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Citrino",
+          "Color": "Amarillo"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/citrine-sun-path_1.jpg"
+      },
+      {
+        "id": "var-citrine-sun-path-2",
+        "title": "18 in, Laton, Amarillo",
+        "sku": "SKU-CITRINE-SUN-PATH-002",
+        "price": {
+          "amount": 189,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 219,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Laton",
+          "Color": "Amarillo"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/citrine-sun-path_1.jpg"
+      }
+    ],
+    "tags": [
+      "citrino",
+      "amarillo"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-18T00:00:00"
+  },
+  {
+    "id": "prod-obsidian-arc",
+    "handle": "obsidian-arc",
+    "title": "Obsidian Arc",
+    "descriptionHtml": "<p>Obsidian Arc con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/obsidian-arc_1.jpg",
+      "/images/necklaces/obsidian-arc_2.jpg"
+    ],
+    "price": {
+      "amount": 149,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-obsidian-arc-1",
+        "title": "18 in, Obsidiana, Negro",
+        "sku": "SKU-OBSIDIAN-ARC-001",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Obsidiana",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/obsidian-arc_1.jpg"
+      },
+      {
+        "id": "var-obsidian-arc-2",
+        "title": "18 in, Acero inoxidable, Negro",
+        "sku": "SKU-OBSIDIAN-ARC-002",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Acero inoxidable",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/obsidian-arc_1.jpg"
+      },
+      {
+        "id": "var-obsidian-arc-3",
+        "title": "20 in, Obsidiana, Negro",
+        "sku": "SKU-OBSIDIAN-ARC-003",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Obsidiana",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/obsidian-arc_1.jpg"
+      },
+      {
+        "id": "var-obsidian-arc-4",
+        "title": "20 in, Acero inoxidable, Negro",
+        "sku": "SKU-OBSIDIAN-ARC-004",
+        "price": {
+          "amount": 149,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "20 in",
+          "Material": "Acero inoxidable",
+          "Color": "Negro"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/obsidian-arc_1.jpg"
+      }
+    ],
+    "tags": [
+      "obsidiana",
+      "negro"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-19T00:00:00"
+  },
+  {
+    "id": "prod-pearl-trio-minimal",
+    "handle": "pearl-trio-minimal",
+    "title": "Pearl Trio Minimal",
+    "descriptionHtml": "<p>Pearl Trio Minimal con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/pearl-trio-minimal_1.jpg",
+      "/images/necklaces/pearl-trio-minimal_2.jpg"
+    ],
+    "price": {
+      "amount": 159,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-pearl-trio-minimal-1",
+        "title": "16 in, Perlas, Blanco",
+        "sku": "SKU-PEARL-TRIO-MINIMAL-001",
+        "price": {
+          "amount": 159,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Perlas",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/pearl-trio-minimal_1.jpg"
+      },
+      {
+        "id": "var-pearl-trio-minimal-2",
+        "title": "16 in, Acero inoxidable, Blanco",
+        "sku": "SKU-PEARL-TRIO-MINIMAL-002",
+        "price": {
+          "amount": 159,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "16 in",
+          "Material": "Acero inoxidable",
+          "Color": "Blanco"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/pearl-trio-minimal_1.jpg"
+      }
+    ],
+    "tags": [
+      "perlas",
+      "minimal"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-20T00:00:00"
+  },
+  {
+    "id": "prod-coral-branch-elegance",
+    "handle": "coral-branch-elegance",
+    "title": "Coral Branch Elegance",
+    "descriptionHtml": "<p>Coral Branch Elegance con diseño artesanal, materiales seleccionados y acabado de alta calidad. Ideal para regalos y ocasiones especiales.</p>",
+    "images": [
+      "/images/necklaces/coral-branch-elegance_1.jpg",
+      "/images/necklaces/coral-branch-elegance_2.jpg"
+    ],
+    "price": {
+      "amount": 589,
+      "currency": "USD"
+    },
+    "compareAtPrice": {
+      "amount": 649,
+      "currency": "USD"
+    },
+    "options": [
+      "Largo",
+      "Material",
+      "Color"
+    ],
+    "variants": [
+      {
+        "id": "var-coral-branch-elegance-1",
+        "title": "18 in, Coral, Coral",
+        "sku": "SKU-CORAL-BRANCH-ELEGANCE-001",
+        "price": {
+          "amount": 589,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 649,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Coral",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/coral-branch-elegance_1.jpg"
+      },
+      {
+        "id": "var-coral-branch-elegance-2",
+        "title": "18 in, Oro 14k, Coral",
+        "sku": "SKU-CORAL-BRANCH-ELEGANCE-002",
+        "price": {
+          "amount": 589,
+          "currency": "USD"
+        },
+        "compareAtPrice": {
+          "amount": 649,
+          "currency": "USD"
+        },
+        "available": true,
+        "options": {
+          "Largo": "18 in",
+          "Material": "Oro 14k",
+          "Color": "Coral"
+        },
+        "stock": 8,
+        "image": "/images/necklaces/coral-branch-elegance_1.jpg"
+      }
+    ],
+    "tags": [
+      "coral",
+      "premium"
+    ],
+    "availableForSale": true,
+    "createdAt": "2025-01-21T00:00:00"
+  }
+]

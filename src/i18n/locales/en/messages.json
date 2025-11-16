@@ -1,0 +1,16 @@
+{
+  "loadingProduct": "Loading product...",
+  "productNotFound": "Product not found",
+  "errorLoadingProducts": "Error loading products",
+  "addToCart": "Add to Cart",
+  "adding": "Adding...",
+  "added": "Added! ✓",
+  "paymentSuccessTitle": "Payment Successful!",
+  "paymentSuccessMessage": "Thank you for your purchase. You will receive a confirmation email soon.",
+  "backToStore": "Back to Store",
+  "paymentCancelledTitle": "Payment Cancelled",
+  "paymentCancelledMessage": "Your payment has been cancelled. You can try again whenever you want.",
+  "backToCheckout": "Back to Checkout",
+  "errorCreatingSession": "Error creating checkout session",
+  "errorProcessingPayment": "Error processing payment"
+}

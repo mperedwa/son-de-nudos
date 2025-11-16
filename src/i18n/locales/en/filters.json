@@ -1,0 +1,19 @@
+{
+  "filters": "Filters",
+  "openFilters": "Open filters",
+  "closeFilters": "Close filters",
+  "filterProducts": "Product filters",
+  "availability": "Availability",
+  "inStockOnly": "In Stock Only",
+  "price": "Price",
+  "minPrice": "Min: ${{amount}}",
+  "maxPrice": "Max: ${{amount}}",
+  "material": "Material",
+  "color": "Color",
+  "length": "Length",
+  "viewResults": "View Results",
+  "clearFilters": "Clear Filters",
+  "showingResults": "Showing {{count}} {{products}}",
+  "sortBy": "Sort by:",
+  "productsAvailable": "Available products"
+}

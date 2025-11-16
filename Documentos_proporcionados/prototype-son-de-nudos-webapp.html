@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Son de Nudos by Priscilla - Artesanías Exclusivas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-brown: #8B6F47;
+            --secondary-beige: #F5E6D3;
+            --accent-gold: #D4A574;
+            --text-dark: #3C2F2F;
+            --text-light: #6B5D54;
+            --white: #FFFFFF;
+            --shadow: rgba(139, 111, 71, 0.1);
+            --shadow-hover: rgba(139, 111, 71, 0.2);
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FAF7F3 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* Admin Bar (oculta por defecto) */
+        .admin-bar {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 10px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-bar.active {
+            display: flex;
+        }
+
+        /* Header */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            position: relative;
+        }
+
+        .logo-treble {
+            stroke: var(--primary-brown);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            color: var(--primary-brown);
+            font-weight: normal;
+        }
+
+        .brand-tagline {
+            font-size: 14px;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .lang-switcher {
+            display: flex;
+            background: var(--secondary-beige);
+            border-radius: 25px;
+            overflow: hidden;
+        }
+
+        .lang-btn {
+            padding: 8px 15px;
+            border: none;
+            background: transparent;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: var(--primary-brown);
+            color: var(--white);
+        }
+
+        .cart-btn {
+            position: relative;
+            background: var(--accent-gold);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow-hover);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 60px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--secondary-beige) 0%, transparent 100%);
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            color: var(--primary-brown);
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Filtros */
+        .filters {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 30px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 12px 25px;
+            background: var(--white);
+            border: 2px solid var(--secondary-beige);
+            border-radius: 30px;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary-brown);
+            color: var(--white);
+            border-color: var(--primary-brown);
+            transform: translateY(-2px);
+        }
+
+        /* Galería de Productos */
+        .products-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--shadow-hover);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            background: var(--secondary-beige);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--accent-gold);
+            color: var(--white);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 20px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 24px;
+            color: var(--primary-brown);
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .product-rating {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+
+        .star {
+            color: var(--accent-gold);
+            font-size: 18px;
+        }
+
+        .quick-add-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .quick-add-btn:hover {
+            background: var(--accent-gold);
+        }
+
+        /* Modal de Producto */
+        .product-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: var(--white);
+            max-width: 1000px;
+            margin: 50px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--white);
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .modal-image {
+            background: var(--secondary-beige);
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-info {
+            padding: 40px;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .modal-price {
+            font-size: 36px;
+            color: var(--primary-brown);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .modal-description {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .modal-materials {
+            background: var(--secondary-beige);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .add-to-cart-full {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart-full:hover {
+            background: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        /* Panel de Admin para subir productos */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px var(--shadow-hover);
+            z-index: 200;
+            width: 350px;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid var(--secondary-beige);
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .upload-btn {
+            padding: 12px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: var(--accent-gold);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-brown);
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: var(--secondary-beige);
+            color: var(--primary-brown);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .modal-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Floating Action Button para Admin */
+        .admin-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-brown);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px var(--shadow-hover);
+            transition: all 0.3s;
+            z-index: 150;
+        }
+
+        .admin-fab:hover {
+            transform: scale(1.1);
+            background: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+    <!-- Barra de Admin (visible cuando se loguea) -->
+    <div class="admin-bar" id="adminBar">
+        <span>Modo Administrador - Bienvenida Priscilla</span>
+        <button onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 50 50" class="logo-treble">
+                        <path d="M25 5 Q20 15 20 25 T25 45 Q30 35 30 25 T25 5" stroke-linecap="round"/>
+                        <circle cx="20" cy="30" r="3" fill="var(--primary-brown)"/>
+                        <circle cx="30" cy="20" r="3" fill="var(--primary-brown)"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-name">Son de Nudos</div>
+                    <div class="brand-tagline">by Priscilla</div>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="lang-switcher">
+                    <button class="lang-btn active" onclick="switchLang('es')">ES</button>
+                    <button class="lang-btn" onclick="switchLang('en')">EN</button>
+                </div>
+                <button class="cart-btn">
+                    <span id="cartText">Carrito</span>
+                    <span class="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 id="heroTitle">Artesanías Únicas Hechas con Amor</h1>
+        <p id="heroText">Cada pieza cuenta una historia, tejida a mano con dedicación y pasión por el arte del macramé</p>
+    </section>
+
+    <!-- Filtros -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterProducts('all')">Todo</button>
+        <button class="filter-btn" onclick="filterProducts('collares')">Collares</button>
+        <button class="filter-btn" onclick="filterProducts('bolsos')">Bolsos</button>
+        <button class="filter-btn" onclick="filterProducts('pulseras')">Pulseras</button>
+        <button class="filter-btn" onclick="filterProducts('decoracion')">Decoración</button>
+    </div>
+
+    <!-- Galería de Productos -->
+    <div class="products-grid" id="productsGrid">
+        <!-- Producto 1 -->
+        <div class="product-card" onclick="openModal('collar-luna')">
+            <div class="product-image">
+                <span class="product-badge">Nuevo</span>
+                <div style="font-size: 80px;">🌙</div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Collar Luna Creciente</h3>
+                <p class="product-price">$45.00</p>
+                <div class="product-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <button class="quick-add-btn" onclick="event.stopPropagation(); addToCart('collar-luna')">
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+
+        <!-- Producto 2 -->
+        <div class="product-card" onclick="openModal('bolso-verano')">
+            <div class="product-image">
+                <div style="font-size: 80px;">👜</div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Bolso Verano Eterno</h3>
+                <p class="product-price">$68.00</p>
+                <div class="product-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">☆</span>
+                </div>
+                <button class="quick-add-btn" onclick="event.stopPropagation(); addToCart('bolso-verano')">
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+
+        <!-- Producto 3 -->
+        <div class="product-card" onclick="openModal('pulsera-infinito')">
+            <div class="product-image">
+                <span class="product-badge">Bestseller</span>
+                <div style="font-size: 80px;">♾️</div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Pulsera Infinito</h3>
+                <p class="product-price">$25.00</p>
+                <div class="product-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <button class="quick-add-btn" onclick="event.stopPropagation(); addToCart('pulsera-infinito')">
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+
+        <!-- Producto 4 -->
+        <div class="product-card" onclick="openModal('tapiz-mandala')">
+            <div class="product-image">
+                <div style="font-size: 80px;">🕸️</div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Tapiz Mandala</h3>
+                <p class="product-price">$120.00</p>
+                <div class="product-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <button class="quick-add-btn" onclick="event.stopPropagation(); addToCart('tapiz-mandala')">
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+
+        <!-- Producto 5 -->
+        <div class="product-card" onclick="openModal('collar-cascada')">
+            <div class="product-image">
+                <span class="product-badge">Edición Limitada</span>
+                <div style="font-size: 80px;">💎</div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Collar Cascada de Nudos</h3>
+                <p class="product-price">$85.00</p>
+                <div class="product-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <button class="quick-add-btn" onclick="event.stopPropagation(); addToCart('collar-cascada')">
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+
+        <!-- Producto 6 -->
+        <div class="product-card" onclick="openModal('aretes-pluma')">
+            <div class="product-image">
+                <div style="font-size: 80px;">🪶</div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Aretes Pluma Ligera</h3>
+                <p class="product-price">$22.00</p>
+                <div class="product-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">☆</span>
+                </div>
+                <button class="quick-add-btn" onclick="event.stopPropagation(); addToCart('aretes-pluma')">
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Producto -->
+    <div class="product-modal" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-image">
+                <div style="font-size: 150px;" id="modalIcon">🌙</div>
+            </div>
+            <div class="modal-info">
+                <h2 class="modal-title" id="modalTitle">Collar Luna Creciente</h2>
+                <p class="modal-price" id="modalPrice">$45.00</p>
+                <p class="modal-description" id="modalDescription">
+                    Este hermoso collar está tejido a mano con la técnica tradicional de macramé, 
+                    utilizando hilos de algodón 100% natural. Cada pieza es única y lleva 
+                    aproximadamente 8 horas de trabajo artesanal dedicado. El diseño de luna 
+                    creciente simboliza nuevos comienzos y transformación.
+                </p>
+                <div class="modal-materials">
+                    <h4>Materiales y Cuidados:</h4>
+                    <ul id="modalMaterials">
+                        <li>Hilo de algodón 100% natural</li>
+                        <li>Piedras semipreciosas (cuarzo rosa)</li>
+                        <li>Cierre ajustable de bronce</li>
+                        <li>Lavado a mano con agua fría</li>
+                        <li>No usar blanqueador</li>
+                    </ul>
+                </div>
+                <button class="add-to-cart-full" onclick="addToCart(currentProduct); closeModal()">
+                    Agregar al Carrito - <span id="modalPriceBtn">$45.00</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Admin -->
+    <div class="admin-panel" id="adminPanel">
+        <h3>Subir Nuevo Producto</h3>
+        <form class="upload-form">
+            <div class="form-group">
+                <label>Nombre del Producto</label>
+                <input type="text" placeholder="Ej: Collar Estrella">
+            </div>
+            <div class="form-group">
+                <label>Precio ($)</label>
+                <input type="number" placeholder="45.00">
+            </div>
+            <div class="form-group">
+                <label>Categoría</label>
+                <select>
+                    <option>Collares</option>
+                    <option>Bolsos</option>
+                    <option>Pulseras</option>
+                    <option>Decoración</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Descripción</label>
+                <textarea rows="4" placeholder="Describe tu producto..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Imagen</label>
+                <input type="file" accept="image/*">
+            </div>
+            <button type="submit" class="upload-btn">Subir Producto</button>
+        </form>
+    </div>
+
+    <!-- Floating Action Button para Admin -->
+    <div class="admin-fab" onclick="toggleAdminPanel()">
+        <span style="font-size: 24px;">+</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3>Son de Nudos by Priscilla</h3>
+            <p>Artesanías hechas con amor desde 2020</p>
+            <div class="social-links">
+                <a href="#" class="social-link">📷</a>
+                <a href="#" class="social-link">📘</a>
+                <a href="#" class="social-link">📧</a>
+                <a href="https://www.etsy.com/shop/SondeNudos" class="social-link">🛍️</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 14px;">© 2024 Son de Nudos. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Estado de la aplicación
+        let currentLang = 'es';
+        let cart = [];
+        let currentProduct = '';
+        let isAdmin = false;
+
+        // Base de datos de productos simulada
+        const products = {
+            'collar-luna': {
+                name: { es: 'Collar Luna Creciente', en: 'Crescent Moon Necklace' },
+                price: 45,
+                icon: '🌙',
+                description: {
+                    es: 'Este hermoso collar está tejido a mano con la técnica tradicional de macramé...',
+                    en: 'This beautiful necklace is hand-woven with traditional macramé technique...'
+                },
+                materials: {
+                    es: ['Hilo de algodón 100% natural', 'Piedras semipreciosas', 'Cierre ajustable'],
+                    en: ['100% natural cotton thread', 'Semi-precious stones', 'Adjustable clasp']
+                }
+            },
+            'bolso-verano': {
+                name: { es: 'Bolso Verano Eterno', en: 'Eternal Summer Bag' },
+                price: 68,
+                icon: '👜',
+                description: {
+                    es: 'Bolso artesanal perfecto para el verano, tejido con amor y dedicación...',
+                    en: 'Handcrafted bag perfect for summer, woven with love and dedication...'
+                }
+            }
+        };
+
+        // Traducciones
+        const translations = {
+            es: {
+                heroTitle: 'Artesanías Únicas Hechas con Amor',
+                heroText: 'Cada pieza cuenta una historia, tejida a mano con dedicación y pasión por el arte del macramé',
+                cartText: 'Carrito',
+                addToCart: 'Agregar al Carrito',
+                all: 'Todo',
+                necklaces: 'Collares',
+                bags: 'Bolsos',
+                bracelets: 'Pulseras',
+                decor: 'Decoración'
+            },
+            en: {
+                heroTitle: 'Unique Handmade Crafts Made with Love',
+                heroText: 'Each piece tells a story, hand-woven with dedication and passion for the art of macramé',
+                cartText: 'Cart',
+                addToCart: 'Add to Cart',
+                all: 'All',
+                necklaces: 'Necklaces',
+                bags: 'Bags',
+                bracelets: 'Bracelets',
+                decor: 'Decor'
+            }
+        };
+
+        // Funciones de idioma
+        function switchLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            document.getElementById('heroTitle').textContent = translations[currentLang].heroTitle;
+            document.getElementById('heroText').textContent = translations[currentLang].heroText;
+            document.getElementById('cartText').textContent = translations[currentLang].cartText;
+            
+            // Actualizar botones de agregar al carrito
+            document.querySelectorAll('.quick-add-btn').forEach(btn => {
+                btn.textContent = translations[currentLang].addToCart;
+            });
+        }
+
+        // Funciones del carrito
+        function addToCart(productId) {
+            cart.push(productId);
+            updateCartCount();
+            showNotification('Producto agregado al carrito');
+        }
+
+        function updateCartCount() {
+            document.querySelector('.cart-count').textContent = cart.length;
+        }
+
+        // Funciones del modal
+        function openModal(productId) {
+            currentProduct = productId;
+            const product = products[productId] || products['collar-luna'];
+            
+            document.getElementById('modalIcon').textContent = product.icon || '🌙';
+            document.getElementById('modalTitle').textContent = product.name[currentLang];
+            document.getElementById('modalPrice').textContent = `$${product.price}.00`;
+            document.getElementById('modalPriceBtn').textContent = `$${product.price}.00`;
+            document.getElementById('modalDescription').textContent = product.description[currentLang];
+            
+            document.getElementById('productModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Funciones de filtro
+        function filterProducts(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Aquí iría la lógica de filtrado real
+            console.log('Filtrando por:', category);
+        }
+
+        // Funciones de admin
+        function toggleAdminPanel() {
+            // Simulación de login
+            if (!isAdmin) {
+                const password = prompt('Ingrese contraseña de administrador:');
+                if (password === 'priscilla2024') {
+                    isAdmin = true;
+                    document.getElementById('adminBar').classList.add('active');
+                } else {
+                    alert('Contraseña incorrecta');
+                    return;
+                }
+            }
+            
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('active');
+        }
+
+        function logout() {
+            isAdmin = false;
+            document.getElementById('adminBar').classList.remove('active');
+            document.getElementById('adminPanel').classList.remove('active');
+        }
+
+        // Notificaciones
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary-brown);
+                color: white;
+                padding: 15px 30px;
+                border-radius: 25px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+                z-index: 2000;
+                animation: slideUp 0.3s ease-out;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Event listeners
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('productModal')) {
+                closeModal();
+            }
+        }
+
+        // Animación de entrada para productos
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease-out';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

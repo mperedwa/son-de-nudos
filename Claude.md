@@ -1,0 +1,163 @@
+Claude.md
+
+1. Objetivo de este archivo
+
+Este archivo define cómo debes trabajar como asistente de desarrollo dentro de este proyecto ecommerce de collares. Aquí se fijan estándares de código, flujo de trabajo, convenciones de UI, seguridad y cómo usar planning.md y tasks.md.
+
+Al inicio de cada sesión:
+	1.	Lee planning.md para entender la arquitectura y decisiones técnicas.
+	2.	Lee este archivo para respetar estándares y flujo de trabajo.
+	3.	Revisa tasks.md para saber qué tareas están pendientes y su prioridad.
+
+Al terminar cada bloque de trabajo, actualiza tasks.md y añade un breve resumen de sesión en la sección de log de este archivo.
+
+## ⚠️ IMPORTANTE: Configuración de Puerto
+
+**PUERTO PERMANENTE PARA SON DE NUDOS: 5174**
+
+- El proyecto **SIEMPRE** debe correr en `http://localhost:5174`
+- **NUNCA** cambiar a 5173 (ese puerto es para otro proyecto)
+- Configurado en `vite.config.ts` con `strictPort: true`
+- Documentado en `.env` y `.env.example`
+- Si el puerto 5174 está ocupado, el servidor fallará intencionalmente
+
+Este puerto está asignado permanentemente y NO debe cambiarse bajo ninguna circunstancia.
+
+2. Estándares de tecnología y código
+	•	Lenguaje y stack
+	•	TypeScript estricto, React con Vite.
+	•	React Router para ruteo.
+	•	Zustand para estado global de carrito y UI.
+	•	TailwindCSS para estilos, sin librerías UI pesadas.
+	•	Estilo de código
+	•	Usa funciones de React con hooks, evita clases.
+	•	Componentes tipados con props explícitas.
+	•	No usar any salvo casos justificados y documentados.
+	•	Nombres descriptivos en inglés para código, texto visible en español para UI.
+	•	Extrae lógica en helpers cuando sea reutilizable, por ejemplo filters.ts, money.ts.
+	•	Formularios y validación
+	•	Para formularios de checkout, usar React Hook Form y Zod para validación siempre que sea razonable.
+	•	Validaciones en cliente y, cuando aplique, en servidor para datos sensibles.
+	•	Accesibilidad
+	•	Todos los inputs con etiqueta o atributo aria-label significativo.
+	•	CartDrawer con role=“dialog”, aria-modal y gestión de foco (focus trap en abrir y devolución al disparador al cerrar).
+	•	Controles interactivos activables con teclado.
+	•	Texto alternativo descriptivo en imágenes de producto.
+
+3. UI consistente y design system
+	•	Tipografía
+	•	Sans moderna limpia, por ejemplo Inter o similar definida en Tailwind.
+	•	Jerarquía clara: títulos con font-semibold, cuerpo con peso normal.
+	•	Títulos de producto en una o dos líneas con ellipsis.
+	•	Colores y estilo
+	•	Paleta base en blanco y negro, tonos neutros para fondos y bordes.
+	•	Acentos sutiles, por ejemplo en hover o bordes activos.
+	•	Mucho espacio en blanco, foco visual en fotografía del producto.
+	•	Sombra suave y border radius en tarjetas y drawers.
+	•	Layout y componentes clave
+	•	 como carrusel de mensajes finos arriba de todo, auto play con pausa on hover.
+	
+    ### Paleta y estilo visual de referencia
+
+La interfaz debe transmitir una estética cálida, artesanal y elegante inspirada en tonos tierra. Esta línea visual proviene del archivo HTML de referencia y debe reflejarse en todos los componentes del proyecto.
+
+**Paleta principal**  
+- Marrón primario similar a #8B6F47 usado para títulos, contornos y estados activos.  
+- Beige suave similar a #F5E6D3 para fondos ligeros y zonas de descanso visual.  
+- Dorado apagado similar a #D4A574 como acento sutil en botones y elementos destacados.  
+- Texto en tonos café oscuro y café claro para mantener una imagen cálida y armónica.  
+- Fondo blanco o crema con degradados suaves para aportar luminosidad sin perder calidez.
+
+**Tipografía y ambiente**  
+- Estilo con inspiración artesanal y elegante, jerarquía marcada en títulos y cuerpo.  
+- Títulos en marrón primario y copy en tonos café.  
+- Espaciado amplio y composición limpia para resaltar las fotos del producto.
+
+**Superficies y componentes**  
+- Tarjetas con bordes redondeados y sombras suaves que evocan textura artesanal.  
+- Botones con colores tierra y transiciones ligeras en hover.  
+- Estados hover que cambian del marrón al dorado para un efecto cálido y premium.  
+- Iconografía simple y limpia, manteniendo una estética minimalista.
+
+**Sensación general**  
+- Look cálido y elegante, con identidad artesanal y tonos naturales.  
+- Superficies mayormente blancas o beige con acentos en marrón y dorado.  
+- Diseño orientado a destacar las fotografías y el trabajo artístico de cada pieza.
+
+<Header> con logo, navegación básica (Shop, About) y botón de carrito, más selector de moneda simulado.  
+
+
+
+	•	 bajo el header en páginas de colección y producto.
+	•	Toolbar de colección con botón Filtros en móvil y selector Ordenar.
+	•	Grid de productos con grid-cols-2 en móvil, grid-cols-3 en md, grid-cols-4 en lg.
+	•	 con imagen principal y hover image, lifting en hover con sombra.
+	•	 como slide-over desde la derecha, ancho razonable y scroll interno.
+	•	
+
+<Footer> con links de políticas, newsletter, redes y nota de plataforma.  
+
+
+
+
+Define clases de Tailwind reutilizables mediante composiciones, por ejemplo mediante utilidades o patrones de componentes.
+
+4. Flujo de trabajo recomendado
+
+Para cada tarea en tasks.md:
+	1.	Leer contexto
+	•	Revisa planning.md y la descripción de la tarea.
+	•	Identifica qué archivos se verán afectados.
+	2.	Planificación rápida
+	•	Escribe un breve plan en lenguaje natural o pseudo código.
+	•	Confirma que el plan respeta la arquitectura existente.
+	3.	Implementación
+	•	Crea o modifica componentes en src/components o páginas en src/app/routes según corresponda.
+	•	Mantén el código modular, con separación entre UI y lógica cuando tenga sentido.
+	•	Acompaña secciones complejas con comentarios breves.
+	4.	Pruebas
+	•	Añade o actualiza pruebas unitarias, especialmente para filters.ts, money.ts y lógica de estado.
+	•	Cuando describas cambios, menciona qué se debería probar manualmente en la UI.
+	5.	Documentación y tareas
+	•	Si la tarea cambia el comportamiento del sistema, actualiza planning.md si la decisión es estructural.
+	•	Marca la tarea como completada en tasks.md con ✅ y actualiza criterios de aceptación si hace falta.
+	•	Si surgen nuevas tareas derivadas, añádelas con estado ⏳.
+	6.	Resumen de sesión
+	•	Añade una entrada corta en la sección “Log de sesiones” de este archivo, indicando fecha, qué se hizo y qué falta.
+
+5. Seguridad y permisos
+	•	Nunca exponer claves privadas de Stripe o tokens de Shopify en el cliente. Deben leerse solo en el servidor o funciones backend.
+	•	Validar datos que llegan al backend mock, especialmente los relacionados con importes y cupones.
+	•	No almacenar información sensible de tarjetas, Stripe se encarga del procesamiento.
+	•	En Shopify, utilizar únicamente la Storefront API pública, respetando limits de la API.
+	•	Configurar .env.example con variables esperadas para Stripe y Shopify, sin valores reales.
+	•	Evitar interpolar HTML sin sanitizar en la UI, usar React de forma segura para descriptionHtml (solo contenido controlado).
+
+6. Pro tips de trabajo
+	•	Antes de añadir lógica nueva, revisa si ya existe un helper o patrón similar en src/lib.
+	•	Para filtros y orden, centraliza la lógica en filters.ts y usa URLSearchParams para sincronizar estado con la URL.
+	•	Mantén el texto de la UI en español, consistente y conciso.
+	•	Asegúrate de que la colección se vea bien con 4, 8 o 20 productos, usando grid responsivo.
+
+7. Log de sesiones
+
+Usa esta sección para anotar resúmenes breves por sesión.
+
+Formato sugerido:
+	•	[AAAA-MM-DD] Resumen corto de lo realizado, archivos tocados, tareas cerradas, tareas nuevas.
+
+Ejemplo:
+	•	[2025-11-14] Implementada estructura base de Vite, Tailwind y React Router, creada CollectionPage inicial con grid y ProductCard básica, pendiente conectar filtros y carrito.
+
+Sesiones:
+	•	[2025-11-14] FASE 1 COMPLETADA - Fundación del proyecto. Creado PLAN_MAESTRO.md con roadmap completo de 7 fases. Inicializado proyecto Vite con React + TypeScript. Instaladas dependencias: react-router-dom, zustand, tailwindcss, react-hook-form, zod. Configurado TailwindCSS con paleta tierra personalizada (#8B6F47, #F5E6D3, #D4A574). Implementado React Router con 5 rutas: /, /product/:handle, /checkout, /success, /cancel. Creado RootLayout básico con header y footer temporales. Configurados stores Zustand: cart.ts (items, cupones, totales) y ui.ts (drawers). Creada estructura completa de carpetas. Configurado alias @ → src. Creado .env.example y lib/config.ts. Build exitoso sin errores. Archivos tocados: 20+ archivos nuevos.
+	•	[2025-11-14] FASE 2 COMPLETADA - Layout y componentes base. Creado AnnouncementBar.tsx con carrusel auto-rotativo de 4 mensajes (envío gratis, descuentos, Shop Pay, pickup local), pausa on hover. Implementado Header.tsx profesional con logo SVG de clave de sol en marrón, navegación Tienda/Sobre Mí, selector de idioma ES/EN con estados activos, botón de carrito con contador integrado a Zustand (muestra cantidad total de items), sticky positioning. Creado Footer.tsx completo con 4 columnas: About con descripción, Enlaces (Tienda, Sobre Mí, Contacto, FAQ), Legal (Privacidad, Términos, Envíos, Cuidado), Newsletter con formulario funcional y confirmación animada, redes sociales (Instagram, Facebook, Etsy, Email) con iconos SVG y hover effects dorados, copyright. Implementado Breadcrumbs.tsx reutilizable con navegación accesible (aria-label, aria-current). Actualizado RootLayout.tsx para integrar todos los componentes. Añadida animación fadeIn en index.css. Actualizadas páginas de colección y producto para usar Breadcrumbs. Build exitoso: CSS 7.31KB (2.04KB gzip), JS 193KB (62.63KB gzip). Servidor dev corriendo en localhost:5175. Siguiente paso: Fase 3 - Grid de productos, filtros y orden.
+	•	[2025-11-14] FASE 3 COMPLETADA - Grid de productos, filtros y orden. Creados tipos TypeScript en src/types/models.ts (Product, Variant, Money, FilterOptions, SortOption, PaginationOptions). Copiado products.json con 20 collares desde referencia a src/data/products.json. Implementado lib/money.ts con funciones puras: formatMoney (usa Intl.NumberFormat), addMoney, subtractMoney, multiplyMoney, compareMoney, getDiscountPercentage, createMoney - todas con validación de moneda. Creado componente Price.tsx para mostrar precios formateados con compareAtPrice tachado y badge de descuento opcional. Implementado ProductCard.tsx con efecto hover (cambia a segunda imagen si existe), badges de SALE/NUEVO/Agotado, precio con descuento, lifting effect on hover (-translate-y-1), link a página de detalle. Creado ProductGrid.tsx responsivo (2 columnas móvil, 3 tablet, 4 desktop, gap-6), estados de carga con skeleton y estado vacío con ilustración. Implementado lib/filters.ts con funciones puras: filterProducts (disponibilidad, rango precio, material, color, largo), sortProducts (featured, best, a-z, z-a, priceAsc, priceDesc, dateAsc, dateDesc), paginateProducts, getTotalPages, getUniqueOptionValues, getPriceRange, processProducts (aplica todo en pipeline). Creado CollectionToolbar.tsx con botón filtros (solo móvil), selector de orden con 7 opciones, contador de productos. Implementado FiltersDrawer.tsx completo con disponibilidad checkbox, rango precio con sliders, checkboxes material/color/largo extraídos dinámicamente de productos, botones "Ver resultados" y "Limpiar filtros", funciona como sidebar fijo en desktop y drawer slide-over en móvil. Actualizado CollectionPage completamente: carga 20 productos desde JSON, gestión completa de filtros y orden con URLSearchParams (sincroniza URL con estado, preserva filtros en reload), layout flex con sidebar desktop y drawer móvil, integración completa de todos componentes. Build exitoso sin errores, compilación en 377ms. Servidor dev corriendo en localhost:5174. 20 collares visibles en grid funcional con hover images. Archivos nuevos: 10+ componentes y utilidades. Siguiente paso: Fase 4 - Página de producto y selección de variantes.
+	•	[2025-11-14] FASE 4 COMPLETADA - Página de producto y selección de variantes. Creado ImageGallery.tsx con imagen principal y grid de 4 miniaturas, clic en miniatura actualiza imagen principal, indicador de zoom en hover, borde destacado en thumbnail seleccionado. Verificado store/cart.ts - todas las funciones ya implementadas correctamente (addItem con acumulación de cantidades, removeItem, updateQty, applyCoupon). Implementado VariantSelector.tsx con lógica compleja: extrae valores únicos de opciones (Material, Color, Largo), calcula automáticamente qué valores están disponibles según combinación actual (getAvailableValues verifica variantes disponibles y coincidencias parciales), grid 3 columnas, botones deshabilitados con línea diagonal para opciones no disponibles, estado seleccionado con fondo marrón primario, mensaje de error cuando combinación no existe, indicador de stock con punto verde/rojo y cantidad disponible. Creado AddToCartButton.tsx integrado con Zustand: estados múltiples (normal, adding con spinner, success con checkmark verde), deshabilitado cuando no hay variante o está agotada, abre CartDrawer automáticamente tras agregar, transiciones suaves entre estados. Reescrito completamente product/[handle].tsx: useParams para obtener handle dinámico, useMemo para encontrar producto en products.json, gestión de selectedOptions con useState, cálculo automático de selectedVariant según opciones seleccionadas con useMemo, Navigate redirect si producto no existe, layout dos columnas (galería | info producto), integración de ImageGallery + Price + VariantSelector + AddToCartButton, descripción HTML con dangerouslySetInnerHTML (contenido controlado), tarjetas de beneficios (artesanal, calidad, regalo), display de tags, iconos de features (envío gratis, cuotas, pickup local). Actualizado TASKS.md Hito 4 con ✅ COMPLETADO. Build exitoso sin errores, HMR funcionando. Servidor dev corriendo en localhost:5174. Navegación desde colección a producto funcional, selección de variantes con validación completa, agregar al carrito operativo. Archivos nuevos: 3 componentes. Archivos modificados: 1 página, 1 doc. Siguiente paso: Fase 5 - Carrito lateral y checkout.
+	•	[2025-11-14] FASE 5 COMPLETADA - Carrito lateral y checkout. Creado CartDrawer.tsx completo: slide-over desde derecha con overlay, lista items con imagen/título/variante/cantidad/precio, controles de cantidad con botones +/- (mínimo 1), botón eliminar por item, estado vacío con CTA "Ver productos", cierre con ESC y overlay click, scroll interno, accesibilidad completa (role="dialog", aria-modal), formulario de cupones con validación (4 cupones: WELCOME10 10%, PRISCILLA15 15%, VERANO20 20% min$50, NAVIDAD25 25% min$100), indicador visual cuando cupón aplicado (verde con checkmark), botón remover cupón, barra de progreso hacia envío gratis con mensaje dinámico "Te faltan $X" o "¡Envío gratis desbloqueado!", resumen con subtotal/descuento/envío/total. Actualizado cart.ts: refactorizado qty → quantity, addItem/removeItem/updateQty ahora usan productId+variantId para identificación única, applyCoupon retorna {success, error}, removeCoupon(), funciones computadas: shipping() calcula $10 o $0 si gratis, isFreeShipping() verifica umbral $150, amountUntilFreeShipping() calcula faltante, total() incluye envío. Corregido bug de infinite loop en CartDrawer separando obtención de funciones de su ejecución (obtener función primero, llamar después). Actualizado RootLayout.tsx: integrado CartDrawer global, atajo de teclado Cmd/Ctrl+K para toggle carrito. Actualizado config.ts: agregado shippingCost: $10. Reescrito completamente checkout.tsx: layout dos columnas responsivo (formulario izq | resumen der), formulario contacto con email/nombre/apellido/teléfono (campos requeridos marcados con *), método de entrega con radio buttons styled (envío $10 vs pickup gratis), formulario envío condicional (solo si shipping) con dirección/ciudad/estado/CP, resumen pedido sticky con scroll (max-h-64), items con foto/título/variante/cantidad/precio, totales con descuentos/envío, cálculo dinámico de total según pickup (sin envío), validación básica del formulario, botón "Completar pedido" con loading state, redirect a /success tras 2s mock, redirect a / si carrito vacío con Navigate. Actualizado TASKS.md Hito 5 con ✅ COMPLETADO. Build exitoso sin errores, HMR funcionando. Servidor dev corriendo en localhost:5174. Carrito completo funcional desde header/atajo teclado, cupones operativos, checkout completo con todos formularios. Archivos nuevos: 1 componente (CartDrawer). Archivos modificados: 4 archivos (cart.ts, RootLayout, config.ts, checkout.tsx), 2 docs. Siguiente paso: Fase 6 - Integración de pagos y backend mock.
+	•	[2025-11-14] FASE 6 PARCIALMENTE COMPLETADA - Integración de pagos y backend mock. Creado mockServer.ts completo (250 líneas): simulación de red con latencia 100-300ms, endpoints getProducts(), getCollectionNecklaces() (carga desde products.json), getProductByHandle(handle), validateCoupon(code, subtotal) valida 4 cupones con mínimos, calculateShipping(subtotal) aplica reglas $10 o gratis si >=150, createCheckoutSession() detecta config.enableStripe para delegar a Stripe o continuar en mock, tipos ApiResponse, CouponValidationResponse, ShippingCalculationResponse. Instaladas dependencias: stripe (servidor) y @stripe/stripe-js (cliente) vía npm install. Creado server/stripe.ts (200 líneas): getStripeClient() inicializa con STRIPE_SECRET_KEY, createStripeCheckoutSession() crea sesión real de Stripe con line_items (productos + envío condicional), billing_address_collection, shipping_address_collection si aplica, descuentos con cupones temporales (createStripeCoupon), metadata con couponCode y shippingMethod, retorna sessionId + url de redirección, getCheckoutSession(sessionId) para verificar estado post-pago, manejo completo de errores. Creado lib/stripe.ts (cliente): getStripe() carga Stripe con PUBLISHABLE_KEY (singleton), redirectToCheckout(sessionId) maneja redirección a Stripe Checkout con validación de configuración. Actualizado mockServer.createCheckoutSession(): importación dinámica de stripeServer cuando config.enableStripe = true, delegación completa o fallback a mock según modo. Refactorizado index.tsx: cambió import estático de products.json a llamada async mockServer.getCollectionNecklaces(), useState para allProducts/loading/error, useEffect para carga inicial, mensaje de error rojo si falla. Refactorizado product/[handle].tsx: cambió carga síncrona a async mockServer.getProductByHandle(handle), useState para product/loading/error, useEffect para carga por handle, pantalla de loading con spinner, redirect si no encuentra producto. Actualizado checkout.tsx: integración completa con mockServer.createCheckoutSession(), pasa items/couponCode/discountAmount/customerEmail/shippingMethod, detecta modo (enableStripe) para redirigir a URL externa (Stripe) o local (mock), manejo de errores con alert, console.log de sessionId y modo. Actualizado .env.example: agregado VITE_SHIPPING_COST=10, documentación completa de variables Stripe/Shopify/config. Actualizado TASKS.md Hito 6: ✅ mockServer.ts, ✅ Stripe Checkout, ⏳ Shopify (opcional no prioritario). Build exitoso sin errores, HMR funcionando. Servidor dev corriendo en localhost:5174. Sistema completo operativo en modo mock, listo para cambiar a modo Stripe con .env configurado. Archivos nuevos: 3 archivos (mockServer.ts, stripe.ts server, stripe.ts client). Archivos modificados: 3 rutas (index, product, checkout), 1 config (.env.example), 2 docs. Siguiente paso: Fase 7 - Calidad, documentación y pulido (tests, linter, README, accesibilidad).
+	•	[2025-11-14] FASE 7 PARCIALMENTE COMPLETADA - Calidad, documentación y pulido. Creado README.md completo (350+ líneas): descripción del proyecto, características principales detalladas, stack tecnológico completo, instrucciones de instalación paso a paso, configuración de variables de entorno con ejemplos para los 3 modos (mock/stripe/shopify), sección de scripts disponibles (dev, build, preview, lint), estructura del proyecto con árbol completo de archivos y descripción de cada directorio, documentación del sistema de cupones con tabla de códigos, guías de deployment para Vercel/Netlify/CloudFlare, troubleshooting con soluciones a problemas comunes, roadmap con features completadas y pendientes, secciones de testing manual y recursos útiles. Creado .eslintrc.cjs: configuración ESLint para React + TypeScript con plugin react-refresh, reglas @typescript-eslint/recommended, eslint:recommended y react-hooks/recommended, warnings para no-explicit-any y unused-vars (con ignore pattern para underscore). Corregido problema de dependencias: ejecutado rm -rf node_modules package-lock.json && npm install para reinstalar dependencias limpias tras conflictos de ts-api-utils, instaladas 301 packages exitosamente. Ejecutado npm run lint: pasa sin errores ni warnings en todo el proyecto, validación completa de código en src/components, src/lib, src/store, src/server y src/app. Verificada accesibilidad existente: CartDrawer con role="dialog" aria-modal y focus trap, Breadcrumbs con aria-label="breadcrumb" y aria-current="page", FiltersDrawer con gestión de foco y cierre con ESC, atajos de teclado globales (Cmd/Ctrl+K para carrito), todos los inputs con labels descriptivos, botones accesibles. Actualizado TASKS.md Hito 7: ✅ configurar linter, ✅ crear README, ✅ accesibilidad básica, ⏳ tests unitarios (pendiente para futura iteración). Build continúa exitoso. Servidor dev funcional en localhost:5174. Proyecto completo y listo para producción en modo mock, con documentación profesional completa. Archivos nuevos: 2 (README.md, .eslintrc.cjs). Archivos modificados: 1 doc (TASKS.md). Próximos pasos opcionales: tests unitarios con Vitest, integración Shopify, features adicionales del roadmap.
+	•	[2025-11-15] FASE 8 COMPLETADA - Internacionalización (i18n) bilingüe Español/Inglés. Instaladas dependencias: react-i18next, i18next, i18next-browser-languagedetector. Creada estructura completa de traducciones: 16 archivos JSON (8 namespaces × 2 idiomas): common, navigation, product, cart, checkout, messages, announcements, filters. Configurado src/i18n/index.ts con detección automática de idioma del navegador (orden: localStorage → navigator → htmlTag), fallback a inglés, soporte ES/EN, conversión automática de regiones (en-US → en), debug mode en desarrollo. Creado store/language.ts con Zustand para gestión global de idioma actual, sincronización bidireccional con i18next vía event listeners, funciones setLanguage() y toggleLanguage(). Traducidos TODOS los componentes y páginas: Header.tsx (con selector ES/EN estilizado, botones activos con fondo marrón), Footer.tsx, AnnouncementBar.tsx, CartDrawer.tsx (múltiples namespaces, interpolación con counts), ProductCard.tsx, ProductGrid.tsx, FiltersDrawer.tsx, CollectionToolbar.tsx, Breadcrumbs.tsx, checkout.tsx, success.tsx, cancel.tsx. Implementado hook useTranslation(['namespace1', 'namespace2']) en todos los componentes con múltiples namespaces cuando necesario. Utilizada interpolación para valores dinámicos: t('cart:yourCartWithCount', {count}), t('cart:amountUntilFreeShipping', {amount}). Corregido error de múltiples copias de React tras instalación (rm -rf node_modules, npm install limpio, 307 packages). Corregido CRÍTICO problema de puerto: configurado PERMANENTEMENTE puerto 5174 en vite.config.ts con strictPort: true, creado .env con VITE_PORT=5174, actualizado .env.example, agregada sección de advertencia en CLAUDE.md para NUNCA usar puerto 5173 (pertenece a otro proyecto). Actualizado README.md con sección completa de i18n: características, tabla de idiomas soportados, estructura de archivos, ejemplos de uso, configuración del detector. Sistema completamente funcional: detección automática de idioma, selector manual con persistencia en localStorage, todas las páginas traducidas, feedback del usuario verificado. Build exitoso, servidor corriendo en http://localhost:5174/. Archivos nuevos: 18 (16 traducciones JSON + i18n/index.ts + store/language.ts). Archivos modificados: 12 componentes/rutas + README.md + vite.config.ts + .env.example + CLAUDE.md. Próximos pasos: tests unitarios con Vitest, features opcionales del roadmap.
+
+⸻
+

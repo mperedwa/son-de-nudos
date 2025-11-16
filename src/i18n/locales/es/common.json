@@ -1,0 +1,18 @@
+{
+  "shop": "Tienda",
+  "aboutMe": "Sobre Mí",
+  "contact": "Contacto",
+  "faq": "Preguntas Frecuentes",
+  "privacyPolicy": "Política de Privacidad",
+  "termsAndConditions": "Términos y Condiciones",
+  "shippingAndReturns": "Envíos y Devoluciones",
+  "productCare": "Cuidado de Productos",
+  "more": "Más",
+  "less": "Menos",
+  "loading": "Cargando...",
+  "error": "Error",
+  "success": "Éxito",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "breadcrumb": "Navegación"
+}

@@ -1,0 +1,19 @@
+{
+  "filters": "Filtros",
+  "openFilters": "Abrir filtros",
+  "closeFilters": "Cerrar filtros",
+  "filterProducts": "Filtros de productos",
+  "availability": "Disponibilidad",
+  "inStockOnly": "Solo en stock",
+  "price": "Precio",
+  "minPrice": "Mínimo: ${{amount}}",
+  "maxPrice": "Máximo: ${{amount}}",
+  "material": "Material",
+  "color": "Color",
+  "length": "Largo",
+  "viewResults": "Ver resultados",
+  "clearFilters": "Limpiar filtros",
+  "showingResults": "Mostrando {{count}} {{products}}",
+  "sortBy": "Ordenar por:",
+  "productsAvailable": "Productos disponibles"
+}
