@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "migrate": "tsx --env-file=.env scripts/migrate-to-supabase.ts",
     "migrate:dry": "tsx --env-file=.env scripts/migrate-to-supabase.ts --dry-run --verbose",
-    "setup:admin": "tsx --env-file=.env scripts/setup-admin-user.ts"
+    "setup:admin": "tsx --env-file=.env scripts/setup-admin-user.ts",
+    "create:admin": "tsx --env-file=.env scripts/create-admin.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
