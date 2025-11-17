@@ -189,17 +189,28 @@ export function getStockLevel(stock: number): StockLevel {
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+// Debug logs para verificar que las variables se cargan correctamente
+console.log('[Supabase] Environment check:', {
+  mode: import.meta.env.MODE,
+  prod: import.meta.env.PROD,
+  dev: import.meta.env.DEV,
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlValue: supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : 'MISSING',
+})
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  const errorMsg = '[Supabase] VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set in .env'
+  const errorMsg = `[Supabase] Missing environment variables:
+  - VITE_SUPABASE_URL: ${supabaseUrl ? 'SET' : 'MISSING'}
+  - VITE_SUPABASE_ANON_KEY: ${supabaseAnonKey ? 'SET' : 'MISSING'}
+
+  ⚠️ Asegúrate de que el archivo .env existe y contiene las credenciales correctas.
+  ⚠️ Si acabas de crear/modificar .env, reinicia el servidor de desarrollo.`
+
   console.error(errorMsg)
 
-  // En producción, fallar inmediatamente si faltan variables críticas
-  if (import.meta.env.PROD) {
-    throw new Error(errorMsg + ' - Cannot initialize Supabase client in production without credentials')
-  }
-
-  // En desarrollo, solo advertir
-  console.warn('[Supabase] Running in development mode without proper credentials. Features may not work.')
+  // Fallar en TODOS los ambientes - no permitir crear cliente con credenciales vacías
+  throw new Error(errorMsg + '\n\nCannot initialize Supabase client without credentials.')
 }
 
 // ==============================================================================
