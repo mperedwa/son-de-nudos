@@ -62,14 +62,14 @@ export default function AdminDashboard() {
         ])
 
         // Calcular totales
-        const totalRevenue = orders?.reduce((sum, order) => {
+        const totalRevenue = (orders as any[])?.reduce((sum, order: any) => {
           return order.status === 'paid' || order.status === 'delivered'
             ? sum + Number(order.total)
             : sum
         }, 0) || 0
 
-        const pendingOrders = orders?.filter(
-          (o) => o.status === 'pending' || o.status === 'paid'
+        const pendingOrders = (orders as any[])?.filter(
+          (o: any) => o.status === 'pending' || o.status === 'paid'
         ).length || 0
 
         setStats({

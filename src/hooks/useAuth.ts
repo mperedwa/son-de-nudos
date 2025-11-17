@@ -132,7 +132,7 @@ export function useAuth(): UseAuthReturn {
       // Actualizar last_login_at
       await supabase
         .from('admins')
-        .update({ last_login_at: new Date().toISOString() })
+        .update({ last_login_at: new Date().toISOString() } as any)
         .eq('id', admin.id)
 
       setUser(data.user)
