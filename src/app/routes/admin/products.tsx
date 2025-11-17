@@ -4,6 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
 import type { Database } from '@/lib/supabase'
+import { MultiImageUploader } from '@/components/admin/MultiImageUploader'
+import { ImageUploader } from '@/components/admin/ImageUploader'
+import { deleteFolder, deleteImage } from '@/lib/storage'
 
 // ============================================================================
 // TYPES
@@ -869,6 +872,15 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
             </div>
           </div>
 
+          {/* Images */}
+          <MultiImageUploader
+            images={watch('images')}
+            onImagesChange={(urls) => setValue('images', urls)}
+            folder="products"
+            subfolder={watch('handle') || 'temp'}
+            disabled={isSubmitting}
+          />
+
           {/* Available for sale */}
           <div className="flex items-center gap-2">
             <input
@@ -937,6 +949,10 @@ function DeleteConfirmModal({ product, onClose, onDelete }: DeleteConfirmModalPr
     setError(null)
 
     try {
+      // 1. Eliminar carpeta de imágenes del producto en Storage
+      await deleteFolder(`products/${product.handle}`)
+
+      // 2. Eliminar producto de la base de datos
       const { error: deleteError } = await supabase
         .from('products')
         .delete()
@@ -1025,6 +1041,8 @@ function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onS
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    setValue,
   } = useForm<VariantFormData>({
     resolver: zodResolver(variantSchema),
     defaultValues: variant
@@ -1212,24 +1230,15 @@ function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onS
             )}
           </div>
 
-          {/* Image URL */}
-          <div>
-            <label className="block text-sm font-medium text-[#6B5844] mb-2">
-              Imagen (URL)
-            </label>
-            <input
-              {...register('image')}
-              type="text"
-              className="
-                w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30
-                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
-              "
-              placeholder="https://..."
-            />
-            {errors.image && (
-              <p className="mt-1 text-sm text-red-600">{errors.image.message}</p>
-            )}
-          </div>
+          {/* Image */}
+          <ImageUploader
+            currentImageUrl={watch('image') || null}
+            onImageChange={(url) => setValue('image', url || '')}
+            folder="variants"
+            subfolder={watch('sku') || 'temp'}
+            label="Imagen de la Variante"
+            disabled={isSubmitting}
+          />
 
           {/* Available */}
           <div className="flex items-center gap-2">
@@ -1299,6 +1308,12 @@ function VariantDeleteModal({ variant, onClose, onDelete }: VariantDeleteModalPr
     setError(null)
 
     try {
+      // 1. Eliminar imagen de la variante en Storage si existe
+      if (variant.image) {
+        await deleteImage(variant.image)
+      }
+
+      // 2. Eliminar variante de la base de datos
       const { error: deleteError } = await supabase
         .from('variants')
         .delete()
