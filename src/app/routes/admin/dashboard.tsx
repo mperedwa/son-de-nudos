@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { supabase } from '@/lib/supabase'
+import { supabase, subscribeToStockChanges } from '@/lib/supabase'
 
 // ============================================================================
 // TIPOS
@@ -32,6 +32,7 @@ export default function AdminDashboard() {
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [variantIds, setVariantIds] = useState<string[]>([])
 
   // Cargar estadísticas y pedidos recientes
   useEffect(() => {
@@ -46,6 +47,7 @@ export default function AdminDashboard() {
           { count: totalOrders },
           { data: orders },
           { data: variants },
+          { data: allVariants },
         ] = await Promise.all([
           supabase.from('products').select('*', { count: 'exact', head: true }),
           supabase
@@ -59,6 +61,7 @@ export default function AdminDashboard() {
             .order('created_at', { ascending: false })
             .limit(100),
           supabase.from('variants').select('stock').lte('stock', 5),
+          supabase.from('variants').select('id'),
         ])
 
         // Calcular totales
@@ -81,6 +84,9 @@ export default function AdminDashboard() {
           pendingOrders,
         })
 
+        // Store variant IDs for real-time subscriptions
+        setVariantIds(allVariants?.map((v: any) => v.id) || [])
+
         // Obtener pedidos recientes
         const { data: recentOrdersData } = await supabase
           .from('orders')
@@ -99,6 +105,36 @@ export default function AdminDashboard() {
 
     fetchDashboardData()
   }, [])
+
+  // Real-time subscription to stock changes
+  useEffect(() => {
+    if (variantIds.length === 0) return
+
+    // Subscribe to all variants to update low stock count
+    const subscriptions = variantIds.map((variantId) =>
+      subscribeToStockChanges(variantId, async (_newStock) => {
+        // Re-fetch low stock count when any stock changes
+        const { data } = await supabase.from('variants').select('stock').lte('stock', 5)
+
+        setStats((prev) => {
+          if (!prev) return prev
+          return {
+            ...prev,
+            lowStockVariants: data?.length || 0,
+          }
+        })
+      })
+    )
+
+    // Cleanup subscriptions
+    return () => {
+      subscriptions.forEach((sub) => {
+        if (sub && typeof sub.unsubscribe === 'function') {
+          sub.unsubscribe()
+        }
+      })
+    }
+  }, [variantIds.length])
 
   // Loading state
   if (loading) {

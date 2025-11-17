@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useMemo } from 'react'
-import { fetchVariantsWithProducts, type VariantWithProduct, type StockLevel } from '@/lib/supabase'
+import { fetchVariantsWithProducts, subscribeToStockChanges, type VariantWithProduct, type StockLevel } from '@/lib/supabase'
 import { StockLevelBadge } from '@/components/admin/StockLevelBadge'
 import { QuickAdjustModal } from '@/components/admin/QuickAdjustModal'
 import { StockHistoryModal } from '@/components/admin/StockHistoryModal'
@@ -47,6 +47,9 @@ export default function AdminInventory() {
   const [adjustModalVariant, setAdjustModalVariant] = useState<VariantWithProduct | null>(null)
   const [historyModalVariant, setHistoryModalVariant] = useState<VariantWithProduct | null>(null)
 
+  // Real-time notifications
+  const [notification, setNotification] = useState<string | null>(null)
+
   // ==========================================================================
   // DATA FETCHING
   // ==========================================================================
@@ -68,6 +71,40 @@ export default function AdminInventory() {
       setLoading(false)
     }
   }
+
+  // ==========================================================================
+  // REAL-TIME SUBSCRIPTIONS
+  // ==========================================================================
+
+  useEffect(() => {
+    if (variants.length === 0) return
+
+    // Subscribe to stock changes for each variant
+    const subscriptions = variants.map((variant) =>
+      subscribeToStockChanges(variant.id, (newStock) => {
+        // Update local state
+        setVariants((prev) =>
+          prev.map((v) => (v.id === variant.id ? { ...v, stock: newStock } : v))
+        )
+
+        // Show notification
+        const variantName = `${variant.product.title} - ${variant.title}`
+        setNotification(`📦 Stock actualizado: ${variantName} → ${newStock} unidades`)
+
+        // Auto-hide notification after 5 seconds
+        setTimeout(() => setNotification(null), 5000)
+      })
+    )
+
+    // Cleanup subscriptions on unmount
+    return () => {
+      subscriptions.forEach((sub) => {
+        if (sub && typeof sub.unsubscribe === 'function') {
+          sub.unsubscribe()
+        }
+      })
+    }
+  }, [variants.length]) // Only re-subscribe when variant count changes
 
   // ==========================================================================
   // FILTERING & SORTING
@@ -190,6 +227,20 @@ export default function AdminInventory() {
         <h1 className="text-3xl font-bold text-[#8B6F47]">Gestión de Inventario</h1>
         <p className="text-[#6B5844]/70 mt-1">Control consolidado de stock de todas las variantes</p>
       </div>
+
+      {/* Real-Time Notification */}
+      {notification && (
+        <div className="p-4 bg-blue-50 border-2 border-blue-200 rounded-lg flex items-center justify-between animate-pulse">
+          <p className="text-blue-800 font-medium">{notification}</p>
+          <button
+            type="button"
+            onClick={() => setNotification(null)}
+            className="text-blue-600 hover:text-blue-800 font-bold text-lg"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
