@@ -18,6 +18,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: '📊' },
+  { name: 'Mi Perfil', path: '/admin/profile', icon: '👤' },
   { name: 'Productos', path: '/admin/products', icon: '📦' },
   { name: 'Pedidos', path: '/admin/orders', icon: '🛒' },
   { name: 'Cupones', path: '/admin/coupons', icon: '🎫' },

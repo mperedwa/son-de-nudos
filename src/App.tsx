@@ -11,6 +11,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { AdminLayout } from './components/AdminLayout'
 import AdminLogin from './app/routes/admin/login'
 import AdminDashboard from './app/routes/admin/dashboard'
+import AdminProfile from './app/routes/admin/profile'
 
 /**
  * Configuración principal de rutas
@@ -47,6 +48,7 @@ function App() {
           }
         >
           <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="profile" element={<AdminProfile />} />
           {/* Placeholder routes - se implementarán en siguientes fases */}
           <Route
             path="products"
