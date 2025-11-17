@@ -14,6 +14,7 @@ import AdminDashboard from './app/routes/admin/dashboard'
 import AdminProfile from './app/routes/admin/profile'
 import AdminProducts from './app/routes/admin/products'
 import AdminInventory from './app/routes/admin/inventory'
+import AdminCoupons from './app/routes/admin/coupons'
 
 /**
  * Configuración principal de rutas
@@ -61,14 +62,7 @@ function App() {
               </div>
             }
           />
-          <Route
-            path="coupons"
-            element={
-              <div className="p-8 text-center text-[#6B5844]">
-                Gestión de cupones - Próximamente
-              </div>
-            }
-          />
+          <Route path="coupons" element={<AdminCoupons />} />
           <Route path="inventory" element={<AdminInventory />} />
           <Route
             path="settings"
