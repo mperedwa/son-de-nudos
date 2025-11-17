@@ -13,6 +13,7 @@ import AdminLogin from './app/routes/admin/login'
 import AdminDashboard from './app/routes/admin/dashboard'
 import AdminProfile from './app/routes/admin/profile'
 import AdminProducts from './app/routes/admin/products'
+import AdminInventory from './app/routes/admin/inventory'
 
 /**
  * Configuración principal de rutas
@@ -68,14 +69,7 @@ function App() {
               </div>
             }
           />
-          <Route
-            path="inventory"
-            element={
-              <div className="p-8 text-center text-[#6B5844]">
-                Gestión de inventario - Próximamente
-              </div>
-            }
-          />
+          <Route path="inventory" element={<AdminInventory />} />
           <Route
             path="settings"
             element={
