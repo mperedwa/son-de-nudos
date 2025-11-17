@@ -8,6 +8,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { supabase, type Database } from '@/lib/supabase'
 import { CouponStatusBadge, type CouponStatus } from '@/components/admin/CouponStatusBadge'
+import { CouponFormModal } from '@/components/admin/CouponFormModal'
 
 // ============================================================================
 // TYPES
@@ -69,6 +70,10 @@ export default function AdminCoupons() {
   // Sorting
   const [sortField, setSortField] = useState<SortField>('created_at')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
+
+  // Modal state
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false)
+  const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null)
 
   // ==========================================================================
   // DATA FETCHING
@@ -187,6 +192,31 @@ export default function AdminCoupons() {
     }
   }
 
+  function handleOpenCreateModal() {
+    setEditingCoupon(null)
+    setIsFormModalOpen(true)
+  }
+
+  function handleOpenEditModal(coupon: Coupon) {
+    setEditingCoupon(coupon)
+    setIsFormModalOpen(true)
+  }
+
+  function handleCloseModal() {
+    setIsFormModalOpen(false)
+    setEditingCoupon(null)
+  }
+
+  function handleCouponSuccess(coupon: Coupon) {
+    if (editingCoupon) {
+      // Update existing coupon in list
+      setCoupons((prev) => prev.map((c) => (c.id === coupon.id ? coupon : c)))
+    } else {
+      // Add new coupon to list
+      setCoupons((prev) => [coupon, ...prev])
+    }
+  }
+
   // ==========================================================================
   // STATS
   // ==========================================================================
@@ -238,9 +268,7 @@ export default function AdminCoupons() {
         </div>
         <button
           type="button"
-          onClick={() => {
-            /* TODO: Open create modal */
-          }}
+          onClick={handleOpenCreateModal}
           className="px-6 py-2.5 text-white bg-gradient-to-r from-[#8B6F47] to-[#D4A574] rounded-lg hover:from-[#6B5844] hover:to-[#8B6F47] transition-colors font-medium"
         >
           + Crear Cupón
@@ -471,9 +499,7 @@ export default function AdminCoupons() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => {
-                              /* TODO: Open edit modal */
-                            }}
+                            onClick={() => handleOpenEditModal(coupon)}
                             className="px-3 py-1 text-sm font-medium text-[#8B6F47] bg-[#F5E6D3] rounded-lg hover:bg-[#D4A574]/30 transition-colors"
                             title="Editar"
                           >
@@ -497,6 +523,14 @@ export default function AdminCoupons() {
           )}
         </div>
       )}
+
+      {/* Modal */}
+      <CouponFormModal
+        coupon={editingCoupon}
+        isOpen={isFormModalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handleCouponSuccess}
+      />
     </div>
   )
 }
