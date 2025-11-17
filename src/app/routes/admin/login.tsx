@@ -122,7 +122,7 @@ export default function AdminLogin() {
                     : 'border-[#D4A574]/30 bg-white'
                   }
                 `}
-                placeholder="admin@sondenudos.com"
+                placeholder="tu@email.com"
               />
               {errors.email && (
                 <p className="mt-1.5 text-sm text-red-600">
@@ -184,19 +184,6 @@ export default function AdminLogin() {
               )}
             </button>
           </form>
-
-          {/* Credenciales de prueba (solo desarrollo) */}
-          {import.meta.env.DEV && (
-            <div className="mt-6 p-4 bg-[#F5E6D3] rounded-lg border border-[#D4A574]/30">
-              <p className="text-xs font-medium text-[#8B6F47] mb-2">
-                Credenciales de prueba:
-              </p>
-              <p className="text-xs text-[#6B5844] font-mono">
-                admin@sondenudos.com
-              </p>
-              <p className="text-xs text-[#6B5844] font-mono">[REDACTED]</p>
-            </div>
-          )}
         </div>
 
         {/* Footer */}
