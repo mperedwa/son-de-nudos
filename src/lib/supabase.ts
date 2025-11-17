@@ -190,7 +190,16 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('[Supabase] VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set in .env')
+  const errorMsg = '[Supabase] VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set in .env'
+  console.error(errorMsg)
+
+  // En producción, fallar inmediatamente si faltan variables críticas
+  if (import.meta.env.PROD) {
+    throw new Error(errorMsg + ' - Cannot initialize Supabase client in production without credentials')
+  }
+
+  // En desarrollo, solo advertir
+  console.warn('[Supabase] Running in development mode without proper credentials. Features may not work.')
 }
 
 // ==============================================================================

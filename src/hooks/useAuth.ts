@@ -52,6 +52,12 @@ export function useAuth(): UseAuthReturn {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
+        // Timeout de seguridad - forzar loading=false después de 5 segundos
+        const timeoutId = setTimeout(() => {
+          console.warn('[useAuth] Timeout de 5s alcanzado - forzando loading = false')
+          setLoading(false)
+        }, 5000)
+
         // Obtener sesión actual
         const { data: { session } } = await supabase.auth.getSession()
 
@@ -62,6 +68,9 @@ export function useAuth(): UseAuthReturn {
           const admin = await checkAdminStatus(session.user.id)
           setAdminData(admin)
         }
+
+        // Limpiar timeout si todo fue exitoso
+        clearTimeout(timeoutId)
       } catch (err) {
         console.error('Error inicializando auth:', err)
         setError('Error al inicializar autenticación')
@@ -75,20 +84,36 @@ export function useAuth(): UseAuthReturn {
     // Escuchar cambios de autenticación
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event)
+        console.log('[useAuth] Auth state changed:', event, session?.user?.id || 'no user')
 
-        // Solo procesar eventos relevantes para evitar re-renders innecesarios
+        // Procesar TODOS los eventos para asegurar que loading se actualice
         if (event === 'SIGNED_IN' && session?.user) {
+          console.log('[useAuth] Procesando SIGNED_IN')
           setUser(session.user)
           const admin = await checkAdminStatus(session.user.id)
           setAdminData(admin)
           setLoading(false)
         } else if (event === 'SIGNED_OUT') {
+          console.log('[useAuth] Procesando SIGNED_OUT')
           setUser(null)
           setAdminData(null)
           setLoading(false)
+        } else if (event === 'INITIAL_SESSION') {
+          console.log('[useAuth] Procesando INITIAL_SESSION')
+          // Ya procesado en initializeAuth, solo asegurar loading=false
+          setLoading(false)
+        } else if (event === 'TOKEN_REFRESHED') {
+          console.log('[useAuth] Procesando TOKEN_REFRESHED')
+          // Token refrescado, mantener usuario actual
+          if (session?.user) {
+            setUser(session.user)
+          }
+          setLoading(false)
+        } else {
+          // Cualquier otro evento desconocido - asegurar que loading se detenga
+          console.log('[useAuth] Evento desconocido, asegurando loading = false')
+          setLoading(false)
         }
-        // Ignorar INITIAL_SESSION, TOKEN_REFRESHED y otros eventos
       }
     )
 
