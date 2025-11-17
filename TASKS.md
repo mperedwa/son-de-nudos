@@ -87,4 +87,46 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar sitio en producción	Deployment verificado con estado "Ready", configuración automática de Vite detectada correctamente, protección de acceso activada por defecto	2025-11-16
 ✅	Actualizar documentación con URLs	README.md actualizado con URLs de GitHub y Vercel, sección de deployment expandida con CI/CD, instrucciones para desactivar protección	2025-11-16
 
+Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (Inicio: 16-Nov-2025)
+
+Estado	Tarea	Criterios de aceptación	Fecha objetivo
+✅	Verificar/instalar Supabase CLI	Supabase CLI v2.48.3+ instalado y funcionando, comando supabase --version ejecuta correctamente	2025-11-16
+✅	Inicializar proyecto Supabase	Comando supabase init ejecutado, carpeta supabase/ creada con config.toml, estructura de migraciones lista	2025-11-16
+✅	Crear schema SQL completo	Archivo supabase/migrations/20251116000000_initial_schema.sql creado con 7 tablas (products, variants, coupons, orders, admins, shipping_config, stock_history), constraints, índices y triggers funcionando	2025-11-16
+✅	Configurar Row Level Security (RLS)	Políticas RLS creadas para todas las tablas: lectura pública para productos/variants/coupons, escritura solo admins autenticados, orders solo admins	2025-11-16
+✅	Crear seed data inicial	Archivo supabase/seed.sql con 4 cupones iniciales (WELCOME10, PRISCILLA15, VERANO20, NAVIDAD25) y usuario admin@sondenudos.com con password hasheado	2025-11-16
+✅	Instalar SDK de Supabase	@supabase/supabase-js instalado vía npm, dependencia añadida a package.json, types disponibles	2025-11-16
+✅	Crear cliente TypeScript de Supabase	Archivo src/lib/supabase.ts creado con tipos Database completos para 7 tablas, helpers (isAuthenticated, getCurrentUser, signOut), subscriptions real-time para stock y orders	2025-11-16
+✅	Actualizar variables de entorno	.env.example actualizado con VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY documentados	2025-11-16
+✅	Documentar arquitectura en PLANNING.md	Sección 5.1 Fase 11 añadida con stack completo, descripción de 7 tablas, triggers, RLS, cliente Supabase, migración y admin panel routes	2025-11-16
+✅	Crear proyecto Supabase remoto	Proyecto creado en https://supabase.com/dashboard con ID mxpmbzdenlelrlcwmjmg, región seleccionada, credenciales obtenidas	2025-11-16
+✅	Linkear proyecto local con remoto	Comando supabase link ejecutado exitosamente con project-id mxpmbzdenlelrlcwmjmg, proyecto local conectado a instancia remota	2025-11-16
+✅	Corregir error UUID en schema	Reemplazado uuid_generate_v4() con gen_random_uuid() (compatible con pgcrypto), eliminada extensión uuid-ossp innecesaria	2025-11-16
+✅	Push de schema a Supabase	Comando supabase db push ejecutado sin errores, 7 tablas creadas en base remota, triggers y RLS activos, seed.sql aplicado con 4 cupones y usuario admin	2025-11-16
+✅	Configurar archivo .env	Variables VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY y SUPABASE_SERVICE_ROLE_KEY configuradas, credenciales obtenidas con supabase projects api-keys	2025-11-16
+✅	Crear script de migración de datos	Archivo scripts/migrate-to-supabase.ts creado con soporte dry-run, verbose logging, validación de env vars, manejo de errores por producto, instalado dotenv para cargar .env	2025-11-16
+✅	Ejecutar migración de productos	Script ejecutado exitosamente, 20 productos migrados con 67 variantes, dry-run previo verificado, datos insertados en PostgreSQL correctamente	2025-11-16
+✅	Configurar Supabase Auth	Supabase Auth nativo integrado, funciona automáticamente con el proyecto, configuración lista para email/password	2025-11-16
+✅	Crear hook de autenticación	Hook useAuth() creado en src/hooks/useAuth.ts con login, logout, user state, isAdmin check, persistencia de sesión, verificación contra tabla admins	2025-11-16
+✅	Implementar página /admin/login	Página login creada con React Hook Form + Zod, validación completa, manejo de errores, redirect a /admin/dashboard, credenciales de prueba en desarrollo	2025-11-16
+✅	Crear componente ProtectedRoute	Componente creado que verifica autenticación con useAuth, redirect a /admin/login si no autenticado, muestra loading mientras verifica sesión	2025-11-16
+✅	Implementar AdminLayout	Layout creado con sidebar izquierdo navegable (6 secciones), header con usuario y logout, responsive con overlay móvil, paleta tierra	2025-11-16
+✅	Crear página /admin/dashboard	Dashboard funcional con 3 cards de métricas (productos, pedidos, ingresos), alerta de stock bajo, tabla de pedidos recientes con badges de status, queries a Supabase	2025-11-16
+⏳	Implementar CRUD de productos - Listar	Tabla de productos con columnas: imagen, título, precio, stock total, disponibilidad, acciones (editar/eliminar), búsqueda, filtros, paginación	2025-11-22
+⏳	Implementar CRUD de productos - Crear	Formulario para nuevo producto: título, handle auto-generado, descripción WYSIWYG, precio, compare_at_price, tags, imágenes (hasta 4), validación completa	2025-11-23
+⏳	Implementar CRUD de productos - Editar	Formulario prellenado con datos del producto, actualización en Supabase, manejo de imágenes existentes/nuevas, validación	2025-11-23
+⏳	Implementar CRUD de variantes	Gestión de variantes dentro de producto: agregar/editar/eliminar variantes, opciones dinámicas (Largo, Material, Color), stock individual, SKU único, precio por variante	2025-11-24
+⏳	Implementar upload de imágenes	Integración con Supabase Storage, bucket public/products creado, upload con resize automático, preview, eliminar imágenes, CDN URLs	2025-11-25
+⏳	Implementar gestión de inventario	Página /admin/inventory con tabla de todas las variantes, filtro por stock bajo, edición rápida de stock, registro en stock_history, alertas de stock crítico	2025-11-26
+⏳	Implementar real-time updates de stock	Subscripción real-time a cambios de stock, actualización automática de UI sin refresh, notificaciones cuando stock llega a mínimo	2025-11-26
+⏳	Implementar CRUD de cupones - Listar	Tabla de cupones con código, descuento %, mínimo, usos actuales/máximos, fechas validez, estado activo/inactivo, acciones	2025-11-27
+⏳	Implementar CRUD de cupones - Crear/Editar	Formulario de cupón: código único, porcentaje (1-100), monto mínimo opcional, usos máximos opcional, fechas de validez, toggle activo, validación de dates y percent	2025-11-27
+⏳	Implementar vista de pedidos	Tabla de pedidos con: ID, fecha, cliente, email, items, total, status, filtros por status/fecha, búsqueda por email, paginación	2025-11-28
+⏳	Implementar detalle de pedido	Modal/página con información completa: items con imágenes, dirección de envío, totales desglosados, timeline de status, botón para cambiar status	2025-11-28
+⏳	Implementar configuración de envío	Página /admin/settings con formulario editable: costo de envío estándar, umbral de envío gratis, moneda, actualización en shipping_config table	2025-11-29
+⏳	Crear webhook de Stripe para guardar pedidos	Endpoint /api/webhooks/stripe que escucha checkout.session.completed, crea order en Supabase con items, customer_email, shipping_address, amounts	2025-11-30
+⏳	Implementar histórico de cambios de stock	Vista en /admin/inventory/history mostrando tabla de stock_history: variante, cambio, razón, stock anterior/nuevo, admin que lo hizo, fecha	2025-11-30
+⏳	Añadir tests E2E del admin panel	Tests con Playwright: login, crear producto, editar stock, crear cupón, ver pedidos, verificar RLS funciona correctamente	2025-12-01
+⏳	Documentar admin panel en README	Sección en README con: cómo acceder (/admin/login), credenciales default, funcionalidades disponibles, cómo crear usuarios admin adicionales	2025-12-01
+
 ⸻

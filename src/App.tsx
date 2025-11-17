@@ -6,20 +6,88 @@ import CheckoutPage from './app/routes/checkout'
 import SuccessPage from './app/routes/success'
 import CancelPage from './app/routes/cancel'
 
+// Admin imports
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { AdminLayout } from './components/AdminLayout'
+import AdminLogin from './app/routes/admin/login'
+import AdminDashboard from './app/routes/admin/dashboard'
+
 /**
  * Configuración principal de rutas
  * Usa React Router v6 con layout compartido
+ *
+ * Estructura:
+ * - / → Tienda pública (RootLayout)
+ * - /admin/login → Login público
+ * - /admin/* → Panel admin protegido (AdminLayout)
  */
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Rutas públicas de la tienda */}
         <Route path="/" element={<RootLayout />}>
           <Route index element={<CollectionPage />} />
           <Route path="product/:handle" element={<ProductPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="success" element={<SuccessPage />} />
           <Route path="cancel" element={<CancelPage />} />
+        </Route>
+
+        {/* Login del admin (público) */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* Panel de administración (protegido) */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+          {/* Placeholder routes - se implementarán en siguientes fases */}
+          <Route
+            path="products"
+            element={
+              <div className="p-8 text-center text-[#6B5844]">
+                Gestión de productos - Próximamente
+              </div>
+            }
+          />
+          <Route
+            path="orders"
+            element={
+              <div className="p-8 text-center text-[#6B5844]">
+                Gestión de pedidos - Próximamente
+              </div>
+            }
+          />
+          <Route
+            path="coupons"
+            element={
+              <div className="p-8 text-center text-[#6B5844]">
+                Gestión de cupones - Próximamente
+              </div>
+            }
+          />
+          <Route
+            path="inventory"
+            element={
+              <div className="p-8 text-center text-[#6B5844]">
+                Gestión de inventario - Próximamente
+              </div>
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <div className="p-8 text-center text-[#6B5844]">
+                Configuración - Próximamente
+              </div>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

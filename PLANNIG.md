@@ -203,8 +203,74 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	Roadmap futuro
 	•	Integración con email marketing para newsletter.
 	•	Sistema de cuentas de usuario y wishlist.
-	•	Panel básico de administración.
+	•	✅ Panel básico de administración (Fase 11 - EN DESARROLLO).
 	•	Analítica avanzada con panel de métricas.
+
+5.1 Fase 11: Panel de Administración con Supabase (EN DESARROLLO)
+
+**Stack Backend:**
+	•	Supabase PostgreSQL: Base de datos relacional con Row Level Security
+	•	Supabase Auth: Autenticación de administradores
+	•	Supabase Storage: Almacenamiento de imágenes con CDN
+	•	Supabase Realtime: Updates en vivo de inventario
+
+**Arquitectura de Base de Datos:**
+
+7 tablas principales:
+	1.	products: Productos (collares) con datos base
+	•	id, handle, title, description_html, images[], price, compare_at_price
+	•	tags[], available_for_sale, created_at, updated_at
+	2.	variants: Variantes con opciones (Largo, Material, Color)
+	•	id, product_id, title, sku, price, compare_at_price
+	•	available, stock, options (JSONB), image
+	3.	coupons: Cupones dinámicos con validación
+	•	id, code, percent, min_amount, max_uses, current_uses
+	•	valid_from, valid_until, active
+	4.	orders: Pedidos guardados desde Stripe webhook
+	•	id, stripe_session_id, customer_email, customer_name
+	•	shipping_address (JSONB), items (JSONB)
+	•	subtotal, discount, shipping, total, status
+	5.	admins: Usuarios administradores
+	•	id, email, password_hash, name, role
+	•	active, last_login_at
+	6.	shipping_config: Configuración de envío editable
+	•	id, standard_cost, free_shipping_threshold, currency
+	7.	stock_history: Histórico de movimientos de inventario
+	•	id, variant_id, change, reason, previous_stock, new_stock
+	•	admin_id, created_at
+
+**Funcionalidades Triggers:**
+	•	updated_at automático en todas las tablas
+	•	Log automático de cambios de stock
+
+**Row Level Security (RLS):**
+	•	Productos y variantes: Lectura pública, escritura solo admins
+	•	Cupones: Lectura pública (solo activos), escritura solo admins
+	•	Pedidos: Solo admins
+	•	Shipping config: Lectura pública, escritura solo admins
+
+**Cliente Supabase (src/lib/supabase.ts):**
+	•	Cliente TypeScript con tipos auto-generados
+	•	Helpers: isAuthenticated(), getCurrentUser(), signOut()
+	•	Real-time subscriptions:
+	•	subscribeToStockChanges(variantId, callback)
+	•	subscribeToNewOrders(callback)
+
+**Migración de Datos:**
+	•	Script TypeScript (scripts/migrate-to-supabase.ts)
+	•	Lee products.json actual
+	•	Transforma a formato Supabase
+	•	Inserta 20 productos + variantes con stock inicial
+
+**Admin Panel (Próximo):**
+	•	/admin/login - Autenticación con Supabase Auth
+	•	/admin/dashboard - Dashboard con métricas
+	•	/admin/products - CRUD de productos
+	•	/admin/orders - Gestión de pedidos
+	•	/admin/coupons - Gestión de cupones
+	•	/admin/settings - Configuración de envío
+
+**Costo:** $0/mes (tier gratuito hasta ~100 productos, 500 pedidos/mes)
 
 6. Calidad, observabilidad y DevEx
 	•	Pruebas
