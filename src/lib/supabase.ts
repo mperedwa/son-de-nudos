@@ -98,8 +98,22 @@ export type Database = {
           updated_at: string
           last_login_at: string | null
         }
-        Insert: Omit<Database['public']['Tables']['admins']['Row'], 'id' | 'created_at' | 'updated_at' | 'last_login_at'>
-        Update: Partial<Database['public']['Tables']['admins']['Insert']>
+        Insert: {
+          id?: string
+          email: string
+          password_hash?: string | null
+          name: string
+          role: 'admin' | 'superadmin'
+          active?: boolean
+        }
+        Update: {
+          email?: string
+          password_hash?: string | null
+          name?: string
+          role?: 'admin' | 'superadmin'
+          active?: boolean
+          last_login_at?: string | null
+        }
       }
       shipping_config: {
         Row: {
