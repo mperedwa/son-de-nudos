@@ -206,13 +206,90 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	✅ Panel básico de administración (Fase 11 - EN DESARROLLO).
 	•	Analítica avanzada con panel de métricas.
 
-5.1 Fase 11: Panel de Administración con Supabase (EN DESARROLLO)
+5.1 Fase 11: Panel de Administración con Supabase ✅ PARCIALMENTE COMPLETADO (54%)
 
-**Stack Backend:**
-	•	Supabase PostgreSQL: Base de datos relacional con Row Level Security
-	•	Supabase Auth: Autenticación de administradores
-	•	Supabase Storage: Almacenamiento de imágenes con CDN
-	•	Supabase Realtime: Updates en vivo de inventario
+**Estado de Implementación:**
+
+✅ **Backend Completo:**
+	•	Supabase PostgreSQL: 7 tablas + triggers + RLS configurados
+	•	Supabase Auth: Sistema de autenticación de admins funcional
+	•	Supabase Storage: Bucket `product-images` con RLS policies activas
+	•	Migraciones aplicadas: 20 productos + 67 variantes migrados exitosamente
+
+✅ **Autenticación y Seguridad:**
+	•	Login de administradores (/admin/login)
+	•	Protección de rutas con ProtectedRoute
+	•	Hook useAuth() con verificación de rol admin
+	•	RLS activo en todas las tablas
+	•	Persistencia de sesión
+
+✅ **Panel de Administración Base:**
+	•	AdminLayout con sidebar responsive (7 secciones navegables)
+	•	Dashboard con métricas en tiempo real (productos, pedidos, ingresos)
+	•	Página de perfil (/admin/profile) con cambio de contraseña seguro
+
+✅ **CRUD de Productos COMPLETO:**
+	•	Listar productos: búsqueda por título/handle, filtro por disponibilidad
+	•	Crear productos con validación completa (React Hook Form + Zod)
+	•	Editar productos existentes con prellenado
+	•	Clonar productos (duplicar con sufijo)
+	•	Eliminar productos con confirmación y cleanup de Storage
+	•	MultiImageUploader integrado (hasta 4 imágenes por producto):
+		- Drag & drop de archivos
+		- Reordenamiento visual con botones ▲/▼
+		- Preview en tiempo real
+		- Badge "Principal" en primera imagen
+		- Validación de tipo (JPG/PNG/WebP) y tamaño (max 5MB)
+		- Progress bar durante upload múltiple
+		- Cleanup en errores
+
+✅ **CRUD de Variantes COMPLETO:**
+	•	Gestión anidada dentro de productos (tabla expandible)
+	•	Crear, editar, clonar y eliminar variantes
+	•	Campos completos: title, sku (único), price, compare_at_price, stock, available
+	•	Opciones dinámicas en JSONB (Largo, Material, Color)
+	•	ImageUploader individual por variante (opcional):
+		- Drag & drop single file
+		- Preview de imagen actual
+		- Estados de loading y error
+		- Reemplazo con cleanup automático
+	•	Validación: SKU único (regex: A-Z0-9-), stock numérico entero
+
+✅ **Sistema de Storage (Supabase):**
+	•	Bucket público `product-images` configurado
+	•	Estructura: products/{handle}/ y variants/{sku}/
+	•	Helpers en lib/storage.ts:
+		- uploadImage(): upload con nombres UUID
+		- deleteImage(): eliminación por URL
+		- deleteFolder(): batch delete de carpetas
+		- validateImageFile(): validación client-side
+	•	RLS Policies:
+		- Lectura pública (todos pueden ver imágenes)
+		- Escritura solo para usuarios autenticados (admins)
+	•	Cleanup automático: al eliminar productos/variantes se eliminan sus imágenes
+	•	URLs públicas con CDN de Supabase
+
+⏳ **Pendientes del Hito 11:**
+	•	Gestión de Inventario (/admin/inventory) - Vista consolidada de stock
+	•	Real-time updates de stock con subscripciones
+	•	CRUD de Cupones (crear, editar, listar, activar/desactivar)
+	•	Vista de Pedidos (tabla con filtros, detalle individual)
+	•	Detalle de pedido con timeline de estados
+	•	Configuración de envío (/admin/settings)
+	•	Webhook de Stripe para guardar pedidos en orders
+	•	Histórico de cambios de stock (stock_history)
+	•	Tests E2E del admin panel
+
+**Componentes Implementados:**
+	•	src/app/routes/admin/products.tsx (1053 líneas) - CRUD completo
+	•	src/app/routes/admin/profile.tsx (321 líneas) - Perfil y contraseña
+	•	src/components/admin/MultiImageUploader.tsx (326 líneas) - Gallery uploader
+	•	src/components/admin/ImageUploader.tsx (288 líneas) - Single image uploader
+	•	src/lib/storage.ts (227 líneas) - Storage helpers
+
+**Migraciones SQL:**
+	•	supabase/migrations/20251116000000_initial_schema.sql - Schema completo
+	•	supabase/migrations/20251117000000_setup_storage.sql - Storage bucket + policies
 
 **Arquitectura de Base de Datos:**
 
@@ -248,29 +325,32 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	Cupones: Lectura pública (solo activos), escritura solo admins
 	•	Pedidos: Solo admins
 	•	Shipping config: Lectura pública, escritura solo admins
+	•	Storage: Lectura pública, upload/update/delete solo admins
 
 **Cliente Supabase (src/lib/supabase.ts):**
 	•	Cliente TypeScript con tipos auto-generados
 	•	Helpers: isAuthenticated(), getCurrentUser(), signOut()
-	•	Real-time subscriptions:
-	•	subscribeToStockChanges(variantId, callback)
-	•	subscribeToNewOrders(callback)
+	•	Real-time subscriptions (preparados):
+		- subscribeToStockChanges(variantId, callback)
+		- subscribeToNewOrders(callback)
 
 **Migración de Datos:**
 	•	Script TypeScript (scripts/migrate-to-supabase.ts)
 	•	Lee products.json actual
 	•	Transforma a formato Supabase
-	•	Inserta 20 productos + variantes con stock inicial
+	•	Insertados: 20 productos + 67 variantes con stock inicial
 
-**Admin Panel (Próximo):**
-	•	/admin/login - Autenticación con Supabase Auth
-	•	/admin/dashboard - Dashboard con métricas
-	•	/admin/products - CRUD de productos
-	•	/admin/orders - Gestión de pedidos
-	•	/admin/coupons - Gestión de cupones
-	•	/admin/settings - Configuración de envío
+**Rutas Admin Implementadas:**
+	•	/admin/login - Autenticación con Supabase Auth ✅
+	•	/admin/dashboard - Dashboard con métricas ✅
+	•	/admin/profile - Perfil y cambio de contraseña ✅
+	•	/admin/products - CRUD de productos y variantes ✅
+	•	/admin/orders - Gestión de pedidos ⏳
+	•	/admin/coupons - Gestión de cupones ⏳
+	•	/admin/inventory - Control de inventario ⏳
+	•	/admin/settings - Configuración de envío ⏳
 
-**Costo:** $0/mes (tier gratuito hasta ~100 productos, 500 pedidos/mes)
+**Costo:** $0/mes (tier gratuito Supabase: 500MB database, 1GB storage, 2GB bandwidth)
 
 6. Calidad, observabilidad y DevEx
 	•	Pruebas

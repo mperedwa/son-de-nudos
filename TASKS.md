@@ -87,7 +87,7 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar sitio en producción	Deployment verificado con estado "Ready", configuración automática de Vite detectada correctamente, protección de acceso activada por defecto	2025-11-16
 ✅	Actualizar documentación con URLs	README.md actualizado con URLs de GitHub y Vercel, sección de deployment expandida con CI/CD, instrucciones para desactivar protección	2025-11-16
 
-Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (Inicio: 16-Nov-2025)
+Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (54% completado - Inicio: 16-Nov-2025)
 
 Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar/instalar Supabase CLI	Supabase CLI v2.48.3+ instalado y funcionando, comando supabase --version ejecuta correctamente	2025-11-16
@@ -112,11 +112,13 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Crear componente ProtectedRoute	Componente creado que verifica autenticación con useAuth, redirect a /admin/login si no autenticado, muestra loading mientras verifica sesión	2025-11-16
 ✅	Implementar AdminLayout	Layout creado con sidebar izquierdo navegable (6 secciones), header con usuario y logout, responsive con overlay móvil, paleta tierra	2025-11-16
 ✅	Crear página /admin/dashboard	Dashboard funcional con 3 cards de métricas (productos, pedidos, ingresos), alerta de stock bajo, tabla de pedidos recientes con badges de status, queries a Supabase	2025-11-16
-⏳	Implementar CRUD de productos - Listar	Tabla de productos con columnas: imagen, título, precio, stock total, disponibilidad, acciones (editar/eliminar), búsqueda, filtros, paginación	2025-11-22
-⏳	Implementar CRUD de productos - Crear	Formulario para nuevo producto: título, handle auto-generado, descripción WYSIWYG, precio, compare_at_price, tags, imágenes (hasta 4), validación completa	2025-11-23
-⏳	Implementar CRUD de productos - Editar	Formulario prellenado con datos del producto, actualización en Supabase, manejo de imágenes existentes/nuevas, validación	2025-11-23
-⏳	Implementar CRUD de variantes	Gestión de variantes dentro de producto: agregar/editar/eliminar variantes, opciones dinámicas (Largo, Material, Color), stock individual, SKU único, precio por variante	2025-11-24
-⏳	Implementar upload de imágenes	Integración con Supabase Storage, bucket public/products creado, upload con resize automático, preview, eliminar imágenes, CDN URLs	2025-11-25
+✅	Implementar CRUD de productos - Listar	Tabla de productos con columnas: imagen, título, handle, precio, estado, acciones (editar/clonar/eliminar), búsqueda por título/handle, filtro por disponibilidad, contador de variantes expandible por producto	2025-11-17
+✅	Implementar CRUD de productos - Crear	Formulario completo: título, handle auto-generado desde título, descripción HTML, precio, compare_at_price, MultiImageUploader (hasta 4 imágenes con drag&drop y reordenamiento), toggle disponibilidad, validación con Zod	2025-11-17
+✅	Implementar CRUD de productos - Editar	Formulario prellenado con datos del producto, actualización en Supabase, manejo de imágenes existentes/nuevas con MultiImageUploader, validación completa	2025-11-17
+✅	Implementar funcionalidad de Clonar producto	Modal de clonación que duplica producto con sufijo "(Copia)" en título y "-copy" en handle, copia todas las imágenes y datos, permite edición antes de guardar	2025-11-17
+✅	Implementar CRUD de variantes	Gestión completa anidada dentro de productos: tabla expandible por producto, crear/editar/clonar/eliminar variantes, campos title/sku/price/compare_at_price/stock/available, ImageUploader individual, validación SKU único, opciones dinámicas en JSONB	2025-11-17
+✅	Implementar upload de imágenes	Integración completa con Supabase Storage: bucket "product-images" público creado, MultiImageUploader para productos (4 imgs max, drag&drop, reordenamiento), ImageUploader para variantes (1 img), validación JPG/PNG/WebP max 5MB, preview en tiempo real, cleanup automático al eliminar, URLs públicas CDN	2025-11-17
+✅	Implementar página de perfil de admin	Página /admin/profile con información del usuario (nombre, email, rol, estado), formulario de cambio de contraseña con validación (mínimo 8 caracteres, confirmación, diferente a actual), verificación de contraseña actual antes de actualizar, mensajes de éxito/error	2025-11-17
 ⏳	Implementar gestión de inventario	Página /admin/inventory con tabla de todas las variantes, filtro por stock bajo, edición rápida de stock, registro en stock_history, alertas de stock crítico	2025-11-26
 ⏳	Implementar real-time updates de stock	Subscripción real-time a cambios de stock, actualización automática de UI sin refresh, notificaciones cuando stock llega a mínimo	2025-11-26
 ⏳	Implementar CRUD de cupones - Listar	Tabla de cupones con código, descuento %, mínimo, usos actuales/máximos, fechas validez, estado activo/inactivo, acciones	2025-11-27
