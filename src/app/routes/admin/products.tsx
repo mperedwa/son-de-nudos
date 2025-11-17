@@ -43,6 +43,7 @@ export default function ProductsPage() {
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
+  const [cloningProduct, setCloningProduct] = useState<Product | null>(null)
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null)
 
   // Fetch products
@@ -90,6 +91,10 @@ export default function ProductsPage() {
     setEditingProduct(product)
   }
 
+  function handleCloneClick(product: Product) {
+    setCloningProduct(product)
+  }
+
   function handleDeleteClick(product: Product) {
     setDeletingProduct(product)
   }
@@ -97,6 +102,7 @@ export default function ProductsPage() {
   function handleCloseModals() {
     setIsCreateModalOpen(false)
     setEditingProduct(null)
+    setCloningProduct(null)
     setDeletingProduct(null)
   }
 
@@ -185,6 +191,7 @@ export default function ProductsPage() {
           <ProductsTable
             products={filteredProducts}
             onEdit={handleEditClick}
+            onClone={handleCloneClick}
             onDelete={handleDeleteClick}
           />
         </div>
@@ -208,6 +215,15 @@ export default function ProductsPage() {
         />
       )}
 
+      {cloningProduct && (
+        <ProductFormModal
+          mode="clone"
+          product={cloningProduct}
+          onClose={handleCloseModals}
+          onSave={handleProductSaved}
+        />
+      )}
+
       {deletingProduct && (
         <DeleteConfirmModal
           product={deletingProduct}
@@ -226,10 +242,11 @@ export default function ProductsPage() {
 interface ProductsTableProps {
   products: Product[]
   onEdit: (product: Product) => void
+  onClone: (product: Product) => void
   onDelete: (product: Product) => void
 }
 
-function ProductsTable({ products, onEdit, onDelete }: ProductsTableProps) {
+function ProductsTable({ products, onEdit, onClone, onDelete }: ProductsTableProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -258,6 +275,7 @@ function ProductsTable({ products, onEdit, onDelete }: ProductsTableProps) {
               key={product.id}
               product={product}
               onEdit={() => onEdit(product)}
+              onClone={() => onClone(product)}
               onDelete={() => onDelete(product)}
             />
           ))}
@@ -274,10 +292,11 @@ function ProductsTable({ products, onEdit, onDelete }: ProductsTableProps) {
 interface ProductRowProps {
   product: Product
   onEdit: () => void
+  onClone: () => void
   onDelete: () => void
 }
 
-function ProductRow({ product, onEdit, onDelete }: ProductRowProps) {
+function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
   const firstImage = product.images?.[0]
 
   return (
@@ -345,6 +364,13 @@ function ProductRow({ product, onEdit, onDelete }: ProductRowProps) {
             ✏️
           </button>
           <button
+            onClick={onClone}
+            className="p-2 text-[#8B6F47] hover:bg-[#F5E6D3] rounded-lg transition-colors"
+            title="Clonar"
+          >
+            📋
+          </button>
+          <button
             onClick={onDelete}
             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             title="Eliminar"
@@ -362,7 +388,7 @@ function ProductRow({ product, onEdit, onDelete }: ProductRowProps) {
 // ============================================================================
 
 interface ProductFormModalProps {
-  mode: 'create' | 'edit'
+  mode: 'create' | 'edit' | 'clone'
   product?: Product
   onClose: () => void
   onSave: () => void
@@ -381,16 +407,27 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: product
-      ? {
-          title: product.title,
-          handle: product.handle,
-          description_html: product.description_html,
-          price: product.price,
-          compare_at_price: product.compare_at_price,
-          tags: product.tags,
-          images: product.images,
-          available_for_sale: product.available_for_sale,
-        }
+      ? mode === 'clone'
+        ? {
+            title: `${product.title} (Copia)`,
+            handle: `${product.handle}-copy`,
+            description_html: product.description_html,
+            price: product.price,
+            compare_at_price: product.compare_at_price,
+            tags: product.tags,
+            images: product.images,
+            available_for_sale: product.available_for_sale,
+          }
+        : {
+            title: product.title,
+            handle: product.handle,
+            description_html: product.description_html,
+            price: product.price,
+            compare_at_price: product.compare_at_price,
+            tags: product.tags,
+            images: product.images,
+            available_for_sale: product.available_for_sale,
+          }
       : {
           title: '',
           handle: '',
@@ -405,7 +442,7 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
 
   const title = watch('title')
 
-  // Auto-generate handle from title
+  // Auto-generate handle from title (only for create mode)
   useEffect(() => {
     if (mode === 'create' && title) {
       const handle = title
@@ -423,12 +460,14 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
     setError(null)
 
     try {
-      if (mode === 'create') {
+      if (mode === 'create' || mode === 'clone') {
+        // @ts-expect-error - Supabase generated types have circular references
         const { error: insertError } = await supabase.from('products').insert(data as ProductInsert)
         if (insertError) throw insertError
       } else {
         const { error: updateError } = await supabase
           .from('products')
+          // @ts-expect-error - Supabase generated types have circular references
           .update(data as ProductUpdate)
           .eq('id', product!.id)
         if (updateError) throw updateError
@@ -448,7 +487,7 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
       <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-[#D4A574]/20">
           <h2 className="text-2xl font-semibold text-[#8B6F47]">
-            {mode === 'create' ? 'Nuevo Producto' : 'Editar Producto'}
+            {mode === 'create' ? 'Nuevo Producto' : mode === 'clone' ? 'Clonar Producto' : 'Editar Producto'}
           </h2>
         </div>
 
@@ -594,7 +633,7 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
                 transition-all duration-200
               "
             >
-              {isSubmitting ? 'Guardando...' : mode === 'create' ? 'Crear Producto' : 'Guardar Cambios'}
+              {isSubmitting ? 'Guardando...' : mode === 'create' ? 'Crear Producto' : mode === 'clone' ? 'Clonar Producto' : 'Guardar Cambios'}
             </button>
           </div>
         </form>
