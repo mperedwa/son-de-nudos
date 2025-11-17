@@ -13,6 +13,8 @@ type Product = Database['public']['Tables']['products']['Row']
 type ProductInsert = Database['public']['Tables']['products']['Insert']
 type ProductUpdate = Database['public']['Tables']['products']['Update']
 
+type Variant = Database['public']['Tables']['variants']['Row']
+
 // ============================================================================
 // VALIDATION SCHEMA
 // ============================================================================
@@ -29,6 +31,19 @@ const productSchema = z.object({
 })
 
 type ProductFormData = z.infer<typeof productSchema>
+
+const variantSchema = z.object({
+  title: z.string().min(1, 'El título es requerido'),
+  sku: z.string().min(1, 'El SKU es requerido').regex(/^[A-Z0-9-]+$/, 'Solo letras mayúsculas, números y guiones'),
+  price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
+  compare_at_price: z.number().nullable(),
+  available: z.boolean(),
+  stock: z.number().int('Debe ser un número entero').min(0, 'El stock debe ser mayor o igual a 0'),
+  options: z.record(z.string(), z.string()),
+  image: z.string(),
+})
+
+type VariantFormData = z.infer<typeof variantSchema>
 
 // ============================================================================
 // MAIN COMPONENT
@@ -298,9 +313,24 @@ interface ProductRowProps {
 
 function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
   const firstImage = product.images?.[0]
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [variantsCount, setVariantsCount] = useState<number | null>(null)
+
+  // Fetch variants count
+  useEffect(() => {
+    async function fetchVariantsCount() {
+      const { count } = await supabase
+        .from('variants')
+        .select('*', { count: 'exact', head: true })
+        .eq('product_id', product.id)
+      setVariantsCount(count)
+    }
+    fetchVariantsCount()
+  }, [product.id])
 
   return (
-    <tr className="hover:bg-[#F5E6D3]/30 transition-colors">
+    <>
+      <tr className="hover:bg-[#F5E6D3]/30 transition-colors">
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           {firstImage ? (
@@ -314,8 +344,20 @@ function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
               <span className="text-2xl">📦</span>
             </div>
           )}
-          <div>
-            <p className="font-medium text-[#8B6F47]">{product.title}</p>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <p className="font-medium text-[#8B6F47]">{product.title}</p>
+              {variantsCount !== null && variantsCount > 0 && (
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-[#D4A574]/20 text-[#8B6F47] hover:bg-[#D4A574]/30 transition-colors"
+                  title={isExpanded ? 'Ocultar variantes' : 'Ver variantes'}
+                >
+                  <span>{variantsCount} {variantsCount === 1 ? 'variante' : 'variantes'}</span>
+                  <span className="text-xs">{isExpanded ? '▼' : '▶'}</span>
+                </button>
+              )}
+            </div>
             <p className="text-sm text-[#6B5844]/60">
               {product.tags.slice(0, 2).join(', ')}
               {product.tags.length > 2 && '...'}
@@ -380,6 +422,240 @@ function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
         </div>
       </td>
     </tr>
+
+    {/* Fila expandible de variantes */}
+    {isExpanded && (
+      <tr>
+        <td colSpan={5} className="p-0 bg-[#F5E6D3]/10">
+          <VariantsSection
+            productId={product.id}
+            productTitle={product.title}
+            productPrice={product.price}
+            onVariantChange={() => {
+              // Re-fetch variants count cuando cambien
+              async function fetchVariantsCount() {
+                const { count } = await supabase
+                  .from('variants')
+                  .select('*', { count: 'exact', head: true })
+                  .eq('product_id', product.id)
+                setVariantsCount(count)
+              }
+              fetchVariantsCount()
+            }}
+          />
+        </td>
+      </tr>
+    )}
+  </>
+  )
+}
+
+// ============================================================================
+// VARIANTS SECTION
+// ============================================================================
+
+interface VariantsSectionProps {
+  productId: string
+  productTitle: string
+  productPrice: number
+  onVariantChange: () => void
+}
+
+function VariantsSection({ productId, productTitle, productPrice, onVariantChange }: VariantsSectionProps) {
+  const [variants, setVariants] = useState<Variant[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Modal states
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+  const [editingVariant, setEditingVariant] = useState<Variant | null>(null)
+  const [cloningVariant, setCloningVariant] = useState<Variant | null>(null)
+  const [deletingVariant, setDeletingVariant] = useState<Variant | null>(null)
+
+  // Fetch variants
+  useEffect(() => {
+    fetchVariants()
+  }, [productId])
+
+  async function fetchVariants() {
+    try {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('variants')
+        .select('*')
+        .eq('product_id', productId)
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+      setVariants(data || [])
+    } catch (error) {
+      console.error('Error fetching variants:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleCloseModals() {
+    setIsCreateModalOpen(false)
+    setEditingVariant(null)
+    setCloningVariant(null)
+    setDeletingVariant(null)
+  }
+
+  async function handleVariantSaved() {
+    await fetchVariants()
+    onVariantChange()
+    handleCloseModals()
+  }
+
+  async function handleVariantDeleted() {
+    await fetchVariants()
+    onVariantChange()
+    handleCloseModals()
+  }
+
+  return (
+    <div className="p-6 border-t border-[#D4A574]/30">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-[#8B6F47]">
+          Variantes de {productTitle}
+        </h3>
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="
+            px-3 py-1.5 rounded-lg text-sm font-medium text-white
+            bg-gradient-to-r from-[#8B6F47] to-[#D4A574]
+            hover:from-[#6B5844] hover:to-[#8B6F47]
+            transition-all duration-200
+            focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:ring-offset-2
+          "
+        >
+          + Nueva Variante
+        </button>
+      </div>
+
+      {/* Variants Table */}
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="w-8 h-8 border-4 border-[#8B6F47] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      ) : variants.length === 0 ? (
+        <div className="text-center py-8 text-[#6B5844]">
+          No hay variantes. ¡Crea la primera!
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-[#F5E6D3]/50">
+              <tr>
+                <th className="px-4 py-2 text-left text-xs font-medium text-[#8B6F47] uppercase">Título</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-[#8B6F47] uppercase">SKU</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-[#8B6F47] uppercase">Precio</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-[#8B6F47] uppercase">Stock</th>
+                <th className="px-4 py-2 text-left text-xs font-medium text-[#8B6F47] uppercase">Estado</th>
+                <th className="px-4 py-2 text-right text-xs font-medium text-[#8B6F47] uppercase">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#D4A574]/20">
+              {variants.map((variant) => (
+                <tr key={variant.id} className="hover:bg-[#F5E6D3]/30 transition-colors">
+                  <td className="px-4 py-3 text-sm text-[#8B6F47]">{variant.title}</td>
+                  <td className="px-4 py-3">
+                    <code className="text-xs text-[#6B5844] bg-[#F5E6D3] px-2 py-1 rounded">{variant.sku}</code>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-[#8B6F47]">
+                    ${variant.price.toFixed(2)}
+                    {variant.compare_at_price && (
+                      <span className="ml-2 text-xs text-[#6B5844]/60 line-through">
+                        ${variant.compare_at_price.toFixed(2)}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`text-sm font-medium ${variant.stock === 0 ? 'text-red-600' : 'text-[#8B6F47]'}`}>
+                      {variant.stock}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                      variant.available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                    }`}>
+                      {variant.available ? 'Disponible' : 'No disponible'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <button
+                        onClick={() => setEditingVariant(variant)}
+                        className="p-1.5 text-[#8B6F47] hover:bg-[#F5E6D3] rounded transition-colors"
+                        title="Editar"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        onClick={() => setCloningVariant(variant)}
+                        className="p-1.5 text-[#8B6F47] hover:bg-[#F5E6D3] rounded transition-colors"
+                        title="Clonar"
+                      >
+                        📋
+                      </button>
+                      <button
+                        onClick={() => setDeletingVariant(variant)}
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        title="Eliminar"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modals */}
+      {isCreateModalOpen && (
+        <VariantFormModal
+          mode="create"
+          productId={productId}
+          defaultPrice={productPrice}
+          onClose={handleCloseModals}
+          onSave={handleVariantSaved}
+        />
+      )}
+
+      {editingVariant && (
+        <VariantFormModal
+          mode="edit"
+          productId={productId}
+          variant={editingVariant}
+          defaultPrice={productPrice}
+          onClose={handleCloseModals}
+          onSave={handleVariantSaved}
+        />
+      )}
+
+      {cloningVariant && (
+        <VariantFormModal
+          mode="clone"
+          productId={productId}
+          variant={cloningVariant}
+          defaultPrice={productPrice}
+          onClose={handleCloseModals}
+          onSave={handleVariantSaved}
+        />
+      )}
+
+      {deletingVariant && (
+        <VariantDeleteModal
+          variant={deletingVariant}
+          onClose={handleCloseModals}
+          onDelete={handleVariantDeleted}
+        />
+      )}
+    </div>
   )
 }
 
@@ -693,6 +969,370 @@ function DeleteConfirmModal({ product, onClose, onDelete }: DeleteConfirmModalPr
         <p className="text-[#6B5844] mb-6">
           Estás a punto de eliminar el producto <strong>{product.title}</strong>.
           Esta acción no se puede deshacer.
+        </p>
+
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            disabled={isDeleting}
+            className="
+              px-4 py-2 rounded-lg font-medium text-[#6B5844]
+              bg-white border-2 border-[#D4A574]/30
+              hover:bg-[#F5E6D3]
+              disabled:opacity-50 disabled:cursor-not-allowed
+              transition-colors
+            "
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleConfirmDelete}
+            disabled={isDeleting}
+            className="
+              px-4 py-2 rounded-lg font-medium text-white
+              bg-gradient-to-r from-red-600 to-red-500
+              hover:from-red-700 hover:to-red-600
+              disabled:opacity-50 disabled:cursor-not-allowed
+              transition-all duration-200
+            "
+          >
+            {isDeleting ? 'Eliminando...' : 'Eliminar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================================
+// VARIANT FORM MODAL
+// ============================================================================
+
+interface VariantFormModalProps {
+  mode: 'create' | 'edit' | 'clone'
+  productId: string
+  variant?: Variant
+  defaultPrice: number
+  onClose: () => void
+  onSave: () => void
+}
+
+function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onSave }: VariantFormModalProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<VariantFormData>({
+    resolver: zodResolver(variantSchema),
+    defaultValues: variant
+      ? mode === 'clone'
+        ? {
+            title: `${variant.title} (Copia)`,
+            sku: `${variant.sku}-COPY`,
+            price: variant.price,
+            compare_at_price: variant.compare_at_price,
+            available: variant.available,
+            stock: variant.stock,
+            options: variant.options,
+            image: variant.image || '',
+          }
+        : {
+            title: variant.title,
+            sku: variant.sku,
+            price: variant.price,
+            compare_at_price: variant.compare_at_price,
+            available: variant.available,
+            stock: variant.stock,
+            options: variant.options,
+            image: variant.image || '',
+          }
+      : {
+          title: '',
+          sku: '',
+          price: defaultPrice,
+          compare_at_price: null,
+          available: true,
+          stock: 0,
+          options: {},
+          image: '',
+        },
+  })
+
+  async function onSubmit(data: VariantFormData) {
+    setIsSubmitting(true)
+    setError(null)
+
+    try {
+      const variantData = {
+        ...data,
+        product_id: productId,
+        image: data.image || null,
+      }
+
+      if (mode === 'create' || mode === 'clone') {
+        // @ts-expect-error - Supabase generated types have circular references
+        const { error: insertError } = await supabase.from('variants').insert(variantData)
+        if (insertError) throw insertError
+      } else {
+        const { error: updateError } = await supabase
+          .from('variants')
+          // @ts-expect-error - Supabase generated types have circular references
+          .update(data)
+          .eq('id', variant!.id)
+        if (updateError) throw updateError
+      }
+
+      onSave()
+    } catch (err) {
+      console.error('Error saving variant:', err)
+      setError(err instanceof Error ? err.message : 'Error al guardar la variante')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-[#D4A574]/20">
+          <h2 className="text-2xl font-semibold text-[#8B6F47]">
+            {mode === 'create' ? 'Nueva Variante' : mode === 'clone' ? 'Clonar Variante' : 'Editar Variante'}
+          </h2>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">
+          {error && (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium text-[#6B5844] mb-2">
+              Título *
+            </label>
+            <input
+              {...register('title')}
+              type="text"
+              className={`
+                w-full px-4 py-2 rounded-lg border-2
+                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                ${errors.title ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
+              `}
+              placeholder="Ej: Talla M - Color Rojo"
+            />
+            {errors.title && (
+              <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+            )}
+          </div>
+
+          {/* SKU */}
+          <div>
+            <label className="block text-sm font-medium text-[#6B5844] mb-2">
+              SKU *
+            </label>
+            <input
+              {...register('sku')}
+              type="text"
+              className={`
+                w-full px-4 py-2 rounded-lg border-2
+                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                ${errors.sku ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
+              `}
+              placeholder="CMB-M-R"
+            />
+            {errors.sku && (
+              <p className="mt-1 text-sm text-red-600">{errors.sku.message}</p>
+            )}
+            <p className="mt-1 text-xs text-[#6B5844]/60">
+              Solo letras mayúsculas, números y guiones
+            </p>
+          </div>
+
+          {/* Price */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Precio *
+              </label>
+              <input
+                {...register('price', { valueAsNumber: true })}
+                type="number"
+                step="0.01"
+                className={`
+                  w-full px-4 py-2 rounded-lg border-2
+                  focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                  ${errors.price ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
+                `}
+                placeholder="0.00"
+              />
+              {errors.price && (
+                <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Precio de comparación
+              </label>
+              <input
+                {...register('compare_at_price', { valueAsNumber: true })}
+                type="number"
+                step="0.01"
+                className="
+                  w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30
+                  focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                "
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          {/* Stock */}
+          <div>
+            <label className="block text-sm font-medium text-[#6B5844] mb-2">
+              Stock *
+            </label>
+            <input
+              {...register('stock', { valueAsNumber: true })}
+              type="number"
+              className={`
+                w-full px-4 py-2 rounded-lg border-2
+                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                ${errors.stock ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
+              `}
+              placeholder="0"
+            />
+            {errors.stock && (
+              <p className="mt-1 text-sm text-red-600">{errors.stock.message}</p>
+            )}
+          </div>
+
+          {/* Image URL */}
+          <div>
+            <label className="block text-sm font-medium text-[#6B5844] mb-2">
+              Imagen (URL)
+            </label>
+            <input
+              {...register('image')}
+              type="text"
+              className="
+                w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30
+                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+              "
+              placeholder="https://..."
+            />
+            {errors.image && (
+              <p className="mt-1 text-sm text-red-600">{errors.image.message}</p>
+            )}
+          </div>
+
+          {/* Available */}
+          <div className="flex items-center gap-2">
+            <input
+              {...register('available')}
+              type="checkbox"
+              id="variant-available"
+              className="w-4 h-4 rounded text-[#8B6F47] focus:ring-[#D4A574]"
+            />
+            <label htmlFor="variant-available" className="text-sm font-medium text-[#6B5844]">
+              Disponible para venta
+            </label>
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 pt-4">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="
+                px-4 py-2 rounded-lg font-medium text-[#6B5844]
+                bg-white border-2 border-[#D4A574]/30
+                hover:bg-[#F5E6D3]
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-colors
+              "
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="
+                px-4 py-2 rounded-lg font-medium text-white
+                bg-gradient-to-r from-[#8B6F47] to-[#D4A574]
+                hover:from-[#6B5844] hover:to-[#8B6F47]
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-200
+              "
+            >
+              {isSubmitting ? 'Guardando...' : mode === 'create' ? 'Crear Variante' : mode === 'clone' ? 'Clonar Variante' : 'Guardar Cambios'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================================
+// VARIANT DELETE MODAL
+// ============================================================================
+
+interface VariantDeleteModalProps {
+  variant: Variant
+  onClose: () => void
+  onDelete: () => void
+}
+
+function VariantDeleteModal({ variant, onClose, onDelete }: VariantDeleteModalProps) {
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleConfirmDelete() {
+    setIsDeleting(true)
+    setError(null)
+
+    try {
+      const { error: deleteError } = await supabase
+        .from('variants')
+        .delete()
+        .eq('id', variant.id)
+
+      if (deleteError) throw deleteError
+
+      onDelete()
+    } catch (err) {
+      console.error('Error deleting variant:', err)
+      setError(err instanceof Error ? err.message : 'Error al eliminar la variante')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+        <h2 className="text-xl font-semibold text-[#8B6F47] mb-4">
+          ¿Eliminar variante?
+        </h2>
+
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+
+        <p className="text-[#6B5844] mb-2">
+          Estás a punto de eliminar la variante <strong>{variant.title}</strong> (SKU: {variant.sku}).
+        </p>
+        <p className="text-sm text-[#6B5844]/60 mb-6">
+          Esta acción eliminará el historial de stock asociado y no se puede deshacer.
         </p>
 
         <div className="flex justify-end gap-3">
