@@ -66,6 +66,7 @@ export function useAuthHook(): UseAuthReturn {
   // Inicializar sesión al cargar
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null
+    let mounted = true // Flag para cancelar operaciones si el componente se desmonta
 
     const initializeAuth = async () => {
       try {
@@ -73,6 +74,7 @@ export function useAuthHook(): UseAuthReturn {
 
         // Timeout de seguridad - forzar loading=false después de 10 segundos
         timeoutId = setTimeout(() => {
+          if (!mounted) return
           console.warn('[useAuth] ⚠️ Timeout de 10s alcanzado - forzando loading = false')
           setLoading(false)
         }, 10000)
@@ -88,12 +90,25 @@ export function useAuthHook(): UseAuthReturn {
 
         console.log('[useAuth] Sesión obtenida:', session?.user?.id || 'no session')
 
+        // Verificar si el componente sigue montado después de la llamada async
+        if (!mounted) {
+          console.log('[useAuth] Componente desmontado, cancelando initializeAuth')
+          return
+        }
+
         if (session?.user) {
           console.log('[useAuth] Usuario encontrado, verificando admin status...')
           setUser(session.user)
 
           // Verificar si es admin
           const admin = await checkAdminStatus(session.user.id)
+
+          // Verificar de nuevo si sigue montado después de checkAdminStatus
+          if (!mounted) {
+            console.log('[useAuth] Componente desmontado después de checkAdminStatus')
+            return
+          }
+
           setAdminData(admin)
 
           if (admin) {
@@ -146,6 +161,11 @@ export function useAuthHook(): UseAuthReturn {
           console.log('[useAuth] Procesando SIGNED_IN')
           setUser(session.user)
           const admin = await checkAdminStatus(session.user.id)
+          // Verificar si sigue montado después de la llamada async
+          if (!mounted) {
+            console.log('[useAuth] Componente desmontado durante SIGNED_IN')
+            return
+          }
           setAdminData(admin)
           setLoading(false)
         }
@@ -168,6 +188,7 @@ export function useAuthHook(): UseAuthReturn {
 
     return () => {
       console.log('[useAuth] Cleanup: unsubscribing')
+      mounted = false // Marcar como desmontado para cancelar operaciones pendientes
       if (timeoutId) {
         clearTimeout(timeoutId)
       }
