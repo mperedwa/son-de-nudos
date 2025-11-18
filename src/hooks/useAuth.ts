@@ -52,7 +52,7 @@ export function useAuth(): UseAuthReturn {
         return null
       }
 
-      console.log('[useAuth] Admin encontrado:', data.email, data.role)
+      console.log('[useAuth] Admin encontrado:', data)
       return data as AdminUser
     } catch (err) {
       console.error('[useAuth] Error en checkAdminStatus:', err)
@@ -63,7 +63,6 @@ export function useAuth(): UseAuthReturn {
   // Inicializar sesión al cargar
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null
-    let isInitialized = false
 
     const initializeAuth = async () => {
       try {
@@ -109,7 +108,6 @@ export function useAuth(): UseAuthReturn {
           timeoutId = null
         }
 
-        isInitialized = true
         setLoading(false)
         console.log('[useAuth] initializeAuth() completado')
       } catch (err) {
