@@ -29,6 +29,9 @@ export function useAuth(): UseAuthReturn {
   // Verificar si el usuario autenticado es admin
   const checkAdminStatus = async (userId: string): Promise<AdminUser | null> => {
     try {
+      console.log('[useAuth] checkAdminStatus() llamado con userId:', userId)
+      const startTime = Date.now()
+
       const { data, error } = await supabase
         .from('admins')
         .select('id, email, name, role, active')
@@ -36,45 +39,82 @@ export function useAuth(): UseAuthReturn {
         .eq('active', true)
         .single()
 
+      const duration = Date.now() - startTime
+      console.log(`[useAuth] checkAdminStatus() completado en ${duration}ms`)
+
       if (error) {
-        console.error('Error verificando admin:', error)
+        console.error('[useAuth] Error verificando admin:', error.message, error.code)
         return null
       }
 
+      if (!data) {
+        console.warn('[useAuth] checkAdminStatus() devolvió data null/undefined')
+        return null
+      }
+
+      console.log('[useAuth] Admin encontrado:', data.email, data.role)
       return data as AdminUser
     } catch (err) {
-      console.error('Error en checkAdminStatus:', err)
+      console.error('[useAuth] Error en checkAdminStatus:', err)
       return null
     }
   }
 
   // Inicializar sesión al cargar
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout | null = null
+    let isInitialized = false
+
     const initializeAuth = async () => {
       try {
-        // Timeout de seguridad - forzar loading=false después de 5 segundos
-        const timeoutId = setTimeout(() => {
-          console.warn('[useAuth] Timeout de 5s alcanzado - forzando loading = false')
+        console.log('[useAuth] Iniciando initializeAuth()...')
+
+        // Timeout de seguridad - forzar loading=false después de 10 segundos
+        timeoutId = setTimeout(() => {
+          console.warn('[useAuth] ⚠️ Timeout de 10s alcanzado - forzando loading = false')
           setLoading(false)
-        }, 5000)
+        }, 10000)
 
         // Obtener sesión actual
-        const { data: { session } } = await supabase.auth.getSession()
+        console.log('[useAuth] Obteniendo sesión actual...')
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+
+        if (sessionError) {
+          console.error('[useAuth] Error obteniendo sesión:', sessionError)
+          throw sessionError
+        }
+
+        console.log('[useAuth] Sesión obtenida:', session?.user?.id || 'no session')
 
         if (session?.user) {
+          console.log('[useAuth] Usuario encontrado, verificando admin status...')
           setUser(session.user)
 
           // Verificar si es admin
           const admin = await checkAdminStatus(session.user.id)
           setAdminData(admin)
+
+          if (admin) {
+            console.log('[useAuth] ✅ Usuario es admin, login completo')
+          } else {
+            console.warn('[useAuth] ⚠️ Usuario autenticado pero NO es admin')
+          }
+        } else {
+          console.log('[useAuth] No hay sesión activa')
         }
 
         // Limpiar timeout si todo fue exitoso
-        clearTimeout(timeoutId)
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
+
+        isInitialized = true
+        setLoading(false)
+        console.log('[useAuth] initializeAuth() completado')
       } catch (err) {
-        console.error('Error inicializando auth:', err)
+        console.error('[useAuth] Error en initializeAuth():', err)
         setError('Error al inicializar autenticación')
-      } finally {
         setLoading(false)
       }
     }
@@ -84,40 +124,44 @@ export function useAuth(): UseAuthReturn {
     // Escuchar cambios de autenticación
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('[useAuth] Auth state changed:', event, session?.user?.id || 'no user')
+        console.log('[useAuth] 🔔 Auth state changed:', event, session?.user?.id || 'no user')
 
-        // Procesar TODOS los eventos para asegurar que loading se actualice
+        // Ignorar INITIAL_SESSION si ya inicializamos manualmente
+        if (event === 'INITIAL_SESSION') {
+          console.log('[useAuth] Ignorando INITIAL_SESSION (ya manejado en initializeAuth)')
+          return
+        }
+
+        // Procesar SIGNED_IN
         if (event === 'SIGNED_IN' && session?.user) {
           console.log('[useAuth] Procesando SIGNED_IN')
           setUser(session.user)
           const admin = await checkAdminStatus(session.user.id)
           setAdminData(admin)
           setLoading(false)
-        } else if (event === 'SIGNED_OUT') {
+        }
+        // Procesar SIGNED_OUT
+        else if (event === 'SIGNED_OUT') {
           console.log('[useAuth] Procesando SIGNED_OUT')
           setUser(null)
           setAdminData(null)
           setLoading(false)
-        } else if (event === 'INITIAL_SESSION') {
-          console.log('[useAuth] Procesando INITIAL_SESSION')
-          // Ya procesado en initializeAuth, solo asegurar loading=false
-          setLoading(false)
-        } else if (event === 'TOKEN_REFRESHED') {
+        }
+        // Procesar TOKEN_REFRESHED
+        else if (event === 'TOKEN_REFRESHED' && session?.user) {
           console.log('[useAuth] Procesando TOKEN_REFRESHED')
-          // Token refrescado, mantener usuario actual
-          if (session?.user) {
-            setUser(session.user)
-          }
-          setLoading(false)
-        } else {
-          // Cualquier otro evento desconocido - asegurar que loading se detenga
-          console.log('[useAuth] Evento desconocido, asegurando loading = false')
+          setUser(session.user)
+          // No necesitamos recargar adminData en refresh
           setLoading(false)
         }
       }
     )
 
     return () => {
+      console.log('[useAuth] Cleanup: unsubscribing')
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       subscription.unsubscribe()
     }
   }, [])

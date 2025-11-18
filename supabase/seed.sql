@@ -28,19 +28,34 @@ ON CONFLICT (code) DO NOTHING;
 -- ==============================================================================
 -- ADMIN INICIAL
 -- ==============================================================================
--- Crear usuario admin por defecto
--- Password: "[REDACTED]" (cambiar en producción)
--- Hash bcrypt de "[REDACTED]": $2a$10$rN7YT5y9JVZqJ9XqmQxdHOqN5bZxF7zqk8gZQZ3zQZ3zQZ3zQZ3zQ
+-- ⚠️ IMPORTANTE: NO crear admins con seed.sql
+--
+-- Los usuarios admin deben sincronizarse con Supabase Auth para que las
+-- políticas RLS funcionen correctamente (auth.uid() debe coincidir con admins.id)
+--
+-- Para crear usuarios admin, usar el script TypeScript:
+--
+--   npm run create:admin -- --email admin@sondenudos.com --name "Admin Principal" --password "[REDACTED]" --role superadmin
+--
+-- Este script:
+-- 1. Crea el usuario en Supabase Auth (o usa existente)
+-- 2. Obtiene el ID de Auth
+-- 3. Crea registro en tabla admins con el MISMO ID
+-- 4. Garantiza que las políticas RLS funcionen correctamente
+--
+-- Para más detalles, ver: scripts/create-admin.ts
+-- ==============================================================================
 
-INSERT INTO admins (email, password_hash, name, role, active)
-VALUES (
-  'admin@sondenudos.com',
-  '$2a$10$rN7YT5y9JVZqJ9XqmQxdHOqN5bZxF7zqk8gZQZ3zQZ3zQZ3zQZ3zQ',
-  'Admin Principal',
-  'superadmin',
-  true
-)
-ON CONFLICT (email) DO NOTHING;
+-- NOTA: Seed comentado - usar script create-admin.ts en su lugar
+-- INSERT INTO admins (email, password_hash, name, role, active)
+-- VALUES (
+--   'admin@sondenudos.com',
+--   '$2a$10$rN7YT5y9JVZqJ9XqmQxdHOqN5bZxF7zqk8gZQZ3zQZ3zQZ3zQZ3zQ',
+--   'Admin Principal',
+--   'superadmin',
+--   true
+-- )
+-- ON CONFLICT (email) DO NOTHING;
 
 -- ==============================================================================
 -- NOTA: Los productos se migrarán desde products.json usando el script
