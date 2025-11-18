@@ -20,7 +20,7 @@ interface UseAuthReturn {
   isAdmin: boolean
 }
 
-export function useAuth(): UseAuthReturn {
+export function useAuthHook(): UseAuthReturn {
   const [user, setUser] = useState<User | null>(null)
   const [adminData, setAdminData] = useState<AdminUser | null>(null)
   const [loading, setLoading] = useState(true)
