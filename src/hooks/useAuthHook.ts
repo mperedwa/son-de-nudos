@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import type { User } from '@supabase/supabase-js'
 
@@ -25,6 +25,9 @@ export function useAuthHook(): UseAuthReturn {
   const [adminData, setAdminData] = useState<AdminUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Ref para evitar race condition entre initializeAuth y onAuthStateChange
+  const isInitializing = useRef(true)
 
   // Verificar si el usuario autenticado es admin
   const checkAdminStatus = async (userId: string): Promise<AdminUser | null> => {
@@ -108,11 +111,14 @@ export function useAuthHook(): UseAuthReturn {
           timeoutId = null
         }
 
+        // Marcar inicialización como completa
+        isInitializing.current = false
         setLoading(false)
         console.log('[useAuth] initializeAuth() completado')
       } catch (err) {
         console.error('[useAuth] Error en initializeAuth():', err)
         setError('Error al inicializar autenticación')
+        isInitializing.current = false
         setLoading(false)
       }
     }
@@ -132,6 +138,11 @@ export function useAuthHook(): UseAuthReturn {
 
         // Procesar SIGNED_IN
         if (event === 'SIGNED_IN' && session?.user) {
+          // Ignorar si initializeAuth aún está en progreso (evita race condition)
+          if (isInitializing.current) {
+            console.log('[useAuth] Ignorando SIGNED_IN (initializeAuth en progreso)')
+            return
+          }
           console.log('[useAuth] Procesando SIGNED_IN')
           setUser(session.user)
           const admin = await checkAdminStatus(session.user.id)
