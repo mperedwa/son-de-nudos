@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import RootLayout from './app/layout/RootLayout'
+import LandingPage from './app/routes/landing'
 import CollectionPage from './app/routes/index'
 import ProductPage from './app/routes/product/[handle]'
 import CheckoutPage from './app/routes/checkout'
@@ -22,7 +23,8 @@ import AdminOrders from './app/routes/admin/orders'
  * Usa React Router v6 con layout compartido
  *
  * Estructura:
- * - / → Tienda pública (RootLayout)
+ * - / → Landing Page (Home)
+ * - /tienda → Colección de productos
  * - /admin/login → Login público
  * - /admin/* → Panel admin protegido (AdminLayout)
  */
@@ -32,7 +34,8 @@ function App() {
       <Routes>
         {/* Rutas públicas de la tienda */}
         <Route path="/" element={<RootLayout />}>
-          <Route index element={<CollectionPage />} />
+          <Route index element={<LandingPage />} />
+          <Route path="tienda" element={<CollectionPage />} />
           <Route path="product/:handle" element={<ProductPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="success" element={<SuccessPage />} />

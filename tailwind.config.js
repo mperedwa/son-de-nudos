@@ -24,6 +24,22 @@ export default {
           dark: '#3C2F2F',
           light: '#6B5D54',
         },
+        // Colores adicionales Landing Page
+        terracotta: {
+          light: '#E8B4A0',
+          DEFAULT: '#C97B5D',
+          dark: '#A65D42',
+        },
+        olive: {
+          light: '#A8B89C',
+          DEFAULT: '#7A8B6F',
+          dark: '#5C6B52',
+        },
+        sand: {
+          light: '#FBF7F2',
+          DEFAULT: '#F0E6D8',
+          dark: '#E5D5C3',
+        },
       },
       fontFamily: {
         serif: ['Georgia', 'Times New Roman', 'Times', 'serif'],

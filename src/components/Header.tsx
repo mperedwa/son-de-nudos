@@ -54,17 +54,23 @@ export default function Header() {
             {/* Navegación principal */}
             <nav className="hidden md:flex items-center gap-6">
               <Link
-                to="/"
+                to="/tienda"
                 className="text-text-dark hover:text-primary-brown font-medium transition-colors"
               >
                 {t('common:shop')}
               </Link>
-              <a
-                href="#about"
+              <Link
+                to="/#artista"
                 className="text-text-dark hover:text-primary-brown font-medium transition-colors"
+                onClick={(e) => {
+                  if (window.location.pathname === '/') {
+                    e.preventDefault()
+                    document.getElementById('artista')?.scrollIntoView({ behavior: 'smooth' })
+                  }
+                }}
               >
                 {t('common:aboutMe')}
-              </a>
+              </Link>
             </nav>
 
             {/* Selector de idioma */}
