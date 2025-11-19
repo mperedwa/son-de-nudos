@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Son de Nudos | Elegancia Artesanal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display (Elegancia) & Lato (Lectura) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-terra': '#A65D57', // Terracota suave
+                        'brand-sand': '#F5F0EB',  // Fondo crema/arena
+                        'brand-olive': '#5E665B', // Verde apagado para textos
+                        'brand-dark': '#2C2C2C',
+                        'brand-gold': '#D4AF37',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Lato"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-brand-sand text-brand-dark font-sans antialiased">
+
+    <!-- ANNOUNCEMENT BAR -->
+    <div class="bg-brand-terra text-white text-xs text-center py-2 tracking-widest uppercase font-bold">
+        Envíos gratis en pedidos superiores a $100 | Nueva Colección Disponible
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="sticky top-0 z-50 bg-brand-sand/95 backdrop-blur-sm border-b border-stone-200 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button onclick="toggleMenu()" class="text-brand-dark hover:text-brand-terra focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center justify-center w-full md:w-auto md:justify-start">
+                    <a href="#" class="font-serif text-2xl font-bold tracking-wider text-brand-dark">
+                        SON DE NUDOS
+                        <span class="block text-[10px] font-sans tracking-[0.3em] text-center text-brand-terra uppercase mt-1">Handmade Luxury</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#" class="text-sm uppercase tracking-widest hover:text-brand-terra transition-colors">Inicio</a>
+                    <a href="#" class="text-sm uppercase tracking-widest hover:text-brand-terra transition-colors">Bolsos</a>
+                    <a href="#" class="text-sm uppercase tracking-widest hover:text-brand-terra transition-colors">Vestibles</a>
+                    <a href="#artist" class="text-sm uppercase tracking-widest hover:text-brand-terra transition-colors">La Artista</a>
+                </div>
+
+                <!-- Icons -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="text-brand-dark hover:text-brand-terra"><i class="fas fa-search"></i></a>
+                    <a href="#" class="text-brand-dark hover:text-brand-terra relative">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="absolute -top-2 -right-2 bg-brand-terra text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">2</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-stone-100 absolute w-full">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-center py-6">
+                <a href="#" class="block px-3 py-2 text-base font-medium hover:text-brand-terra">INICIO</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium hover:text-brand-terra">BOLSOS</a>
+                <a href="#" class="block px-3 py-2 text-base font-medium hover:text-brand-terra">VESTIBLES</a>
+                <a href="#artist" class="block px-3 py-2 text-base font-medium hover:text-brand-terra">LA ARTISTA</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <!-- Usamos una imagen de macramé elegante con tonos tierra -->
+    <header class="relative h-[85vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0">
+            <!-- Placeholder image: Elegante, fashion, macramé vibe -->
+            <img src="https://images.unsplash.com/photo-1613539246066-78db6ec4ff0f?q=80&w=1886&auto=format&fit=crop" 
+                 alt="Macrame Detail" 
+                 class="w-full h-full object-cover opacity-90">
+            <div class="absolute inset-0 bg-black/20"></div> <!-- Overlay suave -->
+        </div>
+        
+        <div class="relative z-10 text-center text-white px-4 max-w-4xl mx-auto fade-in-up" style="animation-delay: 0.2s;">
+            <p class="text-sm md:text-base tracking-[0.4em] uppercase mb-4 font-light">Arte Textil & Diseño</p>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl mb-6 leading-tight">
+                Donde el ritmo se <br/><span class="italic text-brand-sand">convierte en hilo</span>
+            </h1>
+            <div class="mt-8">
+                <a href="#" class="bg-white text-brand-dark px-8 py-4 uppercase tracking-widest text-xs md:text-sm hover:bg-brand-terra hover:text-white transition duration-300 ease-in-out">
+                    Explorar Colección
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- VALUE PROPS (Iconos) -->
+    <section class="py-12 border-b border-stone-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="flex flex-col items-center p-4">
+                    <i class="fas fa-hands text-3xl text-brand-terra mb-4"></i>
+                    <h3 class="font-serif text-lg mb-2">Hecho a Mano</h3>
+                    <p class="text-sm text-gray-500 font-light">Cada nudo es tejido con precisión y cuidado personal.</p>
+                </div>
+                <div class="flex flex-col items-center p-4">
+                    <i class="fas fa-music text-3xl text-brand-terra mb-4"></i>
+                    <h3 class="font-serif text-lg mb-2">Diseño con Ritmo</h3>
+                    <p class="text-sm text-gray-500 font-light">Piezas con movimiento inspiradas en la música.</p>
+                </div>
+                <div class="flex flex-col items-center p-4">
+                    <i class="fas fa-gem text-3xl text-brand-terra mb-4"></i>
+                    <h3 class="font-serif text-lg mb-2">Materiales Premium</h3>
+                    <p class="text-sm text-gray-500 font-light">Hilos de alta calidad para acabados de lujo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT THE ARTIST SECTION (El corazón de la página) -->
+    <section id="artist" class="py-20 md:py-32 bg-brand-sand relative overflow-hidden">
+        <!-- Elemento decorativo de fondo -->
+        <div class="absolute top-0 right-0 text-[20rem] text-brand-terra opacity-5 font-serif leading-none select-none pointer-events-none -mr-20 -mt-20">
+            &
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                
+                <!-- Imagen de la Artista (Estilo Collage/Boutique) -->
+                <div class="w-full lg:w-1/2 relative">
+                    <div class="relative z-10">
+                        <!-- Placeholder para foto de Priscilla -->
+                        <img src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1887&auto=format&fit=crop" 
+                             alt="Priscilla Torres Artista" 
+                             class="w-full h-[600px] object-cover shadow-xl">
+                    </div>
+                    <!-- Cuadro decorativo detrás -->
+                    <div class="absolute -bottom-6 -right-6 w-full h-full border-2 border-brand-terra z-0 hidden md:block"></div>
+                    
+                    <!-- Cita flotante -->
+                    <div class="absolute bottom-10 -left-4 md:-left-10 bg-white p-6 shadow-lg max-w-xs z-20 hidden md:block">
+                        <p class="font-serif italic text-brand-dark text-lg">"Un nudo, al igual que una nota musical, necesita precisión, ritmo y alma."</p>
+                    </div>
+                </div>
+
+                <!-- Texto Narrativo (El Copy Generado) -->
+                <div class="w-full lg:w-1/2 lg:pl-12">
+                    <span class="text-brand-terra uppercase tracking-[0.2em] text-sm font-bold mb-4 block">Sobre la Fundadora</span>
+                    <h2 class="font-serif text-4xl md:text-5xl text-brand-dark mb-8 leading-tight">
+                        El Ritmo en mis Manos: <br>
+                        <span class="italic text-brand-terra">De la Partitura al Tejido</span>
+                    </h2>
+                    
+                    <div class="prose text-gray-600 font-light leading-relaxed space-y-6 text-lg">
+                        <p>
+                            Toda mi vida, mis manos han hablado a través de la música. Desde la delicadeza de la flauta traversa hasta la energía de la percusión, siempre he buscado la armonía perfecta. Soy educadora de vocación y artista de corazón.
+                        </p>
+                        <p>
+                            Pero la curiosidad de una artista nunca descansa. Buscando nuevas formas de expresión, descubrí el macramé y entendí que <strong>la artesanía es música sólida.</strong>
+                        </p>
+                        <p>
+                            Lo que comenzó como un pasatiempo, se transformó en <em>Son de Nudos</em>. Hoy, transfiero esa disciplina musical a cada hilo, componiendo piezas de moda que llevan mi esencia: dinámica, perfeccionista y vibrante.
+                        </p>
+                    </div>
+
+                    <div class="mt-10 flex items-center gap-4">
+                        <img src="https://placehold.co/100x50/F5F0EB/A65D57?text=Priscilla" alt="Firma" class="opacity-70 grayscale">
+                        <div class="h-px w-20 bg-brand-terra"></div>
+                        <span class="font-serif italic text-brand-dark">Priscilla Torres</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATEGORIES GRID -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-3xl md:text-4xl text-brand-dark mb-4">Nuestras Colecciones</h2>
+                <div class="w-24 h-1 bg-brand-terra mx-auto"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Category 1: Bolsos -->
+                <div class="group relative cursor-pointer overflow-hidden">
+                    <div class="aspect-[3/4] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1598532163257-52017d714743?q=80&w=1930&auto=format&fit=crop" 
+                             alt="Bolsos de Macrame" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                        <h3 class="text-white font-serif text-3xl mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Bolsos</h3>
+                        <span class="text-white text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">Ver Diseños &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Category 2: Vestibles -->
+                <div class="group relative cursor-pointer overflow-hidden mt-0 md:-mt-8"> <!-- Efecto visual de altura diferente -->
+                    <div class="aspect-[3/4] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop" 
+                             alt="Vestibles" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                        <h3 class="text-white font-serif text-3xl mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Vestibles</h3>
+                        <span class="text-white text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">Descubrir Moda &rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Category 3: Accesorios -->
+                <div class="group relative cursor-pointer overflow-hidden">
+                    <div class="aspect-[3/4] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2070&auto=format&fit=crop" 
+                             alt="Collares y Accesorios" 
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    </div>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+                        <h3 class="text-white font-serif text-3xl mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">Accesorios</h3>
+                        <span class="text-white text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">Detalles Únicos &rarr;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PIECE -->
+    <section class="bg-brand-dark text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+            <div class="w-full md:w-1/2 mb-10 md:mb-0">
+                <img src="https://images.unsplash.com/photo-1628149455676-71221c6928d7?q=80&w=1936&auto=format&fit=crop" alt="Pieza Destacada" class="w-full md:w-4/5 shadow-2xl border border-white/10 rounded-sm">
+            </div>
+            <div class="w-full md:w-1/2 md:pl-10">
+                <span class="text-brand-terra text-sm uppercase tracking-widest font-bold mb-2 block">Destacado del Mes</span>
+                <h2 class="font-serif text-4xl mb-6">El Bolso "Sinfonía"</h2>
+                <p class="text-gray-300 font-light mb-8 leading-relaxed">
+                    Una pieza que combina la estructura rígida con flecos fluidos, inspirada en el movimiento de las cuerdas. Perfecto para una noche elegante o un día casual con estilo.
+                </p>
+                <button class="border border-white px-8 py-3 hover:bg-white hover:text-brand-dark transition duration-300 uppercase tracking-widest text-sm">
+                    Ver Detalles
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- INSTAGRAM FEED SIMULATION -->
+    <section class="py-20 bg-white">
+        <div class="text-center mb-12">
+            <p class="text-sm uppercase tracking-widest text-gray-500 mb-2">Únete a nuestra comunidad</p>
+            <h2 class="font-serif text-3xl text-brand-dark"><i class="fab fa-instagram mr-2"></i> @son_de_nudos</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-1">
+            <!-- Placeholder Instagram Images -->
+            <img src="https://images.unsplash.com/photo-1605218427360-363933f30480?w=500&auto=format&fit=crop&q=60" class="w-full h-48 object-cover hover:opacity-80 transition cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1520013573795-38516d2661e4?w=500&auto=format&fit=crop&q=60" class="w-full h-48 object-cover hover:opacity-80 transition cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=500&auto=format&fit=crop&q=60" class="w-full h-48 object-cover hover:opacity-80 transition cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?w=500&auto=format&fit=crop&q=60" class="w-full h-48 object-cover hover:opacity-80 transition cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1550614000-4b9519e00730?w=500&auto=format&fit=crop&q=60" class="w-full h-48 object-cover hover:opacity-80 transition cursor-pointer hidden lg:block">
+            <img src="https://images.unsplash.com/photo-1533561096933-73200d02636d?w=500&auto=format&fit=crop&q=60" class="w-full h-48 object-cover hover:opacity-80 transition cursor-pointer hidden lg:block">
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-sand pt-16 pb-8 border-t border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-1">
+                    <h3 class="font-serif text-2xl font-bold text-brand-dark mb-4">SON DE NUDOS</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Macramé de alta costura hecho a mano en Costa Rica. Donde el ritmo y la precisión se encuentran.
+                    </p>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6 text-brand-terra">Explorar</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand-terra">Inicio</a></li>
+                        <li><a href="#" class="hover:text-brand-terra">Colección Bolsos</a></li>
+                        <li><a href="#" class="hover:text-brand-terra">Colección Vestibles</a></li>
+                        <li><a href="#artist" class="hover:text-brand-terra">La Artista</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Care -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6 text-brand-terra">Atención</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-brand-terra">Envíos y Devoluciones</a></li>
+                        <li><a href="#" class="hover:text-brand-terra">Cuidado del Macramé</a></li>
+                        <li><a href="#" class="hover:text-brand-terra">Contacto</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest mb-6 text-brand-terra">Novedades</h4>
+                    <p class="text-xs text-gray-500 mb-4">Suscríbete para recibir acceso anticipado a nuevos diseños.</p>
+                    <form class="flex flex-col space-y-2">
+                        <input type="email" placeholder="Tu correo electrónico" class="bg-white border border-stone-300 px-4 py-2 text-sm focus:outline-none focus:border-brand-terra">
+                        <button class="bg-brand-dark text-white text-xs uppercase tracking-widest py-3 hover:bg-brand-terra transition">Suscribirse</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-stone-300 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-xs text-gray-500">&copy; 2024 Son de Nudos. Todos los derechos reservados.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0 text-gray-500">
+                    <a href="#" class="hover:text-brand-terra"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-brand-terra"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-brand-terra"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Simple scroll animation trigger
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.add('py-4');
+            }
+        });
+    </script>
+</body>
+</html>

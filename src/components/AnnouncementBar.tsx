@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 /**
  * Barra de anuncios con carrusel auto-rotativo
  * Muestra mensajes promocionales uno a la vez
- * Fase 8: Integrado con i18n para soporte bilingüe
+ * Estilo Gemini: fondo terracota vibrante
  */
 
 export default function AnnouncementBar() {
@@ -32,14 +32,14 @@ export default function AnnouncementBar() {
 
   return (
     <div
-      className="bg-primary-brown text-white py-2 overflow-hidden"
+      className="bg-brand-terra text-white py-2 overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       role="region"
       aria-label={t('ariaLabel')}
     >
       <div className="container mx-auto px-4">
-        <p className="text-center text-sm font-medium animate-fade-in">
+        <p className="text-center text-xs tracking-widest uppercase font-bold animate-fade-in">
           {messages[currentIndex]}
         </p>
       </div>

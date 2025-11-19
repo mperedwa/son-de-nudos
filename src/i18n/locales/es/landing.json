@@ -1,0 +1,87 @@
+{
+  "hero": {
+    "tagline": "Arte Textil & Diseño",
+    "headline": "Donde el ritmo se",
+    "headlineAccent": "convierte en hilo",
+    "description": "Cada pieza es una composición única, tejida con la precisión de una partitura y la pasión de una artista.",
+    "ctaExplore": "Explorar Colección",
+    "ctaArtist": "Conoce a la Artista"
+  },
+  "valueProps": {
+    "handmade": {
+      "title": "Hecho a Mano",
+      "description": "Cada nudo es tejido con precisión y cuidado personal."
+    },
+    "rhythm": {
+      "title": "Diseño con Ritmo",
+      "description": "Piezas con movimiento inspiradas en la música."
+    },
+    "premium": {
+      "title": "Materiales Premium",
+      "description": "Hilos de alta calidad para acabados de lujo."
+    }
+  },
+  "artist": {
+    "tagline": "Sobre la Fundadora",
+    "headline": "El Ritmo en mis Manos:",
+    "headlineAccent": "De la Partitura al Tejido",
+    "subtitle": "Conoce a Priscilla Torres, el alma creativa detrás de Son de Nudos.",
+    "intro": "Durante años, mi vida giró en torno a la música. La flauta traversa, la percusión, el piano... cada instrumento me enseñó algo invaluable sobre la precisión, el ritmo y la disciplina.",
+    "story": "Cuando descubrí el macramé, encontré un nuevo lenguaje para expresar todo lo que la música me había dado. Cada nudo que ato es como una nota en una partitura: preciso, con intención, parte de una composición mayor.",
+    "philosophy": "Lo que antes era sonido ahora es textura. Lo que era melodía ahora es movimiento. Mis manos siguen creando arte, solo que ahora el escenario es diferente. Bienvenido a mi nuevo escenario.",
+    "harmonyText": "fluyen con armonía",
+    "quote": "Cada pieza lleva un poco de mi alma de música. El ritmo nunca me abandona.",
+    "quoteAuthor": "Priscilla Torres, Fundadora",
+    "statHandmade": "Hecho a Mano",
+    "statPieces": "Piezas Creadas",
+    "statYears": "Años de Arte"
+  },
+  "categories": {
+    "tagline": "Colecciones",
+    "headline": "Encuentra tu pieza perfecta",
+    "description": "Cada categoría representa una forma única de expresar el arte del macramé. Descubre cuál resuena contigo.",
+    "explore": "Explorar",
+    "bags": {
+      "title": "Bolsos",
+      "subtitle": "Elegancia que llevas contigo"
+    },
+    "necklaces": {
+      "title": "Collares",
+      "subtitle": "Armonía en cada detalle"
+    },
+    "wearables": {
+      "title": "Vestibles",
+      "subtitle": "Arte que se adapta a ti"
+    }
+  },
+  "featured": {
+    "tagline": "Destacado del Mes",
+    "title": "El Bolso \"Sinfonía\"",
+    "description": "Una pieza que combina la estructura rígida con flecos fluidos, inspirada en el movimiento de las cuerdas. Perfecto para una noche elegante o un día casual con estilo.",
+    "cta": "Ver Detalles"
+  },
+  "instagram": {
+    "tagline": "Únete a nuestra comunidad",
+    "headline": "Síguenos el ritmo",
+    "handle": "@son_de_nudos",
+    "cta": "Ver más en Instagram",
+    "posts": {
+      "1": "Bolso macramé en playa",
+      "2": "Collar artesanal closeup",
+      "3": "Proceso de tejido",
+      "4": "Vestible en evento",
+      "5": "Detalles de nudo",
+      "6": "Lifestyle urbano"
+    }
+  },
+  "newsletter": {
+    "headline": "Únete al ritmo",
+    "description": "Sé la primera en conocer nuevas colecciones, acceder a piezas exclusivas y recibir inspiración artesanal directamente en tu bandeja de entrada.",
+    "placeholder": "Tu correo electrónico",
+    "submit": "Suscribirme",
+    "sending": "Enviando...",
+    "success": "¡Suscrita!",
+    "successMessage": "¡Bienvenida a la comunidad! Revisa tu correo para confirmar tu suscripción.",
+    "privacy": "Respetamos tu privacidad. Sin spam, solo inspiración artesanal."
+  }
+}

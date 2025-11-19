@@ -124,13 +124,13 @@ export default function CartDrawer() {
         aria-label={t('cart:shoppingCart')}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-secondary-beige">
-          <h2 className="text-2xl font-serif text-primary-brown">
+        <div className="flex items-center justify-between p-6 border-b border-stone-200">
+          <h2 className="text-2xl font-serif text-brand-terra">
             {t('cart:yourCartWithCount', { count: items.length })}
           </h2>
           <button
             onClick={closeDrawer}
-            className="text-text-dark hover:text-primary-brown transition-colors"
+            className="text-brand-dark hover:text-brand-terra transition-colors"
             aria-label={t('navigation:closeCart')}
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -149,7 +149,7 @@ export default function CartDrawer() {
           // Estado vacío
           <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
             <svg
-              className="w-24 h-24 text-secondary-beige mb-4"
+              className="w-24 h-24 text-stone-200 mb-4"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -161,16 +161,16 @@ export default function CartDrawer() {
                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
               />
             </svg>
-            <h3 className="text-lg font-medium text-text-dark mb-2">
+            <h3 className="text-lg font-medium text-brand-dark mb-2">
               {t('cart:cartEmpty')}
             </h3>
-            <p className="text-text-light mb-6">
+            <p className="text-gray-500 mb-6">
               {t('cart:cartEmptyDescription')}
             </p>
             <Link
               to="/"
               onClick={closeDrawer}
-              className="px-6 py-3 bg-primary-brown text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+              className="px-6 py-3 bg-brand-terra text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors"
             >
               {t('cart:viewProducts')}
             </Link>
@@ -182,10 +182,10 @@ export default function CartDrawer() {
               {items.map((item) => (
                 <div
                   key={`${item.productId}-${item.variantId}`}
-                  className="flex gap-4 pb-4 border-b border-secondary-beige last:border-b-0"
+                  className="flex gap-4 pb-4 border-b border-stone-200 last:border-b-0"
                 >
                   {/* Imagen */}
-                  <div className="w-20 h-20 rounded-lg overflow-hidden bg-secondary-beige flex-shrink-0">
+                  <div className="w-20 h-20 rounded-lg overflow-hidden bg-stone-200 flex-shrink-0">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -195,14 +195,14 @@ export default function CartDrawer() {
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-text-dark text-sm mb-1 truncate">
+                    <h3 className="font-medium text-brand-dark text-sm mb-1 truncate">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-text-light mb-2">{item.variantTitle}</p>
+                    <p className="text-xs text-gray-500 mb-2">{item.variantTitle}</p>
 
                     {/* Controles de cantidad */}
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center border border-secondary-beige rounded-lg">
+                      <div className="flex items-center border border-stone-200 rounded-lg">
                         <button
                           onClick={() =>
                             updateQty(
@@ -212,7 +212,7 @@ export default function CartDrawer() {
                             )
                           }
                           disabled={item.quantity <= 1}
-                          className="px-2 py-1 text-text-dark hover:text-primary-brown disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                          className="px-2 py-1 text-brand-dark hover:text-brand-terra disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                           aria-label={t('cart:decreaseQuantity')}
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -220,7 +220,7 @@ export default function CartDrawer() {
                           </svg>
                         </button>
 
-                        <span className="px-3 py-1 text-sm font-medium text-text-dark min-w-[2rem] text-center">
+                        <span className="px-3 py-1 text-sm font-medium text-brand-dark min-w-[2rem] text-center">
                           {item.quantity}
                         </span>
 
@@ -228,7 +228,7 @@ export default function CartDrawer() {
                           onClick={() =>
                             updateQty(item.productId, item.variantId, item.quantity + 1)
                           }
-                          className="px-2 py-1 text-text-dark hover:text-primary-brown transition-colors"
+                          className="px-2 py-1 text-brand-dark hover:text-brand-terra transition-colors"
                           aria-label={t('cart:increaseQuantity')}
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -255,11 +255,11 @@ export default function CartDrawer() {
 
                   {/* Precio */}
                   <div className="text-right">
-                    <p className="font-medium text-text-dark">
+                    <p className="font-medium text-brand-dark">
                       {formatMoney(item.unitPrice)}
                     </p>
                     {item.quantity > 1 && (
-                      <p className="text-xs text-text-light mt-1">
+                      <p className="text-xs text-gray-500 mt-1">
                         {formatMoney({
                           amount: item.unitPrice.amount * item.quantity,
                           currency: item.unitPrice.currency,
@@ -273,7 +273,7 @@ export default function CartDrawer() {
 
             {/* Indicador de envío gratis */}
             {!isEmpty && (
-              <div className="px-6 py-4 bg-secondary-beige/30">
+              <div className="px-6 py-4 bg-stone-200/30">
                 <div className="space-y-2">
                   {isFreeShipping ? (
                     <div className="flex items-center gap-2 text-green-700">
@@ -283,15 +283,15 @@ export default function CartDrawer() {
                       <span className="text-sm font-medium">{t('cart:freeShippingUnlocked')}</span>
                     </div>
                   ) : (
-                    <p className="text-xs text-text-dark">
+                    <p className="text-xs text-brand-dark">
                       {t('cart:amountUntilFreeShipping', { amount: amountUntilFreeShipping.toFixed(2) })}
                     </p>
                   )}
 
                   {/* Barra de progreso */}
-                  <div className="w-full bg-secondary-beige rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-stone-200 rounded-full h-2 overflow-hidden">
                     <div
-                      className="h-full bg-primary-brown transition-all duration-300"
+                      className="h-full bg-brand-terra transition-all duration-300"
                       style={{ width: `${Math.min(shippingProgress, 100)}%` }}
                     />
                   </div>
@@ -300,7 +300,7 @@ export default function CartDrawer() {
             )}
 
             {/* Footer con cupones, totales y checkout */}
-            <div className="border-t border-secondary-beige p-6 space-y-4">
+            <div className="border-t border-stone-200 p-6 space-y-4">
               {/* Formulario de cupón */}
               {!couponCode ? (
                 <form onSubmit={handleApplyCoupon} className="space-y-2">
@@ -310,13 +310,13 @@ export default function CartDrawer() {
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
                       placeholder={t('cart:couponCodePlaceholder')}
-                      className="flex-1 px-4 py-2 border border-secondary-beige rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                      className="flex-1 px-4 py-2 border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                       disabled={isApplying}
                     />
                     <button
                       type="submit"
                       disabled={isApplying || !couponInput.trim()}
-                      className="px-4 py-2 bg-primary-brown text-white rounded-lg text-sm font-medium hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 bg-brand-terra text-white rounded-lg text-sm font-medium hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isApplying ? t('cart:applying') : t('cart:apply')}
                     </button>
@@ -354,8 +354,8 @@ export default function CartDrawer() {
 
               {/* Subtotal */}
               <div className="flex items-center justify-between text-sm">
-                <span className="text-text-dark">{t('cart:subtotal')}</span>
-                <span className="font-medium text-text-dark">{formatMoney(subtotal)}</span>
+                <span className="text-brand-dark">{t('cart:subtotal')}</span>
+                <span className="font-medium text-brand-dark">{formatMoney(subtotal)}</span>
               </div>
 
               {/* Descuento (si hay cupón aplicado) */}
@@ -370,22 +370,22 @@ export default function CartDrawer() {
 
               {/* Envío */}
               <div className="flex items-center justify-between text-sm">
-                <span className="text-text-dark">{t('cart:shipping')}</span>
+                <span className="text-brand-dark">{t('cart:shipping')}</span>
                 {isFreeShipping ? (
                   <span className="font-medium text-green-600">{t('cart:free')}</span>
                 ) : (
-                  <span className="font-medium text-text-dark">{formatMoney(shipping)}</span>
+                  <span className="font-medium text-brand-dark">{formatMoney(shipping)}</span>
                 )}
               </div>
 
               {/* Total */}
-              <div className="flex items-center justify-between text-lg font-semibold pt-2 border-t border-secondary-beige">
-                <span className="text-text-dark">{t('cart:total')}</span>
-                <span className="text-primary-brown">{formatMoney(total)}</span>
+              <div className="flex items-center justify-between text-lg font-semibold pt-2 border-t border-stone-200">
+                <span className="text-brand-dark">{t('cart:total')}</span>
+                <span className="text-brand-terra">{formatMoney(total)}</span>
               </div>
 
               {/* Nota de impuestos */}
-              <p className="text-xs text-text-light text-center">
+              <p className="text-xs text-gray-500 text-center">
                 {t('cart:taxesIncluded')}
               </p>
 
@@ -393,7 +393,7 @@ export default function CartDrawer() {
               <Link
                 to="/checkout"
                 onClick={closeDrawer}
-                className="block w-full py-4 bg-primary-brown text-white text-center rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+                className="block w-full py-4 bg-brand-terra text-white text-center rounded-lg font-medium hover:bg-opacity-90 transition-colors"
               >
                 {t('cart:goToCheckout')}
               </Link>
@@ -401,7 +401,7 @@ export default function CartDrawer() {
               {/* Continuar comprando */}
               <button
                 onClick={closeDrawer}
-                className="block w-full py-3 text-primary-brown text-center text-sm font-medium hover:underline"
+                className="block w-full py-3 text-brand-terra text-center text-sm font-medium hover:underline"
               >
                 {t('cart:continueShopping')}
               </button>

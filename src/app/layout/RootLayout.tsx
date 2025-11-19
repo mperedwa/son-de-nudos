@@ -4,6 +4,7 @@ import AnnouncementBar from '@/components/AnnouncementBar'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CartDrawer from '@/components/CartDrawer'
+import SearchDrawer from '@/components/SearchDrawer'
 import { useUIStore } from '@/store/ui'
 
 /**
@@ -52,6 +53,9 @@ export default function RootLayout() {
 
       {/* Drawer del carrito (global) */}
       <CartDrawer />
+
+      {/* Modal de búsqueda (global) */}
+      <SearchDrawer />
     </div>
   )
 }

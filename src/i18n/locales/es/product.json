@@ -25,5 +25,51 @@
   "qualityMaterialsDescription": "Trabajamos con materiales duraderos y acabados de alta calidad",
   "perfectForGifting": "Perfecto para regalar",
   "perfectForGiftingDescription": "Ideal para ocasiones especiales y regalos memorables",
-  "selectOptions": "Selecciona opciones"
+  "selectOptions": "Selecciona opciones",
+  "colors": {
+    "Natural": "Natural",
+    "Blanco": "Blanco",
+    "Negro": "Negro",
+    "Gris": "Gris",
+    "Beige": "Beige",
+    "Marrón": "Marrón",
+    "Coral": "Coral",
+    "Rosa": "Rosa",
+    "Rojo": "Rojo",
+    "Naranja": "Naranja",
+    "Amarillo": "Amarillo",
+    "Mostaza": "Mostaza",
+    "Verde": "Verde",
+    "Verde musgo": "Verde musgo",
+    "Azul": "Azul",
+    "Celeste": "Celeste",
+    "Azul marino": "Azul marino",
+    "Turquesa": "Turquesa",
+    "Morado": "Morado",
+    "Dorado": "Dorado",
+    "Plateado": "Plateado"
+  },
+  "cordMaterials": {
+    "Algodón": "Algodón",
+    "Algodón encerado": "Algodón encerado",
+    "Algodón reciclado": "Algodón reciclado",
+    "Nylon": "Nylon",
+    "Poliéster": "Poliéster"
+  },
+  "accessoryMaterials": {
+    "Plata 925": "Plata 925",
+    "Latón": "Latón",
+    "Cobre": "Cobre",
+    "Bronce": "Bronce",
+    "Piedra natural": "Piedra natural",
+    "Cristal": "Cristal",
+    "Madera": "Madera",
+    "Cerámica": "Cerámica"
+  },
+  "thickness": {
+    "1.5mm": "1.5mm",
+    "3mm": "3mm",
+    "5mm": "5mm",
+    "9mm": "9mm"
+  }
 }

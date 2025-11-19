@@ -2,103 +2,90 @@
  * ArtistSection Component
  *
  * El corazón de la marca - Storytelling sobre Priscilla Torres
- * Inspirado en Patricia Nash: herencia artesanal y historia del creador
+ * Diseño fusionado: Gemini (layout con cita flotante) + Original (i18n)
  *
- * - Foto de Priscilla trabajando o con instrumento musical
- * - Narrativa sobre la transición de música a macramé
- * - Transmite que cada pieza tiene "musicalidad"
+ * - Foto de Priscilla con cuadro decorativo
+ * - Cita flotante sobre la imagen
+ * - Narrativa elegante con firma
  */
 
-export default function ArtistSection() {
-  return (
-    <section id="artista" className="py-20 lg:py-32 bg-white">
-      <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+import { useTranslation } from 'react-i18next'
 
-          {/* Imagen - Placeholder */}
-          <div className="relative order-2 lg:order-1">
-            <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-soft-hover">
-              {/* Placeholder con gradiente - Reemplazar con foto real de Priscilla */}
-              <div className="w-full h-full bg-gradient-to-br from-terracotta-light via-sand to-olive-light flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-white/50 flex items-center justify-center">
-                    <svg className="w-16 h-16 text-primary-brown/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                    </svg>
-                  </div>
-                  <p className="text-primary-brown/70 text-sm font-sans">
-                    Foto de Priscilla Torres
-                  </p>
-                </div>
-              </div>
+export default function ArtistSection() {
+  const { t } = useTranslation('landing')
+
+  return (
+    <section id="artista" className="py-20 md:py-32 bg-brand-sand relative overflow-hidden">
+      {/* Elemento decorativo de fondo */}
+      <div className="absolute top-0 right-0 text-[20rem] text-brand-terra opacity-5 font-serif leading-none select-none pointer-events-none -mr-20 -mt-20 hidden lg:block">
+        &amp;
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+
+          {/* Imagen de la Artista */}
+          <div className="w-full lg:w-1/2 relative">
+            <div className="relative z-10">
+              {/* Placeholder para foto de Priscilla */}
+              <img
+                src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?q=80&w=1887&auto=format&fit=crop"
+                alt="Priscilla Torres Artista"
+                className="w-full h-[500px] md:h-[600px] object-cover shadow-xl"
+              />
             </div>
 
-            {/* Elemento decorativo */}
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 border-2 border-accent-gold/30 rounded-2xl -z-10" />
-            <div className="absolute -top-6 -left-6 w-24 h-24 bg-secondary-beige rounded-full -z-10" />
+            {/* Cuadro decorativo detrás */}
+            <div className="absolute -bottom-6 -right-6 w-full h-full border-2 border-brand-terra z-0 hidden md:block" />
+
+            {/* Cita flotante */}
+            <div className="absolute bottom-10 -left-4 md:-left-10 bg-white p-6 shadow-lg max-w-xs z-20 hidden md:block">
+              <p className="font-serif italic text-brand-dark text-lg">
+                "{t('artist.quote')}"
+              </p>
+            </div>
           </div>
 
-          {/* Contenido */}
-          <div className="order-1 lg:order-2">
+          {/* Texto Narrativo */}
+          <div className="w-full lg:w-1/2 lg:pl-12">
             {/* Etiqueta */}
-            <p className="text-sm tracking-[0.2em] uppercase text-accent-gold mb-4 font-sans">
-              La Artista
-            </p>
+            <span className="text-brand-terra uppercase tracking-[0.2em] text-sm font-bold mb-4 block">
+              {t('artist.tagline')}
+            </span>
 
             {/* Título */}
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-primary-brown leading-tight mb-8">
-              De las notas musicales
-              <span className="block text-terracotta mt-2">
-                a los nudos de macramé
+            <h2 className="font-serif text-4xl md:text-5xl text-brand-dark mb-4 leading-tight">
+              {t('artist.headline')} <br/>
+              <span className="italic text-brand-terra">
+                {t('artist.headlineAccent')}
               </span>
             </h2>
 
+            {/* Subtítulo */}
+            <p className="text-lg text-gray-600 mb-8">
+              {t('artist.subtitle')}
+            </p>
+
             {/* Historia */}
-            <div className="space-y-6 text-text-light font-sans leading-relaxed">
-              <p className="text-lg">
-                <span className="font-medium text-primary-brown">Priscilla Torres</span> es una artista nata.
-                Como flautista traversa, pianista y percusionista, su vida siempre ha estado marcada
-                por el ritmo, la precisión y la disciplina que exige la música.
+            <div className="prose text-gray-600 font-light leading-relaxed space-y-6 text-lg">
+              <p>
+                {t('artist.intro', { name: 'Priscilla Torres' })}
               </p>
 
               <p>
-                Cuando buscaba nuevos horizontes creativos, descubrió en el macramé el lienzo perfecto
-                para expresar su visión artística. Cada nudo que ata es como una nota en una partitura:
-                preciso, intencional, parte de algo más grande.
+                {t('artist.story')}
               </p>
 
               <p>
-                Su perfeccionismo musical se traduce en piezas que no solo se ven hermosas,
-                sino que <span className="italic text-terracotta">fluyen con armonía</span>.
-                Bolsos con movimiento, collares con cadencia, vestibles que danzan contigo.
+                {t('artist.philosophy')}
               </p>
-
-              {/* Quote destacado */}
-              <blockquote className="border-l-4 border-accent-gold pl-6 py-2 my-8">
-                <p className="text-xl font-serif text-primary-brown italic">
-                  "En la música aprendí que cada detalle importa. En el macramé,
-                  cada nudo cuenta la misma historia de dedicación."
-                </p>
-                <footer className="mt-3 text-sm text-text-light">
-                  — Priscilla Torres, Fundadora
-                </footer>
-              </blockquote>
             </div>
 
-            {/* Valores/Filosofía */}
-            <div className="grid grid-cols-3 gap-4 mt-10 pt-10 border-t border-sand-dark">
-              <div className="text-center">
-                <p className="text-2xl lg:text-3xl font-serif text-accent-gold">100%</p>
-                <p className="text-xs uppercase tracking-wider text-text-light mt-1">Hecho a Mano</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl lg:text-3xl font-serif text-accent-gold">+200</p>
-                <p className="text-xs uppercase tracking-wider text-text-light mt-1">Piezas Creadas</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl lg:text-3xl font-serif text-accent-gold">5+</p>
-                <p className="text-xs uppercase tracking-wider text-text-light mt-1">Años de Arte</p>
-              </div>
+            {/* Firma */}
+            <div className="mt-10">
+              <span className="font-serif italic text-3xl text-brand-terra">
+                Priscilla
+              </span>
             </div>
           </div>
         </div>

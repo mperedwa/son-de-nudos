@@ -210,3 +210,45 @@ export function processProducts(
 
   return processed
 }
+
+/**
+ * Busca productos por texto en título, descripción y tags
+ * @param products - Lista de productos
+ * @param query - Texto de búsqueda
+ * @returns Lista de productos que coinciden con la búsqueda
+ */
+export function searchProducts(products: Product[], query: string): Product[] {
+  if (!query || query.trim() === '') {
+    return []
+  }
+
+  const q = query.toLowerCase().trim()
+
+  return products.filter((product) => {
+    // Buscar en título
+    if (product.title.toLowerCase().includes(q)) {
+      return true
+    }
+
+    // Buscar en descripción
+    if (product.descriptionHtml && product.descriptionHtml.toLowerCase().includes(q)) {
+      return true
+    }
+
+    // Buscar en tags
+    if (product.tags && product.tags.some((tag) => tag.toLowerCase().includes(q))) {
+      return true
+    }
+
+    // Buscar en opciones de variantes (material, color, etc.)
+    if (product.variants.some((variant) =>
+      Object.values(variant.options).some(
+        (value) => value && value.toLowerCase().includes(q)
+      )
+    )) {
+      return true
+    }
+
+    return false
+  })
+}

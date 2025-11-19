@@ -24,8 +24,10 @@ type Variant = Database['public']['Tables']['variants']['Row']
 
 const productSchema = z.object({
   title: z.string().min(1, 'El título es requerido'),
+  title_en: z.string().nullable(),
   handle: z.string().min(1, 'El handle es requerido').regex(/^[a-z0-9-]+$/, 'Solo letras minúsculas, números y guiones'),
   description_html: z.string().nullable(),
+  description_html_en: z.string().nullable(),
   price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
   compare_at_price: z.number().nullable(),
   tags: z.array(z.string()),
@@ -35,14 +37,29 @@ const productSchema = z.object({
 
 type ProductFormData = z.infer<typeof productSchema>
 
+// Opciones predefinidas para variantes
+const LARGO_OPTIONS = ['16 in', '18 in', '20 in', '22 in', '24 in']
+const GROSOR_OPTIONS = ['1.5mm', '3mm', '5mm', '9mm']
+const MATERIAL_CORDON_OPTIONS = ['Algodón', 'Algodón encerado', 'Algodón reciclado', 'Nylon', 'Poliéster']
+const MATERIAL_ACCESORIOS_OPTIONS = ['Plata 925', 'Latón', 'Cobre', 'Bronce', 'Piedra natural', 'Cristal', 'Madera', 'Cerámica']
+const COLOR_OPTIONS = [
+  'Natural', 'Blanco', 'Negro', 'Gris', 'Beige', 'Marrón',
+  'Coral', 'Rosa', 'Rojo', 'Naranja', 'Amarillo', 'Mostaza',
+  'Verde', 'Verde musgo', 'Azul', 'Celeste', 'Azul marino', 'Turquesa',
+  'Morado', 'Dorado', 'Plateado'
+]
+
 const variantSchema = z.object({
-  title: z.string().min(1, 'El título es requerido'),
-  sku: z.string().min(1, 'El SKU es requerido').regex(/^[A-Z0-9-]+$/, 'Solo letras mayúsculas, números y guiones'),
+  largo: z.string().min(1, 'El largo es requerido'),
+  grosor: z.string().optional(),
+  materialCordon: z.string().optional(),
+  materialAccesorios: z.string().optional(),
+  colorPrimario: z.string().optional(),
+  colorSecundario: z.string().optional(),
   price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
   compare_at_price: z.number().nullable(),
   available: z.boolean(),
   stock: z.number().int('Debe ser un número entero').min(0, 'El stock debe ser mayor o igual a 0'),
-  options: z.record(z.string(), z.string()),
   image: z.string(),
 })
 
@@ -433,6 +450,7 @@ function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
           <VariantsSection
             productId={product.id}
             productTitle={product.title}
+            productHandle={product.handle}
             productPrice={product.price}
             onVariantChange={() => {
               // Re-fetch variants count cuando cambien
@@ -460,11 +478,12 @@ function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
 interface VariantsSectionProps {
   productId: string
   productTitle: string
+  productHandle: string
   productPrice: number
   onVariantChange: () => void
 }
 
-function VariantsSection({ productId, productTitle, productPrice, onVariantChange }: VariantsSectionProps) {
+function VariantsSection({ productId, productTitle, productHandle, productPrice, onVariantChange }: VariantsSectionProps) {
   const [variants, setVariants] = useState<Variant[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -623,6 +642,8 @@ function VariantsSection({ productId, productTitle, productPrice, onVariantChang
         <VariantFormModal
           mode="create"
           productId={productId}
+          productHandle={productHandle}
+          existingVariants={variants}
           defaultPrice={productPrice}
           onClose={handleCloseModals}
           onSave={handleVariantSaved}
@@ -633,6 +654,8 @@ function VariantsSection({ productId, productTitle, productPrice, onVariantChang
         <VariantFormModal
           mode="edit"
           productId={productId}
+          productHandle={productHandle}
+          existingVariants={variants}
           variant={editingVariant}
           defaultPrice={productPrice}
           onClose={handleCloseModals}
@@ -644,6 +667,8 @@ function VariantsSection({ productId, productTitle, productPrice, onVariantChang
         <VariantFormModal
           mode="clone"
           productId={productId}
+          productHandle={productHandle}
+          existingVariants={variants}
           variant={cloningVariant}
           defaultPrice={productPrice}
           onClose={handleCloseModals}
@@ -689,8 +714,10 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
       ? mode === 'clone'
         ? {
             title: `${product.title} (Copia)`,
+            title_en: product.title_en ? `${product.title_en} (Copy)` : null,
             handle: `${product.handle}-copy`,
             description_html: product.description_html,
+            description_html_en: product.description_html_en,
             price: product.price,
             compare_at_price: product.compare_at_price,
             tags: product.tags,
@@ -699,8 +726,10 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
           }
         : {
             title: product.title,
+            title_en: product.title_en,
             handle: product.handle,
             description_html: product.description_html,
+            description_html_en: product.description_html_en,
             price: product.price,
             compare_at_price: product.compare_at_price,
             tags: product.tags,
@@ -709,8 +738,10 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
           }
       : {
           title: '',
+          title_en: null,
           handle: '',
           description_html: '',
+          description_html_en: null,
           price: 0,
           compare_at_price: null,
           tags: [],
@@ -777,24 +808,41 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
             </div>
           )}
 
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-[#6B5844] mb-2">
-              Título *
-            </label>
-            <input
-              {...register('title')}
-              type="text"
-              className={`
-                w-full px-4 py-2 rounded-lg border-2
-                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
-                ${errors.title ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
-              `}
-              placeholder="Ej: Collar Macramé Azul"
-            />
-            {errors.title && (
-              <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-            )}
+          {/* Title ES/EN */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Título (Español) *
+              </label>
+              <input
+                {...register('title')}
+                type="text"
+                className={`
+                  w-full px-4 py-2 rounded-lg border-2
+                  focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                  ${errors.title ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
+                `}
+                placeholder="Ej: Collar Macramé Azul"
+              />
+              {errors.title && (
+                <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Título (Inglés)
+              </label>
+              <input
+                {...register('title_en')}
+                type="text"
+                className="
+                  w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30
+                  focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                "
+                placeholder="Ej: Blue Macramé Necklace"
+              />
+            </div>
           </div>
 
           {/* Handle */}
@@ -817,20 +865,37 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
             )}
           </div>
 
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-[#6B5844] mb-2">
-              Descripción
-            </label>
-            <textarea
-              {...register('description_html')}
-              rows={4}
-              className="
-                w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30
-                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
-              "
-              placeholder="Descripción del producto..."
-            />
+          {/* Description ES/EN */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Descripción (Español)
+              </label>
+              <textarea
+                {...register('description_html')}
+                rows={4}
+                className="
+                  w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30
+                  focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                "
+                placeholder="Descripción del producto en español..."
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Descripción (Inglés)
+              </label>
+              <textarea
+                {...register('description_html_en')}
+                rows={4}
+                className="
+                  w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30
+                  focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                "
+                placeholder="Product description in English..."
+              />
+            </div>
           </div>
 
           {/* Price */}
@@ -1027,15 +1092,25 @@ function DeleteConfirmModal({ product, onClose, onDelete }: DeleteConfirmModalPr
 interface VariantFormModalProps {
   mode: 'create' | 'edit' | 'clone'
   productId: string
+  productHandle: string
+  existingVariants: Variant[]
   variant?: Variant
   defaultPrice: number
   onClose: () => void
   onSave: () => void
 }
 
-function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onSave }: VariantFormModalProps) {
+function VariantFormModal({ mode, productId, productHandle, existingVariants, variant, defaultPrice, onClose, onSave }: VariantFormModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Extraer opciones existentes de la variante (si existe)
+  const existingLargo = variant?.options?.Largo || ''
+  const existingGrosor = variant?.options?.Grosor || ''
+  const existingMaterialCordon = variant?.options?.MaterialCordon || ''
+  const existingMaterialAccesorios = variant?.options?.MaterialAccesorios || ''
+  const existingColorPrimario = variant?.options?.ColorPrimario || ''
+  const existingColorSecundario = variant?.options?.ColorSecundario || ''
 
   const {
     register,
@@ -1046,46 +1121,78 @@ function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onS
   } = useForm<VariantFormData>({
     resolver: zodResolver(variantSchema),
     defaultValues: variant
-      ? mode === 'clone'
-        ? {
-            title: `${variant.title} (Copia)`,
-            sku: `${variant.sku}-COPY`,
-            price: variant.price,
-            compare_at_price: variant.compare_at_price,
-            available: variant.available,
-            stock: variant.stock,
-            options: variant.options,
-            image: variant.image || '',
-          }
-        : {
-            title: variant.title,
-            sku: variant.sku,
-            price: variant.price,
-            compare_at_price: variant.compare_at_price,
-            available: variant.available,
-            stock: variant.stock,
-            options: variant.options,
-            image: variant.image || '',
-          }
+      ? {
+          largo: existingLargo,
+          grosor: existingGrosor,
+          materialCordon: existingMaterialCordon,
+          materialAccesorios: existingMaterialAccesorios,
+          colorPrimario: existingColorPrimario,
+          colorSecundario: existingColorSecundario,
+          price: variant.price,
+          compare_at_price: variant.compare_at_price,
+          available: variant.available,
+          stock: mode === 'clone' ? 0 : variant.stock,
+          image: variant.image || '',
+        }
       : {
-          title: '',
-          sku: '',
+          largo: '',
+          grosor: '',
+          materialCordon: '',
+          materialAccesorios: '',
+          colorPrimario: '',
+          colorSecundario: '',
           price: defaultPrice,
           compare_at_price: null,
           available: true,
           stock: 0,
-          options: {},
           image: '',
         },
   })
+
+  // Watch los valores para auto-generar título y SKU
+  const largo = watch('largo')
+  const grosor = watch('grosor')
+  const materialCordon = watch('materialCordon')
+  const materialAccesorios = watch('materialAccesorios')
+  const colorPrimario = watch('colorPrimario')
+  const colorSecundario = watch('colorSecundario')
+
+  // Auto-generar título
+  const generatedTitle = [largo, grosor, materialCordon, materialAccesorios, colorPrimario, colorSecundario].filter(Boolean).join(', ') || 'Selecciona las opciones'
+
+  // Auto-generar SKU
+  const generateSKU = () => {
+    const handleUpper = productHandle.toUpperCase().replace(/-/g, '')
+    const nextNumber = existingVariants.length + 1
+    return `${handleUpper}-V${String(nextNumber).padStart(2, '0')}`
+  }
+
+  const generatedSKU = mode === 'edit' ? variant!.sku : generateSKU()
 
   async function onSubmit(data: VariantFormData) {
     setIsSubmitting(true)
     setError(null)
 
     try {
+      // Construir el objeto de variante con título y SKU auto-generados
+      const title = [data.largo, data.grosor, data.materialCordon, data.materialAccesorios, data.colorPrimario, data.colorSecundario].filter(Boolean).join(', ')
+      const sku = mode === 'edit' ? variant!.sku : generateSKU()
+
       const variantData = {
-        ...data,
+        title,
+        sku,
+        price: data.price,
+        compare_at_price: data.compare_at_price,
+        available: data.available,
+        stock: data.stock,
+        options: {
+          Largo: data.largo,
+          Grosor: data.grosor || '',
+          MaterialCordon: data.materialCordon || '',
+          MaterialAccesorios: data.materialAccesorios || '',
+          ColorPrimario: data.colorPrimario || '',
+          ColorSecundario: data.colorSecundario || '',
+        },
         product_id: productId,
         image: data.image || null,
       }
@@ -1095,10 +1202,12 @@ function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onS
         const { error: insertError } = await supabase.from('variants').insert(variantData)
         if (insertError) throw insertError
       } else {
+        // En modo edit, no actualizar el SKU
+        const { sku: _sku, ...updateData } = variantData
         const { error: updateError } = await supabase
           .from('variants')
           // @ts-expect-error - Supabase generated types have circular references
-          .update(data)
+          .update(updateData)
           .eq('id', variant!.id)
         if (updateError) throw updateError
       }
@@ -1128,47 +1237,130 @@ function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onS
             </div>
           )}
 
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-[#6B5844] mb-2">
-              Título *
-            </label>
-            <input
-              {...register('title')}
-              type="text"
-              className={`
-                w-full px-4 py-2 rounded-lg border-2
-                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
-                ${errors.title ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
-              `}
-              placeholder="Ej: Talla M - Color Rojo"
-            />
-            {errors.title && (
-              <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-            )}
+          {/* Preview de Título y SKU auto-generados */}
+          <div className="p-4 bg-[#F5E6D3]/50 rounded-lg border border-[#D4A574]/30">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs font-medium text-[#6B5844]/60 mb-1">Título (auto-generado)</p>
+                <p className="text-sm font-medium text-[#8B6F47]">{generatedTitle}</p>
+              </div>
+              <div>
+                <p className="text-xs font-medium text-[#6B5844]/60 mb-1">SKU {mode === 'edit' ? '' : '(auto-generado)'}</p>
+                <code className="text-sm font-medium text-[#8B6F47] bg-white px-2 py-0.5 rounded">{generatedSKU}</code>
+              </div>
+            </div>
           </div>
 
-          {/* SKU */}
-          <div>
-            <label className="block text-sm font-medium text-[#6B5844] mb-2">
-              SKU *
-            </label>
-            <input
-              {...register('sku')}
-              type="text"
-              className={`
-                w-full px-4 py-2 rounded-lg border-2
-                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
-                ${errors.sku ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
-              `}
-              placeholder="CMB-M-R"
-            />
-            {errors.sku && (
-              <p className="mt-1 text-sm text-red-600">{errors.sku.message}</p>
-            )}
-            <p className="mt-1 text-xs text-[#6B5844]/60">
-              Solo letras mayúsculas, números y guiones
-            </p>
+          {/* Opciones de variante - Fila 1 */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Largo */}
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Largo *
+              </label>
+              <select
+                {...register('largo')}
+                className={`
+                  w-full px-4 py-2 rounded-lg border-2
+                  focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                  ${errors.largo ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
+                `}
+              >
+                <option value="">Seleccionar</option>
+                {LARGO_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+              {errors.largo && (
+                <p className="mt-1 text-sm text-red-600">{errors.largo.message}</p>
+              )}
+            </div>
+
+            {/* Grosor */}
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Grosor
+              </label>
+              <select
+                {...register('grosor')}
+                className="w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30 focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent"
+              >
+                <option value="">Seleccionar</option>
+                {GROSOR_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Opciones de variante - Fila 2: Materiales */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Material del Cordón */}
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Material del Cordón
+              </label>
+              <select
+                {...register('materialCordon')}
+                className="w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30 focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent"
+              >
+                <option value="">Seleccionar</option>
+                {MATERIAL_CORDON_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Material de Accesorios */}
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Material de Accesorios
+              </label>
+              <select
+                {...register('materialAccesorios')}
+                className="w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30 focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent"
+              >
+                <option value="">Seleccionar</option>
+                {MATERIAL_ACCESORIOS_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Opciones de variante - Fila 3: Colores */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Color Primario */}
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Color Primario
+              </label>
+              <select
+                {...register('colorPrimario')}
+                className="w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30 focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent"
+              >
+                <option value="">Seleccionar</option>
+                {COLOR_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Color Secundario */}
+            <div>
+              <label className="block text-sm font-medium text-[#6B5844] mb-2">
+                Color Secundario
+              </label>
+              <select
+                {...register('colorSecundario')}
+                className="w-full px-4 py-2 rounded-lg border-2 border-[#D4A574]/30 focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent"
+              >
+                <option value="">Seleccionar</option>
+                {COLOR_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Price */}
@@ -1235,7 +1427,7 @@ function VariantFormModal({ mode, productId, variant, defaultPrice, onClose, onS
             currentImageUrl={watch('image') || null}
             onImageChange={(url) => setValue('image', url || '')}
             folder="variants"
-            subfolder={watch('sku') || 'temp'}
+            subfolder={generatedSKU || 'temp'}
             label="Imagen de la Variante"
             disabled={isSubmitting}
           />

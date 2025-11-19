@@ -20,7 +20,9 @@ export type Database = {
           id: string
           handle: string
           title: string
+          title_en: string | null
           description_html: string | null
+          description_html_en: string | null
           images: string[]
           price: number
           compare_at_price: number | null

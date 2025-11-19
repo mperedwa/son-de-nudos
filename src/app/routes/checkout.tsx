@@ -107,7 +107,7 @@ export default function CheckoutPage() {
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <Breadcrumbs items={[{ label: t('navigation:home'), href: '/' }, { label: t('checkout:checkout'), href: '/checkout' }]} />
 
-      <h1 className="text-3xl md:text-4xl font-serif text-primary-brown mb-8 mt-6">
+      <h1 className="text-3xl md:text-4xl font-serif text-brand-terra mb-8 mt-6">
         {t('checkout:checkout')}
       </h1>
 
@@ -116,13 +116,13 @@ export default function CheckoutPage() {
         <div className="space-y-6">
           {/* Información de contacto */}
           <div className="bg-white rounded-2xl shadow-soft p-6">
-            <h2 className="text-xl font-semibold text-text-dark mb-4">
+            <h2 className="text-xl font-semibold text-brand-dark mb-4">
               {t('checkout:contactInformation')}
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-text-dark mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-brand-dark mb-2">
                   {t('checkout:email')} <span className="text-red-600">*</span>
                 </label>
                 <input
@@ -131,14 +131,14 @@ export default function CheckoutPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                  className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                   placeholder={t('checkout:emailPlaceholder')}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-text-dark mb-2">
+                  <label htmlFor="firstName" className="block text-sm font-medium text-brand-dark mb-2">
                     {t('checkout:firstName')} <span className="text-red-600">*</span>
                   </label>
                   <input
@@ -147,12 +147,12 @@ export default function CheckoutPage() {
                     required
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                    className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-text-dark mb-2">
+                  <label htmlFor="lastName" className="block text-sm font-medium text-brand-dark mb-2">
                     {t('checkout:lastName')} <span className="text-red-600">*</span>
                   </label>
                   <input
@@ -161,13 +161,13 @@ export default function CheckoutPage() {
                     required
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                    className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-text-dark mb-2">
+                <label htmlFor="phone" className="block text-sm font-medium text-brand-dark mb-2">
                   {t('checkout:phone')}
                 </label>
                 <input
@@ -175,7 +175,7 @@ export default function CheckoutPage() {
                   id="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                  className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                   placeholder={t('checkout:phonePlaceholder')}
                 />
               </div>
@@ -184,14 +184,14 @@ export default function CheckoutPage() {
 
           {/* Método de envío */}
           <div className="bg-white rounded-2xl shadow-soft p-6">
-            <h2 className="text-xl font-semibold text-text-dark mb-4">{t('checkout:shippingMethod')}</h2>
+            <h2 className="text-xl font-semibold text-brand-dark mb-4">{t('checkout:shippingMethod')}</h2>
 
             <div className="space-y-3">
               <label
                 className={`flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
                   shippingMethod === 'shipping'
-                    ? 'border-primary-brown bg-secondary-beige/30'
-                    : 'border-secondary-beige hover:border-accent-gold'
+                    ? 'border-brand-terra bg-stone-200/30'
+                    : 'border-stone-200 hover:border-brand-gold'
                 }`}
               >
                 <input
@@ -203,12 +203,12 @@ export default function CheckoutPage() {
                   className="mt-1"
                 />
                 <div className="flex-1">
-                  <p className="font-medium text-text-dark">{t('checkout:homeDelivery')}</p>
-                  <p className="text-sm text-text-light mt-1">
+                  <p className="font-medium text-brand-dark">{t('checkout:homeDelivery')}</p>
+                  <p className="text-sm text-gray-500 mt-1">
                     {t('checkout:homeDeliveryDescription')}
                   </p>
                 </div>
-                <span className="font-medium text-text-dark">
+                <span className="font-medium text-brand-dark">
                   {formatMoney(shipping)}
                 </span>
               </label>
@@ -216,8 +216,8 @@ export default function CheckoutPage() {
               <label
                 className={`flex items-start gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all ${
                   shippingMethod === 'pickup'
-                    ? 'border-primary-brown bg-secondary-beige/30'
-                    : 'border-secondary-beige hover:border-accent-gold'
+                    ? 'border-brand-terra bg-stone-200/30'
+                    : 'border-stone-200 hover:border-brand-gold'
                 }`}
               >
                 <input
@@ -229,8 +229,8 @@ export default function CheckoutPage() {
                   className="mt-1"
                 />
                 <div className="flex-1">
-                  <p className="font-medium text-text-dark">{t('checkout:pickupInStore')}</p>
-                  <p className="text-sm text-text-light mt-1">
+                  <p className="font-medium text-brand-dark">{t('checkout:pickupInStore')}</p>
+                  <p className="text-sm text-gray-500 mt-1">
                     {t('checkout:pickupInStoreDescription')}
                   </p>
                 </div>
@@ -242,13 +242,13 @@ export default function CheckoutPage() {
           {/* Dirección de envío (solo si shipping) */}
           {shippingMethod === 'shipping' && (
             <div className="bg-white rounded-2xl shadow-soft p-6">
-              <h2 className="text-xl font-semibold text-text-dark mb-4">
+              <h2 className="text-xl font-semibold text-brand-dark mb-4">
                 {t('checkout:shippingAddress')}
               </h2>
 
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-text-dark mb-2">
+                  <label htmlFor="address" className="block text-sm font-medium text-brand-dark mb-2">
                     {t('checkout:address')} <span className="text-red-600">*</span>
                   </label>
                   <input
@@ -257,14 +257,14 @@ export default function CheckoutPage() {
                     required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                    className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                     placeholder={t('checkout:streetPlaceholder')}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="city" className="block text-sm font-medium text-text-dark mb-2">
+                    <label htmlFor="city" className="block text-sm font-medium text-brand-dark mb-2">
                       {t('checkout:city')} <span className="text-red-600">*</span>
                     </label>
                     <input
@@ -273,12 +273,12 @@ export default function CheckoutPage() {
                       required
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                      className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label htmlFor="state" className="block text-sm font-medium text-text-dark mb-2">
+                    <label htmlFor="state" className="block text-sm font-medium text-brand-dark mb-2">
                       {t('checkout:state')} <span className="text-red-600">*</span>
                     </label>
                     <input
@@ -287,13 +287,13 @@ export default function CheckoutPage() {
                       required
                       value={state}
                       onChange={(e) => setState(e.target.value)}
-                      className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                      className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="zipCode" className="block text-sm font-medium text-text-dark mb-2">
+                  <label htmlFor="zipCode" className="block text-sm font-medium text-brand-dark mb-2">
                     {t('checkout:zipCode')} <span className="text-red-600">*</span>
                   </label>
                   <input
@@ -302,7 +302,7 @@ export default function CheckoutPage() {
                     required
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value)}
-                    className="w-full px-4 py-3 border border-secondary-beige rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent"
+                    className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
                     placeholder={t('checkout:zipCodePlaceholder')}
                   />
                 </div>
@@ -314,16 +314,16 @@ export default function CheckoutPage() {
         {/* Columna derecha: Resumen del pedido */}
         <div>
           <div className="bg-white rounded-2xl shadow-soft p-6 sticky top-8">
-            <h2 className="text-xl font-semibold text-text-dark mb-4">{t('checkout:orderSummary')}</h2>
+            <h2 className="text-xl font-semibold text-brand-dark mb-4">{t('checkout:orderSummary')}</h2>
 
             {/* Items */}
             <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
               {items.map((item) => (
                 <div
                   key={`${item.productId}-${item.variantId}`}
-                  className="flex gap-3 pb-3 border-b border-secondary-beige last:border-b-0"
+                  className="flex gap-3 pb-3 border-b border-stone-200 last:border-b-0"
                 >
-                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-secondary-beige flex-shrink-0">
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-stone-200 flex-shrink-0">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -332,15 +332,15 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-text-dark text-sm truncate">
+                    <h3 className="font-medium text-brand-dark text-sm truncate">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-text-light">{item.variantTitle}</p>
-                    <p className="text-xs text-text-light mt-1">{t('checkout:quantity')} {item.quantity}</p>
+                    <p className="text-xs text-gray-500">{item.variantTitle}</p>
+                    <p className="text-xs text-gray-500 mt-1">{t('checkout:quantity')} {item.quantity}</p>
                   </div>
 
                   <div className="text-right">
-                    <p className="font-medium text-text-dark text-sm">
+                    <p className="font-medium text-brand-dark text-sm">
                       {formatMoney({
                         amount: item.unitPrice.amount * item.quantity,
                         currency: item.unitPrice.currency,
@@ -352,10 +352,10 @@ export default function CheckoutPage() {
             </div>
 
             {/* Totales */}
-            <div className="space-y-3 pt-4 border-t border-secondary-beige">
+            <div className="space-y-3 pt-4 border-t border-stone-200">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-text-dark">{t('cart:subtotal')}</span>
-                <span className="font-medium text-text-dark">{formatMoney(subtotal)}</span>
+                <span className="text-brand-dark">{t('cart:subtotal')}</span>
+                <span className="font-medium text-brand-dark">{formatMoney(subtotal)}</span>
               </div>
 
               {discountAmount && (
@@ -370,17 +370,17 @@ export default function CheckoutPage() {
               )}
 
               <div className="flex items-center justify-between text-sm">
-                <span className="text-text-dark">{t('cart:shipping')}</span>
+                <span className="text-brand-dark">{t('cart:shipping')}</span>
                 {shippingMethod === 'pickup' ? (
                   <span className="font-medium text-green-600">{t('cart:free')}</span>
                 ) : (
-                  <span className="font-medium text-text-dark">{formatMoney(shipping)}</span>
+                  <span className="font-medium text-brand-dark">{formatMoney(shipping)}</span>
                 )}
               </div>
 
-              <div className="flex items-center justify-between text-lg font-semibold pt-3 border-t border-secondary-beige">
-                <span className="text-text-dark">{t('cart:total')}</span>
-                <span className="text-primary-brown">
+              <div className="flex items-center justify-between text-lg font-semibold pt-3 border-t border-stone-200">
+                <span className="text-brand-dark">{t('cart:total')}</span>
+                <span className="text-brand-terra">
                   {formatMoney(
                     shippingMethod === 'pickup'
                       ? {
@@ -397,12 +397,12 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={isProcessing}
-              className="w-full mt-6 py-4 bg-primary-brown text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-6 py-4 bg-brand-terra text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? t('checkout:processing') : t('checkout:completeOrder')}
             </button>
 
-            <p className="text-xs text-text-light text-center mt-4">
+            <p className="text-xs text-gray-500 text-center mt-4">
               {t('checkout:termsAcceptance')}
             </p>
           </div>

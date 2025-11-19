@@ -18,8 +18,8 @@ export default function ImageGallery({ images, productTitle }: ImageGalleryProps
 
   if (!images || images.length === 0) {
     return (
-      <div className="aspect-square bg-secondary-beige rounded-2xl flex items-center justify-center">
-        <p className="text-text-light">Sin imagen disponible</p>
+      <div className="aspect-square bg-stone-200 rounded-2xl flex items-center justify-center">
+        <p className="text-gray-500">Sin imagen disponible</p>
       </div>
     )
   }
@@ -29,7 +29,7 @@ export default function ImageGallery({ images, productTitle }: ImageGalleryProps
   return (
     <div className="space-y-4">
       {/* Imagen principal */}
-      <div className="relative aspect-square bg-secondary-beige rounded-2xl overflow-hidden group">
+      <div className="relative aspect-square bg-stone-200 rounded-2xl overflow-hidden group">
         <img
           src={currentImage}
           alt={`${productTitle} - Imagen ${currentIndex + 1}`}
@@ -65,8 +65,8 @@ export default function ImageGallery({ images, productTitle }: ImageGalleryProps
                 aspect-square rounded-lg overflow-hidden border-2 transition-all
                 ${
                   index === currentIndex
-                    ? 'border-primary-brown shadow-md'
-                    : 'border-secondary-beige hover:border-accent-gold'
+                    ? 'border-brand-terra shadow-md'
+                    : 'border-stone-200 hover:border-brand-gold'
                 }
               `}
               aria-label={`Ver imagen ${index + 1}`}

@@ -29,10 +29,10 @@ export default function ProductGrid({ products, isLoading = false }: ProductGrid
             key={index}
             className="bg-white rounded-2xl shadow-soft overflow-hidden animate-pulse"
           >
-            <div className="aspect-square bg-secondary-beige" />
+            <div className="aspect-square bg-stone-200" />
             <div className="p-4 space-y-3">
-              <div className="h-4 bg-secondary-beige rounded w-3/4" />
-              <div className="h-4 bg-secondary-beige rounded w-1/2" />
+              <div className="h-4 bg-stone-200 rounded w-3/4" />
+              <div className="h-4 bg-stone-200 rounded w-1/2" />
             </div>
           </div>
         ))}
@@ -46,7 +46,7 @@ export default function ProductGrid({ products, isLoading = false }: ProductGrid
       <div className="text-center py-16">
         <div className="max-w-md mx-auto">
           <svg
-            className="w-24 h-24 mx-auto text-text-light mb-4"
+            className="w-24 h-24 mx-auto text-gray-500 mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -58,10 +58,10 @@ export default function ProductGrid({ products, isLoading = false }: ProductGrid
               d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
             />
           </svg>
-          <h3 className="text-xl font-serif text-primary-brown mb-2">
+          <h3 className="text-xl font-serif text-brand-terra mb-2">
             {t('noProductsFound')}
           </h3>
-          <p className="text-text-light">
+          <p className="text-gray-500">
             {t('tryAdjustingFilters')}
           </p>
         </div>

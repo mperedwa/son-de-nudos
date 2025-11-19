@@ -70,10 +70,10 @@ export default function VariantSelector({
 
         return (
           <div key={optionName}>
-            <label className="block text-sm font-medium text-text-dark mb-3">
+            <label className="block text-sm font-medium text-brand-dark mb-3">
               {optionName}
               {selectedValue && (
-                <span className="ml-2 text-primary-brown">- {selectedValue}</span>
+                <span className="ml-2 text-brand-terra">- {selectedValue}</span>
               )}
             </label>
 
@@ -91,10 +91,10 @@ export default function VariantSelector({
                       relative px-4 py-3 rounded-lg border-2 text-sm font-medium transition-all
                       ${
                         isSelected
-                          ? 'border-primary-brown bg-primary-brown text-white'
+                          ? 'border-brand-terra bg-brand-terra text-white'
                           : isAvailable
-                          ? 'border-secondary-beige bg-white text-text-dark hover:border-accent-gold hover:bg-secondary-beige'
-                          : 'border-secondary-beige bg-gray-100 text-gray-400 cursor-not-allowed'
+                          ? 'border-stone-200 bg-white text-brand-dark hover:border-brand-gold hover:bg-stone-200'
+                          : 'border-stone-200 bg-gray-100 text-gray-400 cursor-not-allowed'
                       }
                     `}
                   >
@@ -124,15 +124,15 @@ export default function VariantSelector({
 
       {/* Mensaje de stock */}
       {selectedVariant && (
-        <div className="bg-secondary-beige rounded-lg p-4">
+        <div className="bg-stone-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-text-dark">
+            <span className="text-sm text-brand-dark">
               {selectedVariant.available ? (
                 <>
                   <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                   En stock
                   {selectedVariant.stock && (
-                    <span className="ml-2 text-text-light">
+                    <span className="ml-2 text-gray-500">
                       ({selectedVariant.stock} disponibles)
                     </span>
                   )}

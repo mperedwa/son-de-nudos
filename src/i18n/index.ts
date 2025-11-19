@@ -26,6 +26,7 @@ import esCheckout from './locales/es/checkout.json'
 import esMessages from './locales/es/messages.json'
 import esAnnouncements from './locales/es/announcements.json'
 import esFilters from './locales/es/filters.json'
+import esLanding from './locales/es/landing.json'
 
 // Importar traducciones en inglés
 import enCommon from './locales/en/common.json'
@@ -36,6 +37,7 @@ import enCheckout from './locales/en/checkout.json'
 import enMessages from './locales/en/messages.json'
 import enAnnouncements from './locales/en/announcements.json'
 import enFilters from './locales/en/filters.json'
+import enLanding from './locales/en/landing.json'
 
 // Recursos de traducción organizados por idioma y namespace
 const resources = {
@@ -48,6 +50,7 @@ const resources = {
     messages: esMessages,
     announcements: esAnnouncements,
     filters: esFilters,
+    landing: esLanding,
   },
   en: {
     common: enCommon,
@@ -58,6 +61,7 @@ const resources = {
     messages: enMessages,
     announcements: enAnnouncements,
     filters: enFilters,
+    landing: enLanding,
   },
 } as const
 
@@ -81,7 +85,7 @@ i18n
     defaultNS: 'common',
 
     // Namespaces disponibles
-    ns: ['common', 'navigation', 'product', 'cart', 'checkout', 'messages', 'announcements', 'filters'],
+    ns: ['common', 'navigation', 'product', 'cart', 'checkout', 'messages', 'announcements', 'filters', 'landing'],
 
     // Opciones del detector de idioma
     detection: {

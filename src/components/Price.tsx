@@ -27,20 +27,20 @@ export default function Price({
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       {/* Precio actual */}
-      <span className="text-primary-brown font-semibold text-lg">
+      <span className="text-brand-terra font-semibold text-lg">
         {formatMoney(price)}
       </span>
 
       {/* Precio comparativo tachado */}
       {hasDiscount && (
-        <span className="text-text-light text-sm line-through">
+        <span className="text-gray-500 text-sm line-through">
           {formatMoney(compareAtPrice)}
         </span>
       )}
 
       {/* Badge de descuento */}
       {hasDiscount && showDiscount && discountPercent > 0 && (
-        <span className="bg-accent-gold text-white text-xs px-2 py-1 rounded-full font-medium">
+        <span className="bg-brand-gold text-white text-xs px-2 py-1 rounded-full font-medium">
           -{discountPercent}%
         </span>
       )}

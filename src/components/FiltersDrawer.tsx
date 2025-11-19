@@ -87,11 +87,11 @@ export default function FiltersDrawer({
         aria-label={t('filterProducts')}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-secondary-beige p-6 flex items-center justify-between z-10">
-          <h2 className="text-xl font-serif text-primary-brown">{t('filters')}</h2>
+        <div className="sticky top-0 bg-white border-b border-stone-200 p-6 flex items-center justify-between z-10">
+          <h2 className="text-xl font-serif text-brand-terra">{t('filters')}</h2>
           <button
             onClick={onClose}
-            className="lg:hidden text-text-dark hover:text-primary-brown"
+            className="lg:hidden text-brand-dark hover:text-brand-terra"
             aria-label={t('closeFilters')}
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -109,7 +109,7 @@ export default function FiltersDrawer({
         <div className="p-6 space-y-6">
           {/* Disponibilidad */}
           <div>
-            <h3 className="font-medium text-text-dark mb-3">{t('availability')}</h3>
+            <h3 className="font-medium text-brand-dark mb-3">{t('availability')}</h3>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -117,18 +117,18 @@ export default function FiltersDrawer({
                 onChange={(e) =>
                   setFilters({ ...filters, inStockOnly: e.target.checked || undefined })
                 }
-                className="w-4 h-4 text-primary-brown focus:ring-primary-brown border-gray-300 rounded"
+                className="w-4 h-4 text-brand-terra focus:ring-brand-terra border-gray-300 rounded"
               />
-              <span className="text-sm text-text-dark">{t('inStockOnly')}</span>
+              <span className="text-sm text-brand-dark">{t('inStockOnly')}</span>
             </label>
           </div>
 
           {/* Rango de precio */}
           <div>
-            <h3 className="font-medium text-text-dark mb-3">{t('price')}</h3>
+            <h3 className="font-medium text-brand-dark mb-3">{t('price')}</h3>
             <div className="space-y-3">
               <div>
-                <label htmlFor="price-min" className="text-xs text-text-light">
+                <label htmlFor="price-min" className="text-xs text-gray-500">
                   {t('minPrice', { amount: filters.priceMin || priceRange.min })}
                 </label>
                 <input
@@ -140,11 +140,11 @@ export default function FiltersDrawer({
                   onChange={(e) =>
                     setFilters({ ...filters, priceMin: Number(e.target.value) })
                   }
-                  className="w-full h-2 bg-secondary-beige rounded-lg appearance-none cursor-pointer accent-primary-brown"
+                  className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-brand-terra"
                 />
               </div>
               <div>
-                <label htmlFor="price-max" className="text-xs text-text-light">
+                <label htmlFor="price-max" className="text-xs text-gray-500">
                   {t('maxPrice', { amount: filters.priceMax || priceRange.max })}
                 </label>
                 <input
@@ -156,7 +156,7 @@ export default function FiltersDrawer({
                   onChange={(e) =>
                     setFilters({ ...filters, priceMax: Number(e.target.value) })
                   }
-                  className="w-full h-2 bg-secondary-beige rounded-lg appearance-none cursor-pointer accent-primary-brown"
+                  className="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-brand-terra"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@ export default function FiltersDrawer({
           {/* Material */}
           {materials.length > 0 && (
             <div>
-              <h3 className="font-medium text-text-dark mb-3">{t('material')}</h3>
+              <h3 className="font-medium text-brand-dark mb-3">{t('material')}</h3>
               <div className="space-y-2">
                 {materials.map((material) => (
                   <label key={material} className="flex items-center gap-2 cursor-pointer">
@@ -173,9 +173,9 @@ export default function FiltersDrawer({
                       type="checkbox"
                       checked={filters.materials?.includes(material) || false}
                       onChange={() => toggleArrayFilter('materials', material)}
-                      className="w-4 h-4 text-primary-brown focus:ring-primary-brown border-gray-300 rounded"
+                      className="w-4 h-4 text-brand-terra focus:ring-brand-terra border-gray-300 rounded"
                     />
-                    <span className="text-sm text-text-dark">{material}</span>
+                    <span className="text-sm text-brand-dark">{material}</span>
                   </label>
                 ))}
               </div>
@@ -185,7 +185,7 @@ export default function FiltersDrawer({
           {/* Color */}
           {colors.length > 0 && (
             <div>
-              <h3 className="font-medium text-text-dark mb-3">{t('color')}</h3>
+              <h3 className="font-medium text-brand-dark mb-3">{t('color')}</h3>
               <div className="space-y-2">
                 {colors.map((color) => (
                   <label key={color} className="flex items-center gap-2 cursor-pointer">
@@ -193,9 +193,9 @@ export default function FiltersDrawer({
                       type="checkbox"
                       checked={filters.colors?.includes(color) || false}
                       onChange={() => toggleArrayFilter('colors', color)}
-                      className="w-4 h-4 text-primary-brown focus:ring-primary-brown border-gray-300 rounded"
+                      className="w-4 h-4 text-brand-terra focus:ring-brand-terra border-gray-300 rounded"
                     />
-                    <span className="text-sm text-text-dark">{color}</span>
+                    <span className="text-sm text-brand-dark">{color}</span>
                   </label>
                 ))}
               </div>
@@ -205,7 +205,7 @@ export default function FiltersDrawer({
           {/* Largo */}
           {lengths.length > 0 && (
             <div>
-              <h3 className="font-medium text-text-dark mb-3">{t('length')}</h3>
+              <h3 className="font-medium text-brand-dark mb-3">{t('length')}</h3>
               <div className="space-y-2">
                 {lengths.map((length) => (
                   <label key={length} className="flex items-center gap-2 cursor-pointer">
@@ -213,9 +213,9 @@ export default function FiltersDrawer({
                       type="checkbox"
                       checked={filters.lengths?.includes(length) || false}
                       onChange={() => toggleArrayFilter('lengths', length)}
-                      className="w-4 h-4 text-primary-brown focus:ring-primary-brown border-gray-300 rounded"
+                      className="w-4 h-4 text-brand-terra focus:ring-brand-terra border-gray-300 rounded"
                     />
-                    <span className="text-sm text-text-dark">{length}</span>
+                    <span className="text-sm text-brand-dark">{length}</span>
                   </label>
                 ))}
               </div>
@@ -224,16 +224,16 @@ export default function FiltersDrawer({
         </div>
 
         {/* Footer con botones */}
-        <div className="sticky bottom-0 bg-white border-t border-secondary-beige p-6 space-y-3">
+        <div className="sticky bottom-0 bg-white border-t border-stone-200 p-6 space-y-3">
           <button
             onClick={handleApply}
-            className="w-full py-3 bg-primary-brown text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+            className="w-full py-3 bg-brand-terra text-white rounded-lg font-medium hover:bg-opacity-90 transition-colors"
           >
             {t('viewResults')}
           </button>
           <button
             onClick={handleClear}
-            className="w-full py-3 bg-white border border-primary-brown text-primary-brown rounded-lg font-medium hover:bg-secondary-beige transition-colors"
+            className="w-full py-3 bg-white border border-brand-terra text-brand-terra rounded-lg font-medium hover:bg-stone-200 transition-colors"
           >
             {t('clearFilters')}
           </button>

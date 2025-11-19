@@ -77,14 +77,14 @@ export default function AddToCartButton({
         w-full py-4 px-6 rounded-lg font-medium text-lg transition-all transform
         ${
           canAddToCart && !isAdding && !showSuccess
-            ? 'bg-primary-brown text-white hover:bg-opacity-90 hover:shadow-soft-hover active:scale-95'
+            ? 'bg-brand-terra text-white hover:bg-opacity-90 hover:shadow-soft-hover active:scale-95'
             : !selectedVariant
-            ? 'bg-secondary-beige text-text-light cursor-not-allowed'
+            ? 'bg-stone-200 text-gray-500 cursor-not-allowed'
             : selectedVariant && !selectedVariant.available
             ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
             : showSuccess
             ? 'bg-green-600 text-white'
-            : 'bg-primary-brown text-white opacity-70 cursor-wait'
+            : 'bg-brand-terra text-white opacity-70 cursor-wait'
         }
       `}
       aria-label={buttonText}

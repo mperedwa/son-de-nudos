@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta de tonos tierra - Son de Nudos
+        // Paleta fusionada - Gemini + Original
         primary: {
           brown: '#8B6F47',
           DEFAULT: '#8B6F47',
@@ -17,37 +17,55 @@ export default {
           DEFAULT: '#F5E6D3',
         },
         accent: {
-          gold: '#D4A574',
-          DEFAULT: '#D4A574',
+          gold: '#D4AF37', // Dorado más brillante (Gemini)
+          DEFAULT: '#D4AF37',
         },
         text: {
-          dark: '#3C2F2F',
-          light: '#6B5D54',
+          dark: '#2C2C2C', // Más oscuro (Gemini)
+          light: '#5E665B', // Verde olivo (Gemini)
+        },
+        // Colores Gemini
+        brand: {
+          terra: '#A65D57', // Terracota más vibrante
+          sand: '#F5F0EB',  // Fondo crema más cálido
+          olive: '#5E665B', // Verde apagado para textos
+          dark: '#2C2C2C',  // Oscuro para contraste
+          gold: '#D4AF37',  // Dorado brillante
         },
         // Colores adicionales Landing Page
         terracotta: {
           light: '#E8B4A0',
-          DEFAULT: '#C97B5D',
-          dark: '#A65D42',
+          DEFAULT: '#A65D57', // Actualizado a Gemini
+          dark: '#8B4A45',
         },
         olive: {
           light: '#A8B89C',
-          DEFAULT: '#7A8B6F',
-          dark: '#5C6B52',
+          DEFAULT: '#5E665B', // Actualizado a Gemini
+          dark: '#4A524A',
         },
         sand: {
           light: '#FBF7F2',
-          DEFAULT: '#F0E6D8',
+          DEFAULT: '#F5F0EB', // Actualizado a Gemini
           dark: '#E5D5C3',
         },
       },
       fontFamily: {
-        serif: ['Georgia', 'Times New Roman', 'Times', 'serif'],
-        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', 'sans-serif'],
+        // Google Fonts: Playfair Display + Lato
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['"Lato"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
         'soft': '0 5px 20px rgba(139, 111, 71, 0.1)',
         'soft-hover': '0 10px 30px rgba(139, 111, 71, 0.2)',
+      },
+      animation: {
+        'fade-in-up': 'fadeInUp 1s ease-out forwards',
+      },
+      keyframes: {
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
     },
   },

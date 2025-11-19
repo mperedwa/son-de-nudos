@@ -7,6 +7,7 @@ export type UIState = {
   // Estados de drawers/modals
   isCartDrawerOpen: boolean
   isFiltersDrawerOpen: boolean
+  isSearchOpen: boolean
 
   // Acciones
   openCartDrawer: () => void
@@ -16,6 +17,10 @@ export type UIState = {
   openFiltersDrawer: () => void
   closeFiltersDrawer: () => void
   toggleFiltersDrawer: () => void
+
+  openSearch: () => void
+  closeSearch: () => void
+  toggleSearch: () => void
 }
 
 /**
@@ -25,6 +30,7 @@ export type UIState = {
 export const useUIStore = create<UIState>((set) => ({
   isCartDrawerOpen: false,
   isFiltersDrawerOpen: false,
+  isSearchOpen: false,
 
   openCartDrawer: () => set({ isCartDrawerOpen: true }),
   closeCartDrawer: () => set({ isCartDrawerOpen: false }),
@@ -33,4 +39,8 @@ export const useUIStore = create<UIState>((set) => ({
   openFiltersDrawer: () => set({ isFiltersDrawerOpen: true }),
   closeFiltersDrawer: () => set({ isFiltersDrawerOpen: false }),
   toggleFiltersDrawer: () => set((state) => ({ isFiltersDrawerOpen: !state.isFiltersDrawerOpen })),
+
+  openSearch: () => set({ isSearchOpen: true }),
+  closeSearch: () => set({ isSearchOpen: false }),
+  toggleSearch: () => set((state) => ({ isSearchOpen: !state.isSearchOpen })),
 }))

@@ -119,8 +119,8 @@ export default function CollectionPage() {
       />
 
       <div className="mb-8">
-        <h1 className="text-4xl font-serif text-primary-brown mb-2">{t('navigation:necklaces')}</h1>
-        <p className="text-text-light">{t('navigation:necklacesDescription')}</p>
+        <h1 className="text-4xl font-serif text-brand-terra mb-2">{t('navigation:necklaces')}</h1>
+        <p className="text-gray-500">{t('navigation:necklacesDescription')}</p>
       </div>
 
       {/* Mensaje de error si falla la carga */}

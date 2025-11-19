@@ -34,12 +34,12 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 <>
                   <Link
                     to={item.href}
-                    className="text-text-light hover:text-primary-brown transition-colors"
+                    className="text-gray-500 hover:text-brand-terra transition-colors"
                   >
                     {item.label}
                   </Link>
                   <svg
-                    className="w-4 h-4 text-text-light"
+                    className="w-4 h-4 text-gray-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 </>
               ) : (
                 <span
-                  className="text-primary-brown font-medium"
+                  className="text-brand-terra font-medium"
                   aria-current="page"
                 >
                   {item.label}

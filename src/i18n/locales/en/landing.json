@@ -1,0 +1,87 @@
+{
+  "hero": {
+    "tagline": "Textile Art & Design",
+    "headline": "Where rhythm",
+    "headlineAccent": "becomes thread",
+    "description": "Each piece is a unique composition, woven with the precision of a musical score and the passion of an artist.",
+    "ctaExplore": "Explore Collection",
+    "ctaArtist": "Meet the Artist"
+  },
+  "valueProps": {
+    "handmade": {
+      "title": "Handmade",
+      "description": "Each knot is woven with precision and personal care."
+    },
+    "rhythm": {
+      "title": "Design with Rhythm",
+      "description": "Pieces with movement inspired by music."
+    },
+    "premium": {
+      "title": "Premium Materials",
+      "description": "High-quality threads for luxury finishes."
+    }
+  },
+  "artist": {
+    "tagline": "About the Founder",
+    "headline": "Rhythm in My Hands:",
+    "headlineAccent": "From Score to Weave",
+    "subtitle": "Meet Priscilla Torres, the creative soul behind Son de Nudos.",
+    "intro": "For years, my life revolved around music. The transverse flute, percussion, piano... each instrument taught me something invaluable about precision, rhythm, and discipline.",
+    "story": "When I discovered macramé, I found a new language to express everything music had given me. Each knot I tie is like a note in a score: precise, intentional, part of a greater composition.",
+    "philosophy": "What was once sound is now texture. What was melody is now movement. My hands continue creating art, only now the stage is different. Welcome to my new stage.",
+    "harmonyText": "flow with harmony",
+    "quote": "Each piece carries a bit of my musical soul. The rhythm never leaves me.",
+    "quoteAuthor": "Priscilla Torres, Founder",
+    "statHandmade": "Handmade",
+    "statPieces": "Pieces Created",
+    "statYears": "Years of Art"
+  },
+  "categories": {
+    "tagline": "Collections",
+    "headline": "Find your perfect piece",
+    "description": "Each category represents a unique way to express the art of macramé. Discover which one resonates with you.",
+    "explore": "Explore",
+    "bags": {
+      "title": "Bags",
+      "subtitle": "Elegance you carry with you"
+    },
+    "necklaces": {
+      "title": "Necklaces",
+      "subtitle": "Harmony in every detail"
+    },
+    "wearables": {
+      "title": "Wearables",
+      "subtitle": "Art that adapts to you"
+    }
+  },
+  "featured": {
+    "tagline": "Featured This Month",
+    "title": "The \"Symphony\" Bag",
+    "description": "A piece that combines rigid structure with flowing fringes, inspired by the movement of strings. Perfect for an elegant night out or a casual day with style.",
+    "cta": "View Details"
+  },
+  "instagram": {
+    "tagline": "Join our community",
+    "headline": "Follow our rhythm",
+    "handle": "@son_de_nudos",
+    "cta": "See more on Instagram",
+    "posts": {
+      "1": "Macramé bag at beach",
+      "2": "Artisanal necklace closeup",
+      "3": "Weaving process",
+      "4": "Wearable at event",
+      "5": "Knot details",
+      "6": "Urban lifestyle"
+    }
+  },
+  "newsletter": {
+    "headline": "Join the rhythm",
+    "description": "Be the first to know about new collections, access exclusive pieces, and receive artisanal inspiration directly in your inbox.",
+    "placeholder": "Your email address",
+    "submit": "Subscribe",
+    "sending": "Sending...",
+    "success": "Subscribed!",
+    "successMessage": "Welcome to the community! Check your email to confirm your subscription.",
+    "privacy": "We respect your privacy. No spam, just artisanal inspiration."
+  }
+}

@@ -12,15 +12,15 @@ export default function SuccessPage() {
       <div className="container mx-auto px-4 text-center">
         <div className="bg-white rounded-2xl shadow-soft p-12 max-w-2xl mx-auto">
           <div className="text-6xl mb-6">✓</div>
-          <h1 className="text-4xl font-serif text-primary-brown mb-4">
+          <h1 className="text-4xl font-serif text-brand-terra mb-4">
             {t('paymentSuccessTitle')}
           </h1>
-          <p className="text-text-light mb-8">
+          <p className="text-gray-500 mb-8">
             {t('paymentSuccessMessage')}
           </p>
           <a
             href="/"
-            className="inline-block bg-primary-brown hover:bg-accent-gold text-white font-medium px-8 py-3 rounded-lg transition-colors"
+            className="inline-block bg-brand-terra hover:bg-brand-gold text-white font-medium px-8 py-3 rounded-lg transition-colors"
           >
             {t('backToStore')}
           </a>

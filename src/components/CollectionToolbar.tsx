@@ -35,12 +35,12 @@ export default function CollectionToolbar({
   ]
 
   return (
-    <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-secondary-beige">
+    <div className="flex items-center justify-between gap-4 mb-8 pb-4 border-b border-stone-200">
       {/* Botón de filtros (móvil/tablet) y contador */}
       <div className="flex items-center gap-4">
         <button
           onClick={onFiltersClick}
-          className="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border border-primary-brown text-primary-brown rounded-lg hover:bg-secondary-beige transition-colors"
+          className="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border border-brand-terra text-brand-terra rounded-lg hover:bg-stone-200 transition-colors"
           aria-label={t('filters:openFilters')}
         >
           <svg
@@ -59,21 +59,21 @@ export default function CollectionToolbar({
           <span className="font-medium">{t('filters:filters')}</span>
         </button>
 
-        <p className="text-text-light text-sm">
+        <p className="text-gray-500 text-sm">
           {productCount} {productCount === 1 ? t('product:product') : t('product:products')}
         </p>
       </div>
 
       {/* Selector de orden */}
       <div className="flex items-center gap-2">
-        <label htmlFor="sort-select" className="text-sm text-text-dark font-medium hidden sm:block">
+        <label htmlFor="sort-select" className="text-sm text-brand-dark font-medium hidden sm:block">
           {t('filters:sortBy')}
         </label>
         <select
           id="sort-select"
           value={currentSort}
           onChange={(e) => onSortChange(e.target.value as SortOption)}
-          className="px-4 py-2 bg-white border border-secondary-beige rounded-lg text-sm text-text-dark focus:outline-none focus:ring-2 focus:ring-primary-brown focus:border-transparent cursor-pointer"
+          className="px-4 py-2 bg-white border border-stone-200 rounded-lg text-sm text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent cursor-pointer"
         >
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value}>

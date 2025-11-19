@@ -35,7 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <article className="bg-white rounded-2xl shadow-soft hover:shadow-soft-hover transition-all duration-300 hover:-translate-y-1 overflow-hidden">
         {/* Imagen del producto */}
-        <div className="relative aspect-square overflow-hidden bg-secondary-beige">
+        <div className="relative aspect-square overflow-hidden bg-brand-sand">
           <img
             src={isHovered ? hoverImage : mainImage}
             alt={product.title}
@@ -45,14 +45,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {/* Badge de descuento */}
           {product.compareAtPrice && product.compareAtPrice.amount > product.price.amount && (
-            <div className="absolute top-3 right-3 bg-accent-gold text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
+            <div className="absolute top-3 right-3 bg-brand-gold text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
               {t('sale')}
             </div>
           )}
 
           {/* Badge de nuevo */}
           {product.tags.includes('nuevo') && (
-            <div className="absolute top-3 left-3 bg-primary-brown text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
+            <div className="absolute top-3 left-3 bg-brand-terra text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">
               {t('new')}
             </div>
           )}
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Badge de agotado */}
           {!product.availableForSale && (
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-              <span className="bg-white text-text-dark text-sm px-4 py-2 rounded-lg font-semibold">
+              <span className="bg-white text-brand-dark text-sm px-4 py-2 rounded-lg font-semibold">
                 {t('outOfStock')}
               </span>
             </div>
@@ -70,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Información del producto */}
         <div className="p-4">
           {/* Título */}
-          <h3 className="text-text-dark font-medium mb-2 line-clamp-2 group-hover:text-primary-brown transition-colors">
+          <h3 className="text-brand-dark font-medium mb-2 line-clamp-2 group-hover:text-brand-terra transition-colors">
             {product.title}
           </h3>
 
@@ -83,7 +83,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           {/* Indicador de variantes */}
           {hasMultipleVariants && (
-            <p className="text-text-light text-xs mt-2">
+            <p className="text-gray-500 text-xs mt-2">
               {product.variants.length} {t('optionsAvailable')}
             </p>
           )}
