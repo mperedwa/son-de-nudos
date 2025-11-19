@@ -15,6 +15,7 @@ import AdminProfile from './app/routes/admin/profile'
 import AdminProducts from './app/routes/admin/products'
 import AdminInventory from './app/routes/admin/inventory'
 import AdminCoupons from './app/routes/admin/coupons'
+import AdminOrders from './app/routes/admin/orders'
 
 /**
  * Configuración principal de rutas
@@ -53,15 +54,7 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="profile" element={<AdminProfile />} />
           <Route path="products" element={<AdminProducts />} />
-          {/* Placeholder routes - se implementarán en siguientes fases */}
-          <Route
-            path="orders"
-            element={
-              <div className="p-8 text-center text-[#6B5844]">
-                Gestión de pedidos - Próximamente
-              </div>
-            }
-          />
+          <Route path="orders" element={<AdminOrders />} />
           <Route path="coupons" element={<AdminCoupons />} />
           <Route path="inventory" element={<AdminInventory />} />
           <Route

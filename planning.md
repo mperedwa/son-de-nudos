@@ -269,12 +269,14 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	Cleanup automático: al eliminar productos/variantes se eliminan sus imágenes
 	•	URLs públicas con CDN de Supabase
 
-⏳ **Pendientes del Hito 11:**
-	•	Gestión de Inventario (/admin/inventory) - Vista consolidada de stock
+✅ **Completados del Hito 11:**
+	•	Gestión de Inventario (/admin/inventory) - 520 líneas
 	•	Real-time updates de stock con subscripciones
-	•	CRUD de Cupones (crear, editar, listar, activar/desactivar)
-	•	Vista de Pedidos (tabla con filtros, detalle individual)
-	•	Detalle de pedido con timeline de estados
+	•	CRUD de Cupones (crear, editar, listar, activar/desactivar) - 537 líneas
+	•	Vista de Pedidos (tabla con filtros, detalle individual) - 580 líneas
+	•	Detalle de pedido con timeline de estados - 320 líneas
+
+⏳ **Pendientes del Hito 11:**
 	•	Configuración de envío (/admin/settings)
 	•	Webhook de Stripe para guardar pedidos en orders
 	•	Histórico de cambios de stock (stock_history)
@@ -282,9 +284,14 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 
 **Componentes Implementados:**
 	•	src/app/routes/admin/products.tsx (1053 líneas) - CRUD completo
+	•	src/app/routes/admin/orders.tsx (580 líneas) - Gestión de pedidos
+	•	src/app/routes/admin/coupons.tsx (537 líneas) - CRUD de cupones
+	•	src/app/routes/admin/inventory.tsx (520 líneas) - Control de inventario
 	•	src/app/routes/admin/profile.tsx (321 líneas) - Perfil y contraseña
+	•	src/components/admin/OrderDetailModal.tsx (320 líneas) - Detalle de pedido
 	•	src/components/admin/MultiImageUploader.tsx (326 líneas) - Gallery uploader
 	•	src/components/admin/ImageUploader.tsx (288 líneas) - Single image uploader
+	•	src/components/admin/OrderStatusBadge.tsx (110 líneas) - Badge de estado
 	•	src/lib/storage.ts (227 líneas) - Storage helpers
 
 **Migraciones SQL:**
@@ -345,9 +352,9 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	/admin/dashboard - Dashboard con métricas ✅
 	•	/admin/profile - Perfil y cambio de contraseña ✅
 	•	/admin/products - CRUD de productos y variantes ✅
-	•	/admin/orders - Gestión de pedidos ⏳
-	•	/admin/coupons - Gestión de cupones ⏳
-	•	/admin/inventory - Control de inventario ⏳
+	•	/admin/orders - Gestión de pedidos (580 líneas) ✅
+	•	/admin/coupons - Gestión de cupones (537 líneas) ✅
+	•	/admin/inventory - Control de inventario (520 líneas) ✅
 	•	/admin/settings - Configuración de envío ⏳
 
 **Costo:** $0/mes (tier gratuito Supabase: 500MB database, 1GB storage, 2GB bandwidth)

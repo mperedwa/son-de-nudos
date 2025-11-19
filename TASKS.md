@@ -87,7 +87,7 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar sitio en producción	Deployment verificado con estado "Ready", configuración automática de Vite detectada correctamente, protección de acceso activada por defecto	2025-11-16
 ✅	Actualizar documentación con URLs	README.md actualizado con URLs de GitHub y Vercel, sección de deployment expandida con CI/CD, instrucciones para desactivar protección	2025-11-16
 
-Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (54% completado - Inicio: 16-Nov-2025)
+Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (70% completado - Inicio: 16-Nov-2025)
 
 Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar/instalar Supabase CLI	Supabase CLI v2.48.3+ instalado y funcionando, comando supabase --version ejecuta correctamente	2025-11-16
@@ -119,12 +119,12 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Implementar CRUD de variantes	Gestión completa anidada dentro de productos: tabla expandible por producto, crear/editar/clonar/eliminar variantes, campos title/sku/price/compare_at_price/stock/available, ImageUploader individual, validación SKU único, opciones dinámicas en JSONB	2025-11-17
 ✅	Implementar upload de imágenes	Integración completa con Supabase Storage: bucket "product-images" público creado, MultiImageUploader para productos (4 imgs max, drag&drop, reordenamiento), ImageUploader para variantes (1 img), validación JPG/PNG/WebP max 5MB, preview en tiempo real, cleanup automático al eliminar, URLs públicas CDN	2025-11-17
 ✅	Implementar página de perfil de admin	Página /admin/profile con información del usuario (nombre, email, rol, estado), formulario de cambio de contraseña con validación (mínimo 8 caracteres, confirmación, diferente a actual), verificación de contraseña actual antes de actualizar, mensajes de éxito/error	2025-11-17
-⏳	Implementar gestión de inventario	Página /admin/inventory con tabla de todas las variantes, filtro por stock bajo, edición rápida de stock, registro en stock_history, alertas de stock crítico	2025-11-26
-⏳	Implementar real-time updates de stock	Subscripción real-time a cambios de stock, actualización automática de UI sin refresh, notificaciones cuando stock llega a mínimo	2025-11-26
-⏳	Implementar CRUD de cupones - Listar	Tabla de cupones con código, descuento %, mínimo, usos actuales/máximos, fechas validez, estado activo/inactivo, acciones	2025-11-27
-⏳	Implementar CRUD de cupones - Crear/Editar	Formulario de cupón: código único, porcentaje (1-100), monto mínimo opcional, usos máximos opcional, fechas de validez, toggle activo, validación de dates y percent	2025-11-27
-⏳	Implementar vista de pedidos	Tabla de pedidos con: ID, fecha, cliente, email, items, total, status, filtros por status/fecha, búsqueda por email, paginación	2025-11-28
-⏳	Implementar detalle de pedido	Modal/página con información completa: items con imágenes, dirección de envío, totales desglosados, timeline de status, botón para cambiar status	2025-11-28
+✅	Implementar gestión de inventario	Página /admin/inventory (520 líneas) con tabla de variantes, StockLevelBadge, InlineStockEditor, QuickAdjustModal, StockHistoryModal, filtros por stock bajo, registro automático en stock_history	2025-11-17
+✅	Implementar real-time updates de stock	Subscripción real-time configurada en supabase.ts (subscribeToStockChanges), actualización automática de UI, integrado en inventory.tsx	2025-11-17
+✅	Implementar CRUD de cupones - Listar	Página /admin/coupons (537 líneas) con tabla de cupones, CouponStatusBadge (4 estados), filtros por estado, búsqueda por código, estadísticas	2025-11-17
+✅	Implementar CRUD de cupones - Crear/Editar	CouponFormModal completo con validación Zod, porcentaje, monto mínimo, usos máximos, fechas de validez, toggle activo/inactivo	2025-11-17
+✅	Implementar vista de pedidos	Página /admin/orders (580 líneas) con tabla de pedidos, OrderStatusBadge (6 estados), filtros por status/fecha, búsqueda por email/nombre/ID, paginación 10 items, 6 stats cards, alerta de pedidos pendientes	2025-11-18
+✅	Implementar detalle de pedido	OrderDetailModal (320 líneas) con información cliente, dirección de envío, lista de items con imágenes, totales desglosados, timeline de estados, cambio de status con confirmación, Stripe session ID	2025-11-18
 ⏳	Implementar configuración de envío	Página /admin/settings con formulario editable: costo de envío estándar, umbral de envío gratis, moneda, actualización en shipping_config table	2025-11-29
 ⏳	Crear webhook de Stripe para guardar pedidos	Endpoint /api/webhooks/stripe que escucha checkout.session.completed, crea order en Supabase con items, customer_email, shipping_address, amounts	2025-11-30
 ⏳	Implementar histórico de cambios de stock	Vista en /admin/inventory/history mostrando tabla de stock_history: variante, cambio, razón, stock anterior/nuevo, admin que lo hizo, fecha	2025-11-30
