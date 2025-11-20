@@ -18,6 +18,10 @@ E-commerce moderno y minimalista para venta de collares artesanales, construido 
 - **Mock server** para desarrollo sin backend
 - **Galería de imágenes** con miniaturas y hover effects
 - **Accesibilidad** con navegación por teclado y aria labels
+- **Panel de Administración** con Supabase (Auth, Storage, Real-time)
+- **Contenido bilingüe** para productos (título y descripción ES/EN)
+- **Búsqueda de productos** con SearchDrawer
+- **Landing page** con diseño moderno y secciones modulares
 
 ### Experiencia de Usuario
 
@@ -57,6 +61,15 @@ E-commerce moderno y minimalista para venta de collares artesanales, construido 
 - **@stripe/stripe-js** - Cliente de Stripe
 - Soporte para 3 modos: mock, stripe, shopify
 
+### Base de Datos y Admin
+
+- **Supabase** - Backend as a Service (PostgreSQL)
+- **@supabase/supabase-js** - Cliente de Supabase
+- **PostgreSQL** - Base de datos relacional
+- **Row Level Security (RLS)** - Políticas de seguridad
+- **Supabase Auth** - Autenticación de administradores
+- **Supabase Storage** - Almacenamiento de imágenes
+
 ### Validación y Forms
 
 - **React Hook Form** - Manejo de formularios
@@ -84,8 +97,9 @@ El proyecto soporta **Español** e **Inglés** con detección automática del id
 - **Detección automática** del idioma del navegador (español/inglés)
 - **Selector manual** de idioma en el header
 - **Persistencia** del idioma seleccionado en localStorage
-- **8 espacios de nombres** organizados por funcionalidad
+- **9 espacios de nombres** organizados por funcionalidad
 - **Traducciones completas** de toda la interfaz
+- **Traducciones predefinidas** para colores, materiales y grosores
 
 ### Idiomas Disponibles
 
@@ -103,12 +117,13 @@ src/i18n/
 │   ├── es/                     # Traducciones en español
 │   │   ├── common.json         # Textos comunes
 │   │   ├── navigation.json     # Navegación y menús
-│   │   ├── product.json        # Páginas de producto
+│   │   ├── product.json        # Páginas de producto (+ colores, materiales)
 │   │   ├── cart.json           # Carrito de compras
 │   │   ├── checkout.json       # Proceso de pago
 │   │   ├── messages.json       # Mensajes del sistema
 │   │   ├── announcements.json  # Anuncios y promociones
-│   │   └── filters.json        # Filtros y ordenamiento
+│   │   ├── filters.json        # Filtros y ordenamiento
+│   │   └── landing.json        # Landing page
 │   └── en/                     # Traducciones en inglés
 │       └── [mismos archivos]
 ```
@@ -316,11 +331,18 @@ SonDeNudos/
 │   │   │   └── RootLayout.tsx      # Layout global con header/footer
 │   │   └── routes/
 │   │       ├── index.tsx            # Página de colección (grid de productos)
+│   │       ├── landing.tsx          # Landing page principal
 │   │       ├── product/
 │   │       │   └── [handle].tsx     # Página de detalle de producto
 │   │       ├── checkout.tsx         # Página de checkout
 │   │       ├── success.tsx          # Confirmación de pago
-│   │       └── cancel.tsx           # Cancelación de pago
+│   │       ├── cancel.tsx           # Cancelación de pago
+│   │       └── admin/
+│   │           ├── login.tsx        # Login del panel admin
+│   │           ├── dashboard.tsx    # Dashboard con métricas
+│   │           ├── products.tsx     # CRUD de productos y variantes
+│   │           ├── orders.tsx       # Gestión de pedidos
+│   │           └── profile.tsx      # Perfil del administrador
 │   │
 │   ├── components/
 │   │   ├── AddToCartButton.tsx      # Botón agregar al carrito con estados
@@ -336,13 +358,16 @@ SonDeNudos/
 │   │   ├── Price.tsx                # Componente de precio formateado
 │   │   ├── ProductCard.tsx          # Tarjeta de producto con hover
 │   │   ├── ProductGrid.tsx          # Grid responsivo de productos
+│   │   ├── SearchDrawer.tsx         # Modal de búsqueda de productos
 │   │   └── VariantSelector.tsx      # Selector de variantes inteligente
 │   │
 │   ├── lib/
 │   │   ├── config.ts                # Configuración global desde .env
 │   │   ├── filters.ts               # Lógica de filtrado y ordenamiento
 │   │   ├── money.ts                 # Utilidades para formateo de moneda
-│   │   └── stripe.ts                # Cliente de Stripe (navegador)
+│   │   ├── stripe.ts                # Cliente de Stripe (navegador)
+│   │   ├── supabase.ts              # Cliente de Supabase + tipos
+│   │   └── storage.ts               # Helpers para Supabase Storage
 │   │
 │   ├── server/
 │   │   ├── mockServer.ts            # API mock para desarrollo
@@ -590,18 +615,23 @@ npm run dev
 - [x] Integración con mockServer
 - [x] Integración con Stripe Checkout
 - [x] Internacionalización (i18n) - Español/Inglés
+- [x] Panel de Administración con Supabase
+- [x] CRUD de productos y variantes
+- [x] Gestión de pedidos
+- [x] Upload de imágenes con Storage
+- [x] Contenido bilingüe (título/descripción ES/EN)
+- [x] Búsqueda de productos
+- [x] Landing page con diseño moderno
 
 ### Pendiente ⏳
 
 - [ ] Integración con Shopify Storefront API (opcional)
 - [ ] Pruebas unitarias con Vitest
 - [ ] Tests E2E con Playwright
-- [ ] Página de "Sobre Mí" / About
 - [ ] Blog de contenido
 - [ ] Sistema de reviews y ratings
 - [ ] Wishlist / Lista de deseos
 - [ ] Comparador de productos
-- [ ] Búsqueda con autocompletado
 - [ ] Filtros avanzados (rango de precio con slider)
 - [ ] Ordenamiento por popularidad real
 - [ ] Integración con Google Analytics
@@ -609,6 +639,9 @@ npm run dev
 - [ ] Sitemap XML
 - [ ] PWA (Progressive Web App)
 - [ ] Dark mode
+- [ ] Webhook de Stripe para guardar pedidos
+- [ ] CRUD de cupones desde el admin
+- [ ] Vista de inventario consolidado
 
 ## 👥 Contribuir
 
