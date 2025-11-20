@@ -426,11 +426,14 @@ Cupones preconfigurados para testing:
 
 ### 🌐 Sitio en Producción
 
+- **Sitio Web:** https://www.sondenudos.com
+- **Dominio Principal:** sondenudos.com (redirige a www)
 - **GitHub:** https://github.com/mperedwa/son-de-nudos
-- **Vercel:** https://son-de-nudos-9uxsc5fhj-mario-perez-edwards-projects.vercel.app
+- **Vercel:** Configurado con dominio personalizado
+- **Panel Admin:** https://www.sondenudos.com/admin/login
 - **Estado:** ✅ Desplegado y funcionando
 
-> **Nota:** El sitio actualmente tiene protección de acceso activada. Para hacerlo público, ir a Vercel Dashboard → Settings → Deployment Protection → Desactivar.
+> **Dominio Personalizado:** El sitio está configurado con el dominio sondenudos.com comprado en Namecheap. El dominio apex redirige automáticamente a www para mejor rendimiento (CNAME).
 
 ### Build de Producción
 

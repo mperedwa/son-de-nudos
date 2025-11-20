@@ -229,7 +229,7 @@ async function createAdminUser(config: AdminUserConfig) {
     console.log('   La contraseña no se mostrará nuevamente.')
     console.log('\n💡 El usuario puede acceder a:')
     console.log('   http://localhost:5174/admin/login (desarrollo)')
-    console.log('   https://son-de-nudos.vercel.app/admin/login (producción)')
+    console.log('   https://www.sondenudos.com/admin/login (producción)')
     console.log('\n' + '='.repeat(70) + '\n')
   } catch (error) {
     console.error('\n❌ Error durante la creación:', error)

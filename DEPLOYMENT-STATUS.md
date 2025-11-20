@@ -7,9 +7,10 @@
 
 ## 🌐 URLs de Producción
 
-- **URL Principal:** https://son-de-nudos-8bl629me6-mario-perez-edwards-projects.vercel.app
-- **Panel de Admin:** https://son-de-nudos-8bl629me6-mario-perez-edwards-projects.vercel.app/admin/login
-- **Dashboard:** https://son-de-nudos-8bl629me6-mario-perez-edwards-projects.vercel.app/admin/dashboard
+- **URL Principal:** https://www.sondenudos.com
+- **Dominio Apex:** https://sondenudos.com (redirige a www)
+- **Panel de Admin:** https://www.sondenudos.com/admin/login
+- **Dashboard:** https://www.sondenudos.com/admin/dashboard
 
 ## 🔐 Credenciales de Acceso
 
@@ -170,7 +171,7 @@ vercel --prod --yes
 
 Para verificar que todo funciona:
 
-1. Abre: https://son-de-nudos-8bl629me6-mario-perez-edwards-projects.vercel.app/admin/login
+1. Abre: https://www.sondenudos.com/admin/login
 2. Ingresa:
    - Email: `admin@sondenudos.com`
    - Password: `[REDACTED]`

@@ -83,7 +83,7 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Inicializar repositorio Git local	Repositorio Git inicializado, commit inicial creado con mensaje descriptivo, 71 archivos (16,860 líneas) añadidos exitosamente	2025-11-16
 ✅	Crear repositorio en GitHub	Repositorio público creado en https://github.com/mperedwa/son-de-nudos con descripción y tags apropiados	2025-11-16
 ✅	Push del código a GitHub	Código subido exitosamente a GitHub con historial completo, branch main configurado como default	2025-11-16
-✅	Deployment a Vercel	Proyecto desplegado en https://son-de-nudos-9uxsc5fhj-mario-perez-edwards-projects.vercel.app, build exitoso (340KB bundle), CI/CD automático configurado	2025-11-16
+✅	Deployment a Vercel	Proyecto desplegado con dominio personalizado https://www.sondenudos.com, build exitoso (340KB bundle), CI/CD automático configurado	2025-11-16
 ✅	Verificar sitio en producción	Deployment verificado con estado "Ready", configuración automática de Vite detectada correctamente, protección de acceso activada por defecto	2025-11-16
 ✅	Actualizar documentación con URLs	README.md actualizado con URLs de GitHub y Vercel, sección de deployment expandida con CI/CD, instrucciones para desactivar protección	2025-11-16
 
