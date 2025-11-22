@@ -130,7 +130,7 @@ export default function Footer() {
           {/* Redes sociales - Iconos simples */}
           <div className="flex gap-6">
             <a
-              href="https://facebook.com/sondenudos"
+              href="https://www.facebook.com/share/1CwiWSxH5L/?mibextid=wwXIfr"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-brand-terra transition-colors"
@@ -139,7 +139,7 @@ export default function Footer() {
               <i className="fab fa-facebook-f text-lg"></i>
             </a>
             <a
-              href="https://instagram.com/sondenudos"
+              href="https://www.instagram.com/son_de_nudos/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-brand-terra transition-colors"

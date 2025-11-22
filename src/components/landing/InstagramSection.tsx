@@ -40,7 +40,7 @@ export default function InstagramSection() {
         {instagramPosts.map((post) => (
           <a
             key={post.id}
-            href="https://instagram.com/son_de_nudos"
+            href="https://www.instagram.com/son_de_nudos/"
             target="_blank"
             rel="noopener noreferrer"
             className="block"
