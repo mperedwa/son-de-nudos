@@ -16,8 +16,8 @@ export default function AnnouncementBar() {
   const messages = [
     t('freeShipping'),
     t('welcome10'),
-    t('installments'),
-    t('localPickup'),
+    t('handmade'),
+    t('shippingUSA'),
   ]
 
   useEffect(() => {
