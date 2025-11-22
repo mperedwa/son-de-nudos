@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import AnnouncementBar from '@/components/AnnouncementBar'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -20,7 +21,13 @@ import { useUIStore } from '@/store/ui'
  * - CartDrawer con atajo de teclado (Cmd/Ctrl + K)
  */
 export default function RootLayout() {
+  const { t, i18n } = useTranslation('common')
   const toggleCartDrawer = useUIStore((state) => state.toggleCartDrawer)
+
+  // Actualizar título del documento según idioma
+  useEffect(() => {
+    document.title = t('siteTitle')
+  }, [t, i18n.language])
 
   // Atajo de teclado para abrir carrito (Cmd/Ctrl + K)
   useEffect(() => {
