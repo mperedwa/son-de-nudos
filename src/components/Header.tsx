@@ -38,13 +38,21 @@ export default function Header() {
 
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center justify-center w-full md:w-auto md:justify-start">
-            <Link to="/" className="text-center md:text-left">
-              <span className="font-serif text-2xl font-bold tracking-wider text-brand-dark block">
-                SON DE NUDOS
-              </span>
-              <span className="block text-[10px] font-sans tracking-[0.3em] text-center md:text-left text-brand-terra uppercase mt-1">
-                Handmade Luxury
-              </span>
+            <Link to="/" className="flex items-center gap-0">
+              {/* Isotipo - clave de sol */}
+              <img
+                src="/isotipo.png"
+                alt="Son de Nudos"
+                className="h-12 md:h-14 w-auto"
+              />
+              <div className="text-center md:text-left">
+                <span className="font-serif text-xl md:text-2xl font-bold tracking-wider text-brand-dark block">
+                  SON DE NUDOS
+                </span>
+                <span className="block text-xs font-serif italic font-semibold tracking-wide text-center md:text-left text-brand-terra -mt-0.5">
+                  by Priscilla
+                </span>
+              </div>
             </Link>
           </div>
 
