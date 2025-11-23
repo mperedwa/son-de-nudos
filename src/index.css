@@ -76,3 +76,83 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* MailerLite Form Custom Styles - Paleta Tierra */
+.ml-embedded {
+  font-family: inherit !important;
+}
+
+.ml-embedded .ml-form-embedWrapper {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.ml-embedded .ml-form-embedBody {
+  padding: 0 !important;
+}
+
+.ml-embedded .ml-form-formContent {
+  padding: 0 !important;
+}
+
+/* Input field styling */
+.ml-embedded input[type="email"],
+.ml-embedded .ml-form-embedBody .ml-form-embedContent input {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  border: 1px solid #d6ccc2 !important;
+  border-radius: 0 !important;
+  font-size: 14px !important;
+  color: #3C2F2F !important;
+  background: white !important;
+  margin-bottom: 12px !important;
+  transition: border-color 0.2s ease !important;
+}
+
+.ml-embedded input[type="email"]:focus,
+.ml-embedded .ml-form-embedBody .ml-form-embedContent input:focus {
+  outline: none !important;
+  border-color: #C17F59 !important;
+}
+
+.ml-embedded input[type="email"]::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Submit button styling */
+.ml-embedded button[type="submit"],
+.ml-embedded .ml-form-embedSubmit button {
+  width: 100% !important;
+  background-color: #3C2F2F !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  padding: 12px 16px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.ml-embedded button[type="submit"]:hover,
+.ml-embedded .ml-form-embedSubmit button:hover {
+  background-color: #C17F59 !important;
+}
+
+/* Success message */
+.ml-embedded .ml-form-successBody {
+  color: #C17F59 !important;
+  font-size: 14px !important;
+  padding: 0 !important;
+}
+
+/* Hide MailerLite branding if present */
+.ml-embedded .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedPermissions,
+.ml-embedded .ml-mobileButton-horizontal,
+.ml-embedded .ml-form-embedWrapper .ml-form-embedBody .ml-form-formContent.ho498.ml-subscribe-form .ml-form-successBody-row-success,
+.ml-embedded .ml-form-align-center {
+  text-align: left !important;
+}

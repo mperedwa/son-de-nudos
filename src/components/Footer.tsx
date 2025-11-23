@@ -1,22 +1,13 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 /**
  * Footer del sitio - Estilo Gemini
  * Fondo claro, texto oscuro, títulos terracota
+ * Newsletter integrado con MailerLite
  */
 export default function Footer() {
   const { t } = useTranslation('navigation')
-  const [email, setEmail] = useState('')
-  const [isSubscribed, setIsSubscribed] = useState(false)
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubscribed(true)
-    setEmail('')
-    setTimeout(() => setIsSubscribed(false), 3000)
-  }
 
   return (
     <footer className="bg-[#F5F0EB] border-t border-stone-200 mt-auto">
@@ -93,28 +84,8 @@ export default function Footer() {
             <p className="text-sm text-gray-600 mb-4">
               {t('newsletterDescription')}
             </p>
-            <form onSubmit={handleNewsletterSubmit} className="space-y-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t('newsletterPlaceholder')}
-                required
-                className="w-full px-4 py-3 border border-stone-300 rounded-none text-sm text-brand-dark placeholder-gray-400 focus:outline-none focus:border-brand-terra"
-                aria-label={t('newsletterPlaceholder')}
-              />
-              <button
-                type="submit"
-                className="w-full bg-brand-dark hover:bg-brand-terra text-white font-bold text-sm uppercase tracking-wider px-4 py-3 transition-colors"
-              >
-                {t('newsletterButton')}
-              </button>
-              {isSubscribed && (
-                <p className="text-sm text-brand-terra animate-fade-in">
-                  {t('newsletterSuccess')}
-                </p>
-              )}
-            </form>
+            {/* MailerLite Embedded Form */}
+            <div className="ml-embedded" data-form="76EGwp"></div>
             <p className="mt-3 text-xs text-gray-500">
               {t('privacy')}
             </p>
