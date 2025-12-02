@@ -8,8 +8,9 @@ Al inicio de cada sesión:
 	1.	Lee planning.md para entender la arquitectura y decisiones técnicas.
 	2.	Lee este archivo para respetar estándares y flujo de trabajo.
 	3.	Revisa tasks.md para saber qué tareas están pendientes y su prioridad.
+	4.	Revisa kanban.md para ver el estado actual de las tareas activas (compatible con MarkdownTaskManager para visualización).
 
-Al terminar cada bloque de trabajo, actualiza tasks.md y añade un breve resumen de sesión en la sección de log de este archivo.
+Al terminar cada bloque de trabajo, actualiza tasks.md, kanban.md y añade un breve resumen de sesión en la sección de log de este archivo.
 
 ## ⚠️ IMPORTANTE: Configuración de Puerto
 
@@ -121,7 +122,8 @@ Para cada tarea en tasks.md:
 	5.	Documentación y tareas
 	•	Si la tarea cambia el comportamiento del sistema, actualiza planning.md si la decisión es estructural.
 	•	Marca la tarea como completada en tasks.md con ✅ y actualiza criterios de aceptación si hace falta.
-	•	Si surgen nuevas tareas derivadas, añádelas con estado ⏳.
+	•	Mueve la tarea correspondiente en kanban.md a la columna apropiada (🚀 In Progress → ✅ Done).
+	•	Si surgen nuevas tareas derivadas, añádelas con estado ⏳ en tasks.md y créalas en kanban.md con estado 📝 To Do.
 	6.	Resumen de sesión
 	•	Añade una entrada corta en la sección “Log de sesiones” de este archivo, indicando fecha, qué se hizo y qué falta.
 
@@ -139,7 +141,26 @@ Para cada tarea en tasks.md:
 	•	Mantén el texto de la UI en español, consistente y conciso.
 	•	Asegúrate de que la colección se vea bien con 4, 8 o 20 productos, usando grid responsivo.
 
-7. Log de sesiones
+7. Gestión de documentación del proyecto
+
+El proyecto usa tres documentos complementarios que deben mantenerse sincronizados:
+
+	•	kanban.md - Tablero visual de tareas activas (compatible con MarkdownTaskManager)
+		•	Úsalo para: Workflow diario, asignación de tareas, tracking de trabajo en progreso
+		•	Actualízalo: Cuando cambies el estado de una tarea (📝 To Do → 🚀 In Progress → ✅ Done)
+		•	Estructura: Columnas Kanban con tareas discretas (TASK-001, TASK-002, etc.)
+
+	•	tasks.md - Registro histórico de milestones
+		•	Úsalo para: Revisar progreso por Hitos, validar criterios de aceptación completados
+		•	Actualízalo: Al completar una tarea, marca ✅ y expande criterios de aceptación con detalles reales
+		•	Estructura: Tabla cronológica organizada por Hitos (1-11) con estados ⏳/✅/🔄/❌
+
+	•	planning.md - Blueprint arquitectónico
+		•	Úsalo para: Entender diseño del sistema, consultar decisiones técnicas, interfaces TypeScript
+		•	Actualízalo: Solo cuando haya cambios arquitectónicos significativos (nuevas tablas, módulos, patrones)
+		•	Estructura: Secciones conceptuales (Arquitectura, Modelo de datos, Specs técnicas)
+
+8. Log de sesiones
 
 Usa esta sección para anotar resúmenes breves por sesión.
 
