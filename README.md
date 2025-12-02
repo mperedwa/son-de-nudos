@@ -82,6 +82,14 @@ E-commerce moderno y minimalista para venta de collares artesanales, construido 
 - **TypeScript ESLint** - Reglas específicas para TS
 - **Vite HMR** - Hot Module Replacement
 
+### DevOps y Automatización
+
+- **Vercel** - Hosting y deployment automático
+- **Vercel Cron Jobs** - Tareas programadas serverless
+- **Supabase Keepalive** - Endpoint `/api/keepalive` que ejecuta cada 5 días para evitar pausa del proyecto
+- **GitHub Actions** - CI/CD integrado con Vercel
+- **@vercel/node** - Runtime para funciones serverless
+
 ### Internacionalización
 
 - **react-i18next** - Sistema de traducciones

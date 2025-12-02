@@ -1,6 +1,6 @@
 # Kanban Board
 
-<!-- Config: Last Task ID: 007 -->
+<!-- Config: Last Task ID: 008 -->
 
 ## ⚙️ Configuration
 
@@ -162,3 +162,26 @@ Importante para que otros desarrolladores o el cliente puedan usar el admin sin 
 ## 👀 In Review
 
 ## ✅ Done
+
+### TASK-008 | Implementar Supabase Keepalive con Vercel Cron Jobs
+
+**Priority**: High | **Category**: DevOps | **Assigned**: @claude
+**Created**: 2025-12-01 | **Completed**: 2025-12-01
+**Tags**: #devops #supabase #vercel #backend
+
+Sistema automático para evitar que Supabase pause el proyecto por inactividad en el tier gratuito.
+
+**Implementación**:
+- ✅ Endpoint serverless `/api/keepalive` creado
+- ✅ Query simple `SELECT id FROM products LIMIT 1` para mantener DB activa
+- ✅ Vercel Cron Job configurado en `vercel.json` (schedule: `0 0 */5 * *`)
+- ✅ Autenticación con `CRON_SECRET` para seguridad
+- ✅ Instalado `@vercel/node` para tipos TypeScript
+- ✅ Documentado `CRON_SECRET` en `.env.example`
+- ✅ Creado `api/README.md` con guía completa
+- ✅ Variable de entorno configurada en Vercel Dashboard
+
+**Resultado**:
+El proyecto de Supabase se mantiene activo automáticamente. Cron job ejecuta cada 5 días, evitando los 7 días de inactividad que causan la pausa.
+
+**Files**: `api/keepalive.ts`, `vercel.json`, `.env.example`, `api/README.md`

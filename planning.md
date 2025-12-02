@@ -359,6 +359,20 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 
 **Costo:** $0/mes (tier gratuito Supabase: 500MB database, 1GB storage, 2GB bandwidth)
 
+**✅ Supabase Keepalive (Prevención de pausa por inactividad):**
+
+Supabase pausa proyectos del tier gratuito después de 7 días sin conexiones. Para evitarlo:
+
+	•	**Endpoint serverless:** `/api/keepalive` (api/keepalive.ts)
+	•	**Cron Job de Vercel:** Ejecuta automáticamente cada 5 días (`0 0 */5 * *`)
+	•	**Query simple:** `SELECT id FROM products LIMIT 1` mantiene la DB activa
+	•	**Autenticación:** `CRON_SECRET` en variables de entorno (Vercel)
+	•	**Runtime:** @vercel/node para funciones serverless
+	•	**Monitoreo:** Vercel Dashboard → Logs → Filter by "keepalive"
+	•	**Documentación:** api/README.md con guía completa
+
+El sistema funciona completamente automático sin intervención manual. El contador de inactividad se reinicia cada 5 días.
+
 6. Calidad, observabilidad y DevEx
 	•	Pruebas
 	•	Jest o Vitest con Testing Library para React.
