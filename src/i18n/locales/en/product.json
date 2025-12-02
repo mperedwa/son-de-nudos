@@ -3,6 +3,14 @@
   "sale": "SALE",
   "outOfStock": "Out of Stock",
   "inStock": "In Stock",
+  "options": {
+    "Largo": "Length",
+    "Grosor": "Thickness",
+    "MaterialCordon": "Cord Material",
+    "MaterialAccesorios": "Accessory Material",
+    "ColorPrimario": "Primary Color",
+    "ColorSecundario": "Secondary Color"
+  },
   "optionsAvailable": "options available",
   "available": "available",
   "featured": "Featured",

@@ -1,52 +1,87 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import type { Product, FilterOptions, SortOption } from '@/types/models'
+import type { Product, FilterOptions, SortOption, Variant } from '@/types/models'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import CollectionToolbar from '@/components/CollectionToolbar'
 import FiltersDrawer from '@/components/FiltersDrawer'
 import ProductGrid from '@/components/ProductGrid'
 import { processProducts } from '@/lib/filters'
-import { mockServer } from '@/server/mockServer'
+import { getPublicProducts, type PublicProduct } from '@/lib/supabase-public'
+
+/**
+ * Transforma un PublicProduct de Supabase al formato Product usado por los componentes
+ * Usa el idioma actual para seleccionar título y descripción
+ */
+function transformToProduct(p: PublicProduct, lang: string): Product {
+  const isEnglish = lang === 'en'
+  return {
+    id: p.id,
+    handle: p.handle,
+    title: isEnglish && p.title_en ? p.title_en : p.title,
+    descriptionHtml: isEnglish && p.descriptionHtml_en ? p.descriptionHtml_en : (p.descriptionHtml || ''),
+    images: p.images,
+    price: { amount: p.price.amount, currency: 'USD' as const },
+    compareAtPrice: p.compareAtPrice ? { amount: p.compareAtPrice.amount, currency: 'USD' as const } : undefined,
+    options: p.options,
+    variants: p.variants.map((v): Variant => ({
+      id: v.id,
+      title: v.title,
+      sku: v.sku,
+      price: { amount: v.price.amount, currency: 'USD' as const },
+      compareAtPrice: v.compareAtPrice ? { amount: v.compareAtPrice.amount, currency: 'USD' as const } : undefined,
+      available: v.available,
+      stock: v.stock,
+      image: v.image || undefined,
+      options: Object.fromEntries(
+        Object.entries(v.options).filter(([, val]) => val !== null)
+      ) as Record<string, string>,
+    })),
+    tags: p.tags,
+    availableForSale: p.availableForSale,
+    createdAt: p.createdAt,
+  }
+}
 
 /**
  * Página principal: Colección de collares
- * - Carga productos desde mockServer API
+ * - Carga productos desde Supabase API pública
  * - Gestiona filtros y orden con URLSearchParams
  * - Grid responsivo de productos
  * - Drawer de filtros (móvil) y sidebar (desktop)
  *
- * Fase 6: Integrado con mockServer.ts
+ * Fase 11: Integrado con Supabase (lectura pública)
  * Fase 8: Integrado con i18n para soporte bilingüe
  */
 export default function CollectionPage() {
-  const { t } = useTranslation(['navigation', 'messages', 'common'])
+  const { t, i18n } = useTranslation(['navigation', 'messages', 'common'])
   const [searchParams, setSearchParams] = useSearchParams()
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [allProducts, setAllProducts] = useState<Product[]>([])
   const [error, setError] = useState<string | null>(null)
 
-  // Cargar productos desde API mock
+  // Cargar productos desde Supabase API pública
   useEffect(() => {
     const loadProducts = async () => {
       setIsLoading(true)
       setError(null)
 
-      const response = await mockServer.getCollectionNecklaces()
-
-      if (response.success && response.data) {
-        setAllProducts(response.data)
-      } else {
-        setError(response.error || t('messages:errorLoadingProducts'))
-        console.error('[CollectionPage] Error:', response.error)
+      try {
+        const publicProducts = await getPublicProducts()
+        const products = publicProducts.map((p) => transformToProduct(p, i18n.language))
+        setAllProducts(products)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : t('messages:errorLoadingProducts')
+        setError(message)
+        console.error('[CollectionPage] Error:', err)
       }
 
       setIsLoading(false)
     }
 
     loadProducts()
-  }, [])
+  }, [i18n.language, t])
 
   // Leer filtros de URL
   const filters = useMemo<FilterOptions>(() => {

@@ -1,25 +1,61 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { Product, Variant } from '@/types/models'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import ImageGallery from '@/components/ImageGallery'
 import Price from '@/components/Price'
 import VariantSelector from '@/components/VariantSelector'
 import AddToCartButton from '@/components/AddToCartButton'
-import { mockServer } from '@/server/mockServer'
+import { getPublicProductByHandle, type PublicProduct } from '@/lib/supabase-public'
+
+/**
+ * Transforma un PublicProduct de Supabase al formato Product usado por los componentes
+ * Usa el idioma actual para seleccionar título y descripción
+ */
+function transformToProduct(p: PublicProduct, lang: string): Product {
+  const isEnglish = lang === 'en'
+  return {
+    id: p.id,
+    handle: p.handle,
+    title: isEnglish && p.title_en ? p.title_en : p.title,
+    descriptionHtml: isEnglish && p.descriptionHtml_en ? p.descriptionHtml_en : (p.descriptionHtml || ''),
+    images: p.images,
+    price: { amount: p.price.amount, currency: 'USD' as const },
+    compareAtPrice: p.compareAtPrice ? { amount: p.compareAtPrice.amount, currency: 'USD' as const } : undefined,
+    options: p.options,
+    variants: p.variants.map((v): Variant => ({
+      id: v.id,
+      title: v.title,
+      sku: v.sku,
+      price: { amount: v.price.amount, currency: 'USD' as const },
+      compareAtPrice: v.compareAtPrice ? { amount: v.compareAtPrice.amount, currency: 'USD' as const } : undefined,
+      available: v.available,
+      stock: v.stock,
+      image: v.image || undefined,
+      options: Object.fromEntries(
+        Object.entries(v.options).filter(([, val]) => val !== null)
+      ) as Record<string, string>,
+    })),
+    tags: p.tags,
+    availableForSale: p.availableForSale,
+    createdAt: p.createdAt,
+  }
+}
 
 /**
  * Página de detalle de producto
- * - Carga producto por handle desde mockServer API
+ * - Carga producto por handle desde Supabase API pública
  * - Galería de imágenes con miniaturas
  * - Selector de variantes con disponibilidad
  * - Botón agregar al carrito integrado con Zustand
  * - Manejo de errores para handles no encontrados
  *
- * Fase 6: Integrado con mockServer.ts
+ * Fase 11: Integrado con Supabase (lectura pública)
  */
 export default function ProductPage() {
   const { handle } = useParams<{ handle: string }>()
+  const { t, i18n } = useTranslation(['navigation', 'messages', 'product'])
 
   // Estados
   const [product, setProduct] = useState<Product | null>(null)
@@ -27,7 +63,7 @@ export default function ProductPage() {
   const [error, setError] = useState<string | null>(null)
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
 
-  // Cargar producto desde API mock
+  // Cargar producto desde Supabase API pública
   useEffect(() => {
     const loadProduct = async () => {
       if (!handle) {
@@ -38,20 +74,24 @@ export default function ProductPage() {
       setIsLoading(true)
       setError(null)
 
-      const response = await mockServer.getProductByHandle(handle)
-
-      if (response.success && response.data) {
-        setProduct(response.data)
-      } else {
-        setError(response.error || 'Producto no encontrado')
-        console.error('[ProductPage] Error:', response.error)
+      try {
+        const publicProduct = await getPublicProductByHandle(handle)
+        if (publicProduct) {
+          setProduct(transformToProduct(publicProduct, i18n.language))
+        } else {
+          setError(t('messages:productNotFound', 'Producto no encontrado'))
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : t('messages:errorLoadingProduct', 'Error al cargar producto')
+        setError(message)
+        console.error('[ProductPage] Error:', err)
       }
 
       setIsLoading(false)
     }
 
     loadProduct()
-  }, [handle])
+  }, [handle, i18n.language, t])
 
   // Encontrar la variante que coincide con las opciones seleccionadas
   const selectedVariant = useMemo<Variant | undefined>(() => {
@@ -87,7 +127,7 @@ export default function ProductPage() {
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-terra mx-auto mb-4"></div>
-            <p className="text-gray-500">Cargando producto...</p>
+            <p className="text-gray-500">{t('messages:loading', 'Cargando...')}</p>
           </div>
         </div>
       </div>
@@ -103,9 +143,9 @@ export default function ProductPage() {
     <div className="container mx-auto px-4 py-8">
       <Breadcrumbs
         items={[
-          { label: 'Inicio', href: '/' },
-          { label: 'Tienda', href: '/' },
-          { label: 'Collares', href: '/' },
+          { label: t('navigation:home'), href: '/' },
+          { label: t('navigation:shop'), href: '/' },
+          { label: t('navigation:necklaces'), href: '/' },
           { label: product.title, href: `/product/${handle}` },
         ]}
       />

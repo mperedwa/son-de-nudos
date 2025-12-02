@@ -1,12 +1,16 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { Product, Variant } from '@/types/models'
 
 /**
  * Selector de variantes de producto
- * - Muestra opciones disponibles (Largo, Material, Color)
+ * - Muestra opciones disponibles (Largo, Grosor, Material, Color)
  * - Calcula automáticamente variantes disponibles según combinación
  * - Notifica variante seleccionada al componente padre
  * - Muestra mensajes de error cuando combinación no está disponible
+ *
+ * Soporta 6 tipos de opciones de Supabase:
+ * - Largo, Grosor, MaterialCordon, MaterialAccesorios, ColorPrimario, ColorSecundario
  */
 
 type VariantSelectorProps = {
@@ -22,6 +26,7 @@ export default function VariantSelector({
   onOptionChange,
   selectedVariant,
 }: VariantSelectorProps) {
+  const { t } = useTranslation('product')
   // Extraer valores únicos para cada opción
   const optionValues = useMemo(() => {
     const values: Record<string, string[]> = {}
@@ -68,10 +73,13 @@ export default function VariantSelector({
         const availableValues = getAvailableValues(optionName)
         const selectedValue = selectedOptions[optionName]
 
+        // Traducir el nombre de la opción
+        const translatedOptionName = t(`options.${optionName}`, optionName)
+
         return (
           <div key={optionName}>
             <label className="block text-sm font-medium text-brand-dark mb-3">
-              {optionName}
+              {translatedOptionName}
               {selectedValue && (
                 <span className="ml-2 text-brand-terra">- {selectedValue}</span>
               )}
@@ -117,7 +125,7 @@ export default function VariantSelector({
         product.options.every((opt) => selectedOptions[opt]) && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-sm text-red-800">
-              Esta combinación no está disponible. Por favor selecciona otras opciones.
+              {t('combinationNotAvailable')}
             </p>
           </div>
         )}
@@ -130,17 +138,17 @@ export default function VariantSelector({
               {selectedVariant.available ? (
                 <>
                   <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                  En stock
+                  {t('inStock')}
                   {selectedVariant.stock && (
                     <span className="ml-2 text-gray-500">
-                      ({selectedVariant.stock} disponibles)
+                      ({selectedVariant.stock} {t('available')})
                     </span>
                   )}
                 </>
               ) : (
                 <>
                   <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-2"></span>
-                  Agotado
+                  {t('outOfStock')}
                 </>
               )}
             </span>

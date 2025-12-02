@@ -3,6 +3,14 @@
   "sale": "SALE",
   "outOfStock": "Agotado",
   "inStock": "En stock",
+  "options": {
+    "Largo": "Largo",
+    "Grosor": "Grosor",
+    "MaterialCordon": "Material del cordón",
+    "MaterialAccesorios": "Material de accesorios",
+    "ColorPrimario": "Color principal",
+    "ColorSecundario": "Color secundario"
+  },
   "optionsAvailable": "opciones disponibles",
   "available": "disponibles",
   "featured": "Destacados",
