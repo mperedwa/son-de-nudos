@@ -23,9 +23,9 @@ export default function Header() {
   return (
     <nav className="sticky top-0 z-50 bg-brand-sand/95 backdrop-blur-sm border-b border-stone-200 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="relative flex justify-between items-center h-20">
           {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden">
+          <div className="flex items-center md:hidden z-10">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="text-brand-dark hover:text-brand-terra focus:outline-none"
@@ -36,8 +36,8 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center justify-center w-full md:w-auto md:justify-start">
+          {/* Logo - Centrado absoluto en móvil */}
+          <div className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0 flex-shrink-0 flex items-center md:justify-start pointer-events-auto">
             <Link to="/" className="flex items-center gap-0">
               {/* Isotipo - clave de sol */}
               <img
@@ -45,11 +45,11 @@ export default function Header() {
                 alt="Son de Nudos"
                 className="h-12 md:h-14 w-auto"
               />
-              <div className="text-center md:text-left">
+              <div className="md:text-left">
                 <span className="font-serif text-xl md:text-2xl font-bold tracking-wider text-brand-dark block">
                   SON DE NUDOS
                 </span>
-                <span className="block text-xs font-serif italic font-semibold tracking-wide text-center md:text-left text-brand-terra -mt-0.5">
+                <span className="block text-xs font-serif italic font-semibold tracking-wide text-left text-brand-terra -mt-0.5">
                   by Priscilla
                 </span>
               </div>
@@ -141,7 +141,7 @@ export default function Header() {
           </div>
 
           {/* Mobile Cart Icon */}
-          <div className="md:hidden">
+          <div className="md:hidden z-10">
             <button
               onClick={openCartDrawer}
               className="text-brand-dark hover:text-brand-terra relative"
