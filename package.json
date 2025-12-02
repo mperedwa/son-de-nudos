@@ -11,7 +11,10 @@
     "migrate": "tsx --env-file=.env scripts/migrate-to-supabase.ts",
     "migrate:dry": "tsx --env-file=.env scripts/migrate-to-supabase.ts --dry-run --verbose",
     "setup:admin": "tsx --env-file=.env scripts/setup-admin-user.ts",
-    "create:admin": "tsx --env-file=.env scripts/create-admin.ts"
+    "create:admin": "tsx --env-file=.env scripts/create-admin.ts",
+    "generate:template": "tsx --env-file=.env scripts/generate-template.ts",
+    "import:products": "tsx --env-file=.env scripts/import-from-excel.ts",
+    "import:dry": "tsx --env-file=.env scripts/import-from-excel.ts --dry"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -26,6 +29,7 @@
     "react-i18next": "^16.3.3",
     "react-router-dom": "^7.9.6",
     "stripe": "^19.3.1",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"
   },
