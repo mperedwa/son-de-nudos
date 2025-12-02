@@ -1,6 +1,6 @@
 # Kanban Board
 
-<!-- Config: Last Task ID: 008 -->
+<!-- Config: Last Task ID: 009 -->
 
 ## ⚙️ Configuration
 
@@ -185,3 +185,27 @@ Sistema automático para evitar que Supabase pause el proyecto por inactividad e
 El proyecto de Supabase se mantiene activo automáticamente. Cron job ejecuta cada 5 días, evitando los 7 días de inactividad que causan la pausa.
 
 **Files**: `api/keepalive.ts`, `vercel.json`, `.env.example`, `api/README.md`
+
+---
+
+### TASK-009 | Conectar página pública a Supabase
+
+**Priority**: Critical | **Category**: Backend, Frontend | **Assigned**: @claude
+**Created**: 2025-12-02 | **Completed**: 2025-12-02
+**Tags**: #feature #supabase #i18n
+
+Conectar la página pública de la tienda para que muestre productos desde Supabase en lugar del JSON estático.
+
+**Implementación**:
+- ✅ Creado `supabase-public.ts` con API pública de solo lectura
+- ✅ Funciones: `getPublicProducts()`, `getPublicProductByHandle()`, `searchPublicProducts()`
+- ✅ Actualizado `index.tsx` para cargar desde Supabase con soporte bilingüe
+- ✅ Actualizado `[handle].tsx` para cargar producto individual desde Supabase
+- ✅ Actualizado `VariantSelector.tsx` con traducciones de opciones
+- ✅ Corregido error de TypeScript que causaba fallo de deployment
+- ✅ Handle automático desde título en sistema de importación Excel
+
+**Resultado**:
+Los productos creados en el panel admin (`/admin/products`) ahora aparecen automáticamente en la tienda pública. Soporte bilingüe completo: muestra `title_en`/`description_html_en` cuando el usuario está en inglés.
+
+**Files**: `src/lib/supabase-public.ts`, `src/app/routes/index.tsx`, `src/app/routes/product/[handle].tsx`, `src/components/VariantSelector.tsx`, `src/i18n/locales/*/product.json`
