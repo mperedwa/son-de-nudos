@@ -148,11 +148,11 @@ function transformProduct(product: ProductRow, variants: VariantRow[]): PublicPr
  */
 export async function getPublicProducts(): Promise<PublicProduct[]> {
   // 1. Obtener productos disponibles
-  const { data: products, error: productsError } = await supabase
+  const { data: products, error: productsError } = (await supabase
     .from('products')
     .select('*')
     .eq('available_for_sale', true)
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: false })) as { data: ProductRow[] | null; error: any }
 
   if (productsError) {
     console.error('[getPublicProducts] Error fetching products:', productsError)
@@ -165,11 +165,11 @@ export async function getPublicProducts(): Promise<PublicProduct[]> {
 
   // 2. Obtener todas las variantes de los productos
   const productIds = products.map((p) => p.id)
-  const { data: variants, error: variantsError } = await supabase
+  const { data: variants, error: variantsError } = (await supabase
     .from('variants')
     .select('*')
     .in('product_id', productIds)
-    .eq('available', true)
+    .eq('available', true)) as { data: VariantRow[] | null; error: any }
 
   if (variantsError) {
     console.error('[getPublicProducts] Error fetching variants:', variantsError)
@@ -194,11 +194,11 @@ export async function getPublicProducts(): Promise<PublicProduct[]> {
  */
 export async function getPublicProductByHandle(handle: string): Promise<PublicProduct | null> {
   // 1. Obtener el producto
-  const { data: product, error: productError } = await supabase
+  const { data: product, error: productError } = (await supabase
     .from('products')
     .select('*')
     .eq('handle', handle)
-    .single()
+    .single()) as { data: ProductRow | null; error: any }
 
   if (productError) {
     if (productError.code === 'PGRST116') {
@@ -214,11 +214,11 @@ export async function getPublicProductByHandle(handle: string): Promise<PublicPr
   }
 
   // 2. Obtener las variantes del producto
-  const { data: variants, error: variantsError } = await supabase
+  const { data: variants, error: variantsError } = (await supabase
     .from('variants')
     .select('*')
     .eq('product_id', product.id)
-    .order('created_at', { ascending: true })
+    .order('created_at', { ascending: true })) as { data: VariantRow[] | null; error: any }
 
   if (variantsError) {
     console.error('[getPublicProductByHandle] Error fetching variants:', variantsError)
@@ -234,12 +234,12 @@ export async function getPublicProductByHandle(handle: string): Promise<PublicPr
  */
 export async function getPublicProductsByCategory(category: string): Promise<PublicProduct[]> {
   // Supabase soporta búsqueda en arrays con contains
-  const { data: products, error: productsError } = await supabase
+  const { data: products, error: productsError } = (await supabase
     .from('products')
     .select('*')
     .eq('available_for_sale', true)
     .contains('tags', [category])
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: false })) as { data: ProductRow[] | null; error: any }
 
   if (productsError) {
     console.error('[getPublicProductsByCategory] Error:', productsError)
@@ -252,11 +252,11 @@ export async function getPublicProductsByCategory(category: string): Promise<Pub
 
   // Obtener variantes
   const productIds = products.map((p) => p.id)
-  const { data: variants } = await supabase
+  const { data: variants } = (await supabase
     .from('variants')
     .select('*')
     .in('product_id', productIds)
-    .eq('available', true)
+    .eq('available', true)) as { data: VariantRow[] | null; error: any }
 
   // Agrupar variantes por producto
   const variantsByProduct = new Map<string, VariantRow[]>()
@@ -275,12 +275,12 @@ export async function getPublicProductsByCategory(category: string): Promise<Pub
 export async function searchPublicProducts(query: string): Promise<PublicProduct[]> {
   const searchTerm = `%${query}%`
 
-  const { data: products, error: productsError } = await supabase
+  const { data: products, error: productsError } = (await supabase
     .from('products')
     .select('*')
     .eq('available_for_sale', true)
     .or(`title.ilike.${searchTerm},title_en.ilike.${searchTerm},description_html.ilike.${searchTerm}`)
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: false })) as { data: ProductRow[] | null; error: any }
 
   if (productsError) {
     console.error('[searchPublicProducts] Error:', productsError)
@@ -293,11 +293,11 @@ export async function searchPublicProducts(query: string): Promise<PublicProduct
 
   // Obtener variantes
   const productIds = products.map((p) => p.id)
-  const { data: variants } = await supabase
+  const { data: variants } = (await supabase
     .from('variants')
     .select('*')
     .in('product_id', productIds)
-    .eq('available', true)
+    .eq('available', true)) as { data: VariantRow[] | null; error: any }
 
   // Agrupar variantes por producto
   const variantsByProduct = new Map<string, VariantRow[]>()
