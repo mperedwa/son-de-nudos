@@ -2,6 +2,15 @@
 
 Esta guía explica cómo importar múltiples productos a tu tienda Son de Nudos de forma masiva usando un archivo Excel.
 
+## ¡IMPORTANTE! El Handle se Genera Automáticamente
+
+**No necesitas crear handles manualmente.** El sistema genera automáticamente el handle (URL del producto) desde el título:
+
+```
+"Bolso Playa Macramé" → bolso-playa-macrame
+"Collar Azul Oceánico" → collar-azul-oceanico
+```
+
 ## Requisitos Previos
 
 1. Tener Node.js instalado
@@ -27,33 +36,36 @@ Esto creará el archivo `templates/plantilla-productos.xlsx` con:
 
 | Campo | Descripción | Requerido | Ejemplo |
 |-------|-------------|-----------|---------|
-| `handle` | ID único para URL (solo minúsculas, números y guiones) | Sí | `collar-macrame-azul` |
-| `title` | Nombre en español | Sí | `Collar Macramé Azul` |
+| `title` | Nombre en español | **Sí** | `Collar Macramé Azul` |
 | `title_en` | Nombre en inglés | No | `Blue Macramé Necklace` |
 | `description_html` | Descripción en español (puede incluir HTML) | No | `<p>Hermoso collar...</p>` |
 | `description_html_en` | Descripción en inglés | No | `<p>Beautiful necklace...</p>` |
-| `price` | Precio en USD | Sí | `45.00` |
+| `price` | Precio en USD | **Sí** | `45.00` |
 | `compare_at_price` | Precio original (para mostrar descuento) | No | `55.00` |
 | `tags` | Etiquetas separadas por coma | No | `nuevo,collar,azul` |
-| `available_for_sale` | Disponible para venta | Sí | `TRUE` o `FALSE` |
+| `available_for_sale` | Disponible para venta | **Sí** | `TRUE` o `FALSE` |
 | `images` | URLs de imágenes separadas por `\|` | No | `url1\|url2\|url3` |
+
+> **Nota:** El `handle` se genera automáticamente desde el `title`. No hay columna handle.
 
 ### Hoja "Variantes"
 
 | Campo | Descripción | Requerido | Opciones Válidas |
 |-------|-------------|-----------|------------------|
-| `product_handle` | Handle del producto padre | Sí | Debe existir en hoja Productos |
+| `product_title` | **Título EXACTO** del producto | **Sí** | Copia y pega desde hoja Productos |
 | `largo` | Longitud del collar | No | `16 in`, `18 in`, `20 in`, `22 in`, `24 in` |
 | `grosor` | Grosor del cordón | No | `1.5mm`, `3mm`, `5mm`, `9mm` |
 | `material_cordon` | Material del cordón | No | `Algodón`, `Algodón encerado`, `Algodón reciclado`, `Nylon`, `Poliéster` |
 | `material_accesorios` | Material de accesorios | No | `Plata 925`, `Latón`, `Cobre`, `Bronce`, `Piedra natural`, `Cristal`, `Madera`, `Cerámica` |
 | `color_primario` | Color principal | No | Ver lista de colores abajo |
 | `color_secundario` | Color secundario | No | Ver lista de colores abajo |
-| `price` | Precio de esta variante | Sí | `45.00` |
+| `price` | Precio de esta variante | **Sí** | `45.00` |
 | `compare_at_price` | Precio original | No | `55.00` |
-| `stock` | Cantidad disponible | Sí | `5` |
-| `available` | Disponible | Sí | `TRUE` o `FALSE` |
+| `stock` | Cantidad disponible | **Sí** | `5` |
+| `available` | Disponible | **Sí** | `TRUE` o `FALSE` |
 | `image` | URL de imagen de variante | No | URL completa |
+
+> **Importante:** En `product_title` debes poner el título EXACTO del producto (copia y pega para evitar errores).
 
 ### Colores Válidos
 

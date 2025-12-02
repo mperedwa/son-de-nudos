@@ -1,14 +1,16 @@
 /**
  * Script para generar la plantilla Excel de importación de productos
  * Ejecutar: npm run generate:template
+ *
+ * NOTA: El handle se genera AUTOMÁTICAMENTE desde el título
+ * El usuario NO necesita crear handles manualmente
  */
 
 import * as XLSX from 'xlsx'
 import * as path from 'path'
 
-// Definir las columnas de la hoja de Productos
+// Definir las columnas de la hoja de Productos (SIN handle - se genera automático)
 const productosHeaders = [
-  'handle',
   'title',
   'title_en',
   'description_html',
@@ -23,7 +25,6 @@ const productosHeaders = [
 // Ejemplo de producto
 const productosEjemplo = [
   {
-    handle: 'collar-macrame-azul',
     title: 'Collar Macramé Azul Oceánico',
     title_en: 'Ocean Blue Macramé Necklace',
     description_html: '<p>Hermoso collar hecho a mano con técnica de macramé. Cordón de algodón 100% natural teñido en tonos azules que evocan el océano.</p>',
@@ -35,7 +36,6 @@ const productosEjemplo = [
     images: ''
   },
   {
-    handle: 'bolso-macrame-natural',
     title: 'Bolso Macramé Natural',
     title_en: 'Natural Macramé Bag',
     description_html: '<p>Bolso artesanal de macramé en color natural. Perfecto para el día a día o la playa.</p>',
@@ -48,9 +48,9 @@ const productosEjemplo = [
   }
 ]
 
-// Definir las columnas de la hoja de Variantes
+// Definir las columnas de la hoja de Variantes (usa title en lugar de handle)
 const variantesHeaders = [
-  'product_handle',
+  'product_title',
   'largo',
   'grosor',
   'material_cordon',
@@ -64,10 +64,10 @@ const variantesHeaders = [
   'image'
 ]
 
-// Ejemplos de variantes
+// Ejemplos de variantes (referenciando por título)
 const variantesEjemplo = [
   {
-    product_handle: 'collar-macrame-azul',
+    product_title: 'Collar Macramé Azul Oceánico',
     largo: '18 in',
     grosor: '3mm',
     material_cordon: 'Algodón',
@@ -81,7 +81,7 @@ const variantesEjemplo = [
     image: ''
   },
   {
-    product_handle: 'collar-macrame-azul',
+    product_title: 'Collar Macramé Azul Oceánico',
     largo: '20 in',
     grosor: '3mm',
     material_cordon: 'Algodón',
@@ -95,7 +95,7 @@ const variantesEjemplo = [
     image: ''
   },
   {
-    product_handle: 'bolso-macrame-natural',
+    product_title: 'Bolso Macramé Natural',
     largo: '',
     grosor: '5mm',
     material_cordon: 'Algodón reciclado',
@@ -114,10 +114,15 @@ const variantesEjemplo = [
 const instrucciones = [
   ['INSTRUCCIONES PARA LLENAR LA PLANTILLA'],
   [''],
+  ['¡IMPORTANTE! El "handle" (URL del producto) se genera AUTOMÁTICAMENTE desde el título.'],
+  ['Ejemplo: "Bolso Playa Macramé" → bolso-playa-macrame'],
+  ['No necesitas crear handles manualmente.'],
+  [''],
+  ['═══════════════════════════════════════════════════════════════════════'],
+  [''],
   ['HOJA "Productos":'],
-  ['- handle: Identificador único para la URL (solo letras minúsculas, números y guiones). Ej: collar-macrame-azul'],
-  ['- title: Nombre del producto en español (requerido)'],
-  ['- title_en: Nombre del producto en inglés (opcional)'],
+  ['- title: Nombre del producto en español (REQUERIDO)'],
+  ['- title_en: Nombre del producto en inglés (opcional, para clientes que vean la web en inglés)'],
   ['- description_html: Descripción en español, puede incluir HTML básico como <p>, <b>, <ul>'],
   ['- description_html_en: Descripción en inglés (opcional)'],
   ['- price: Precio en USD (número decimal). Ej: 45.00'],
@@ -126,8 +131,10 @@ const instrucciones = [
   ['- available_for_sale: TRUE si está disponible, FALSE si no'],
   ['- images: URLs de imágenes separadas por | (pipe). Ej: url1|url2|url3'],
   [''],
+  ['═══════════════════════════════════════════════════════════════════════'],
+  [''],
   ['HOJA "Variantes":'],
-  ['- product_handle: Handle del producto padre (debe existir en hoja Productos)'],
+  ['- product_title: TÍTULO EXACTO del producto (copia y pega de la hoja Productos)'],
   ['- largo: Opciones válidas: 16 in, 18 in, 20 in, 22 in, 24 in (dejar vacío si no aplica)'],
   ['- grosor: Opciones válidas: 1.5mm, 3mm, 5mm, 9mm'],
   ['- material_cordon: Algodón, Algodón encerado, Algodón reciclado, Nylon, Poliéster'],
@@ -140,11 +147,22 @@ const instrucciones = [
   ['- available: TRUE si está disponible, FALSE si no'],
   ['- image: URL de imagen específica de esta variante (opcional)'],
   [''],
+  ['═══════════════════════════════════════════════════════════════════════'],
+  [''],
   ['NOTAS IMPORTANTES:'],
   ['- Cada producto debe tener al menos una variante'],
-  ['- El handle de producto debe ser único'],
-  ['- Los campos marcados como requeridos no pueden estar vacíos'],
+  ['- El título de producto debe ser ÚNICO (no repitas títulos)'],
+  ['- En variantes, el product_title debe coincidir EXACTAMENTE con el título en Productos'],
+  ['- Los campos marcados como REQUERIDO no pueden estar vacíos'],
   ['- Para las imágenes, primero súbelas al panel admin y copia las URLs'],
+  [''],
+  ['═══════════════════════════════════════════════════════════════════════'],
+  [''],
+  ['FLUJO RECOMENDADO:'],
+  ['1. Llena primero la hoja "Productos" con títulos y descripciones'],
+  ['2. Luego llena "Variantes", copiando los títulos exactos'],
+  ['3. Ejecuta: npm run import:dry ./plantilla-productos.xlsx  (para verificar)'],
+  ['4. Si no hay errores: npm run import:products ./plantilla-productos.xlsx'],
 ]
 
 // Crear el workbook
@@ -154,7 +172,6 @@ const workbook = XLSX.utils.book_new()
 const wsProductos = XLSX.utils.json_to_sheet(productosEjemplo, { header: productosHeaders })
 // Ajustar anchos de columna
 wsProductos['!cols'] = [
-  { wch: 25 }, // handle
   { wch: 35 }, // title
   { wch: 35 }, // title_en
   { wch: 50 }, // description_html
@@ -170,7 +187,7 @@ XLSX.utils.book_append_sheet(workbook, wsProductos, 'Productos')
 // Crear hoja de Variantes
 const wsVariantes = XLSX.utils.json_to_sheet(variantesEjemplo, { header: variantesHeaders })
 wsVariantes['!cols'] = [
-  { wch: 25 }, // product_handle
+  { wch: 35 }, // product_title
   { wch: 10 }, // largo
   { wch: 10 }, // grosor
   { wch: 20 }, // material_cordon
@@ -198,6 +215,9 @@ console.log('✅ Plantilla Excel generada exitosamente!')
 console.log(`📁 Ubicación: ${outputPath}`)
 console.log('')
 console.log('La plantilla incluye:')
-console.log('  - Hoja "Productos": con 2 ejemplos')
-console.log('  - Hoja "Variantes": con 3 ejemplos')
-console.log('  - Hoja "Instrucciones": guía de llenado')
+console.log('  - Hoja "Productos": con 2 ejemplos (SIN columna handle - se genera automático)')
+console.log('  - Hoja "Variantes": con 3 ejemplos (usa título en lugar de handle)')
+console.log('  - Hoja "Instrucciones": guía de llenado actualizada')
+console.log('')
+console.log('💡 El handle se genera automáticamente:')
+console.log('   "Collar Macramé Azul Oceánico" → collar-macrame-azul-oceanico')

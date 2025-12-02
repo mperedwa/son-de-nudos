@@ -31,8 +31,7 @@ function log(message: string, color: keyof typeof colors = 'reset') {
 
 // Tipos
 interface ProductRow {
-  handle: string
-  title: string
+  title: string  // El handle se genera automáticamente desde el título
   title_en?: string
   description_html?: string
   description_html_en?: string
@@ -44,7 +43,7 @@ interface ProductRow {
 }
 
 interface VariantRow {
-  product_handle: string
+  product_title: string  // Referencia por título (más fácil para el usuario)
   largo?: string
   grosor?: string
   material_cordon?: string
@@ -56,6 +55,11 @@ interface VariantRow {
   stock: number
   available: string | boolean
   image?: string
+}
+
+// Producto procesado con handle generado
+interface ProcessedProduct extends ProductRow {
+  handle: string
 }
 
 interface ValidationError {
@@ -72,6 +76,46 @@ const VALID_VALUES = {
   material_cordon: ['Algodón', 'Algodón encerado', 'Algodón reciclado', 'Nylon', 'Poliéster'],
   material_accesorios: ['Plata 925', 'Latón', 'Cobre', 'Bronce', 'Piedra natural', 'Cristal', 'Madera', 'Cerámica'],
   color: ['Natural', 'Blanco', 'Negro', 'Gris', 'Beige', 'Marrón', 'Coral', 'Rosa', 'Rojo', 'Naranja', 'Amarillo', 'Mostaza', 'Verde', 'Verde musgo', 'Azul', 'Celeste', 'Azul marino', 'Turquesa', 'Morado', 'Dorado', 'Plateado'],
+}
+
+/**
+ * Genera un handle URL-friendly desde el título
+ * Ejemplo: "Bolso Playa Macramé" → "bolso-playa-macrame"
+ */
+function generateHandle(title: string): string {
+  return title
+    .toLowerCase()
+    // Reemplazar caracteres acentuados
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    // Reemplazar ñ por n
+    .replace(/ñ/g, 'n')
+    // Reemplazar espacios y caracteres especiales por guiones
+    .replace(/[^a-z0-9]+/g, '-')
+    // Eliminar guiones al inicio y final
+    .replace(/^-+|-+$/g, '')
+    // Eliminar guiones múltiples
+    .replace(/-+/g, '-')
+}
+
+/**
+ * Genera handles únicos, agregando sufijo si hay duplicados
+ */
+function generateUniqueHandles(productos: ProductRow[]): ProcessedProduct[] {
+  const handleCount = new Map<string, number>()
+
+  return productos.map(p => {
+    let handle = generateHandle(p.title)
+
+    // Si ya existe, agregar sufijo numérico
+    const count = handleCount.get(handle) || 0
+    if (count > 0) {
+      handle = `${handle}-${count + 1}`
+    }
+    handleCount.set(generateHandle(p.title), count + 1)
+
+    return { ...p, handle }
+  })
 }
 
 // Validar configuración
@@ -121,26 +165,19 @@ function readExcelFile(filePath: string): { productos: ProductRow[], variantes: 
 // Validar datos
 function validateData(productos: ProductRow[], variantes: VariantRow[]): ValidationError[] {
   const errors: ValidationError[] = []
-  const handles = new Set<string>()
+  const titles = new Set<string>()
 
   // Validar productos
   productos.forEach((p, index) => {
     const row = index + 2 // +2 porque Excel empieza en 1 y tiene header
 
-    // Handle requerido y único
-    if (!p.handle || typeof p.handle !== 'string') {
-      errors.push({ sheet: 'Productos', row, field: 'handle', message: 'Handle es requerido' })
-    } else if (!/^[a-z0-9-]+$/.test(p.handle)) {
-      errors.push({ sheet: 'Productos', row, field: 'handle', message: 'Handle solo puede contener letras minúsculas, números y guiones' })
-    } else if (handles.has(p.handle)) {
-      errors.push({ sheet: 'Productos', row, field: 'handle', message: `Handle duplicado: ${p.handle}` })
-    } else {
-      handles.add(p.handle)
-    }
-
-    // Title requerido
+    // Title requerido y único
     if (!p.title || typeof p.title !== 'string') {
       errors.push({ sheet: 'Productos', row, field: 'title', message: 'Título es requerido' })
+    } else if (titles.has(p.title.trim())) {
+      errors.push({ sheet: 'Productos', row, field: 'title', message: `Título duplicado: "${p.title}"` })
+    } else {
+      titles.add(p.title.trim())
     }
 
     // Price requerido y positivo
@@ -160,11 +197,11 @@ function validateData(productos: ProductRow[], variantes: VariantRow[]): Validat
   variantes.forEach((v, index) => {
     const row = index + 2
 
-    // Product handle requerido y debe existir
-    if (!v.product_handle) {
-      errors.push({ sheet: 'Variantes', row, field: 'product_handle', message: 'Handle de producto es requerido' })
-    } else if (!handles.has(v.product_handle)) {
-      errors.push({ sheet: 'Variantes', row, field: 'product_handle', message: `Producto no existe: ${v.product_handle}` })
+    // Product title requerido y debe existir
+    if (!v.product_title) {
+      errors.push({ sheet: 'Variantes', row, field: 'product_title', message: 'Título de producto es requerido' })
+    } else if (!titles.has(v.product_title.trim())) {
+      errors.push({ sheet: 'Variantes', row, field: 'product_title', message: `Producto no existe: "${v.product_title}"` })
     }
 
     // Validar valores de campos específicos
@@ -201,10 +238,10 @@ function validateData(productos: ProductRow[], variantes: VariantRow[]): Validat
   })
 
   // Verificar que cada producto tenga al menos una variante
-  handles.forEach(handle => {
-    const hasVariant = variantes.some(v => v.product_handle === handle)
+  titles.forEach(title => {
+    const hasVariant = variantes.some(v => v.product_title?.trim() === title)
     if (!hasVariant) {
-      errors.push({ sheet: 'Productos', row: 0, field: 'handle', message: `Producto "${handle}" no tiene variantes definidas` })
+      errors.push({ sheet: 'Productos', row: 0, field: 'title', message: `Producto "${title}" no tiene variantes definidas` })
     }
   })
 
@@ -252,12 +289,16 @@ async function importToSupabase(
     errors: [] as string[]
   }
 
-  // Mapa de handle -> id para las variantes
-  const productIdMap = new Map<string, string>()
+  // Generar handles automáticamente desde los títulos
+  const processedProducts = generateUniqueHandles(productos)
+
+  // Mapa de título -> {handle, id} para las variantes
+  const productMap = new Map<string, { handle: string; id: string }>()
 
   log('\n📦 Importando productos...', 'cyan')
+  log('   (Handles generados automáticamente desde títulos)\n', 'blue')
 
-  for (const p of productos) {
+  for (const p of processedProducts) {
     const productData = {
       handle: p.handle,
       title: p.title,
@@ -272,8 +313,8 @@ async function importToSupabase(
     }
 
     if (dryRun) {
-      log(`  [DRY RUN] Producto: ${p.handle} - ${p.title}`, 'yellow')
-      productIdMap.set(p.handle, 'dry-run-id')
+      log(`  [DRY RUN] "${p.title}" → handle: ${p.handle}`, 'yellow')
+      productMap.set(p.title.trim(), { handle: p.handle, id: 'dry-run-id' })
       results.productsCreated++
     } else {
       const { data, error } = await supabase
@@ -283,37 +324,38 @@ async function importToSupabase(
         .single()
 
       if (error) {
-        results.errors.push(`Producto ${p.handle}: ${error.message}`)
-        log(`  ❌ Error en ${p.handle}: ${error.message}`, 'red')
+        results.errors.push(`Producto "${p.title}": ${error.message}`)
+        log(`  ❌ Error en "${p.title}": ${error.message}`, 'red')
       } else {
-        productIdMap.set(p.handle, data.id)
+        productMap.set(p.title.trim(), { handle: p.handle, id: data.id })
         results.productsCreated++
-        log(`  ✅ ${p.handle} - ${p.title}`, 'green')
+        log(`  ✅ "${p.title}" → ${p.handle}`, 'green')
       }
     }
   }
 
   log('\n📋 Importando variantes...', 'cyan')
 
-  // Agrupar variantes por producto para generar SKUs secuenciales
-  const variantsByProduct = new Map<string, VariantRow[]>()
+  // Agrupar variantes por título de producto
+  const variantsByTitle = new Map<string, VariantRow[]>()
   variantes.forEach(v => {
-    const list = variantsByProduct.get(v.product_handle) || []
+    const title = v.product_title?.trim() || ''
+    const list = variantsByTitle.get(title) || []
     list.push(v)
-    variantsByProduct.set(v.product_handle, list)
+    variantsByTitle.set(title, list)
   })
 
-  for (const [handle, variants] of variantsByProduct) {
-    const productId = productIdMap.get(handle)
-    if (!productId) continue
+  for (const [title, variants] of variantsByTitle) {
+    const productInfo = productMap.get(title)
+    if (!productInfo) continue
 
     for (let i = 0; i < variants.length; i++) {
       const v = variants[i]
       const variantTitle = generateVariantTitle(v)
-      const sku = generateSKU(handle, i)
+      const sku = generateSKU(productInfo.handle, i)
 
       const variantData = {
-        product_id: productId,
+        product_id: productInfo.id,
         title: variantTitle,
         sku: sku,
         price: Number(v.price),
