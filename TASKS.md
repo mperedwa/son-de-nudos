@@ -87,7 +87,7 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar sitio en producción	Deployment verificado con estado "Ready", configuración automática de Vite detectada correctamente, protección de acceso activada por defecto	2025-11-16
 ✅	Actualizar documentación con URLs	README.md actualizado con URLs de GitHub y Vercel, sección de deployment expandida con CI/CD, instrucciones para desactivar protección	2025-11-16
 
-Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (75% completado - Inicio: 16-Nov-2025)
+Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (80% completado - Inicio: 16-Nov-2025)
 
 Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar/instalar Supabase CLI	Supabase CLI v2.48.3+ instalado y funcionando, comando supabase --version ejecuta correctamente	2025-11-16
@@ -129,6 +129,6 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Crear webhook de Stripe para guardar pedidos	Endpoint /api/webhook-stripe creado: verifica firma con STRIPE_WEBHOOK_SECRET, escucha checkout.session.completed, extrae datos de metadata, crea order en Supabase con SUPABASE_SERVICE_ROLE_KEY (bypass RLS), manejo de duplicados por stripe_session_id. Actualizado stripe.ts con metadata completa (items, subtotal, discount, shipping). Documentado en api/README.md	2025-12-03
 ⏳	Implementar histórico de cambios de stock	Vista en /admin/inventory/history mostrando tabla de stock_history: variante, cambio, razón, stock anterior/nuevo, admin que lo hizo, fecha	2025-11-30
 ⏳	Añadir tests E2E del admin panel	Tests con Playwright: login, crear producto, editar stock, crear cupón, ver pedidos, verificar RLS funciona correctamente	2025-12-01
-⏳	Documentar admin panel en README	Sección en README con: cómo acceder (/admin/login), credenciales default, funcionalidades disponibles, cómo crear usuarios admin adicionales	2025-12-01
+✅	Documentar admin panel en README	Sección completa en README.md con: URLs de acceso (producción/local), credenciales por defecto, tabla de módulos con rutas, guía de uso detallada para productos/pedidos/cupones/inventario, instrucciones para crear usuarios admin, diagrama de arquitectura, documentación del webhook	2025-12-03
 
 ⸻

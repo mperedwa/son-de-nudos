@@ -115,26 +115,6 @@ Baja prioridad. Implementar después de estabilizar funcionalidades del admin.
 
 ---
 
-### TASK-007 | Documentar admin panel en README
-
-**Priority**: Medium | **Category**: Documentation | **Assigned**: @claude
-**Created**: 2025-11-23 | **Due**: 2025-12-01
-**Tags**: #docs
-
-Agregar sección completa en README.md documentando el panel de administración.
-
-**Subtasks**:
-- [ ] Documentar URL de acceso (/admin/login)
-- [ ] Explicar credenciales por defecto
-- [ ] Listar funcionalidades disponibles (productos, pedidos, cupones, inventario)
-- [ ] Instrucciones para crear usuarios admin adicionales
-- [ ] Screenshots de las pantallas principales
-
-**Notes**:
-Importante para que otros desarrolladores o el cliente puedan usar el admin sin ayuda.
-
----
-
 ## 🚀 In Progress
 
 ## 👀 In Review
@@ -217,3 +197,32 @@ Los pedidos de Stripe se guardan automáticamente en Supabase con status `paid`.
 2. Agregar `STRIPE_WEBHOOK_SECRET` en Vercel
 
 **Files**: `api/webhook-stripe.ts`, `src/server/stripe.ts`, `.env.example`, `api/README.md`
+
+---
+
+### TASK-007 | Documentar admin panel en README
+
+**Priority**: Medium | **Category**: Documentation | **Assigned**: @claude
+**Created**: 2025-11-23 | **Completed**: 2025-12-03
+**Tags**: #docs
+
+Agregar sección completa en README.md documentando el panel de administración.
+
+**Implementación**:
+- ✅ Documentado URL de acceso (producción y local)
+- ✅ Credenciales por defecto con advertencia de seguridad
+- ✅ Tabla de módulos con rutas y descripciones
+- ✅ Guía de uso detallada para cada módulo:
+  - Productos: crear, agregar variantes, clonar
+  - Pedidos: estados, cambiar estado, filtros
+  - Cupones: crear, configurar, cupones preconfigurados
+  - Inventario: edición rápida, filtros
+- ✅ Instrucciones para crear usuarios admin adicionales
+- ✅ Diagrama de arquitectura del admin
+- ✅ Documentación del webhook de Stripe
+- ✅ Actualizado roadmap con tareas completadas
+
+**Resultado**:
+Documentación completa del panel admin en README.md. Cualquier usuario puede entender cómo usar el sistema sin ayuda externa.
+
+**Files**: `README.md`

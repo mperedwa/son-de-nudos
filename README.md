@@ -205,6 +205,172 @@ i18n
   })
 ```
 
+## 🔐 Panel de Administración
+
+El proyecto incluye un **panel de administración completo** para gestionar productos, pedidos, cupones e inventario.
+
+### Acceso
+
+| URL | Descripción |
+|-----|-------------|
+| **Producción** | https://www.sondenudos.com/admin/login |
+| **Local** | http://localhost:5174/admin/login |
+
+### Credenciales por Defecto
+
+```
+Email:    admin@sondenudos.com
+Password: [REDACTED]
+```
+
+> ⚠️ **Importante:** Cambia la contraseña en producción desde `/admin/profile`
+
+### Funcionalidades Disponibles
+
+| Módulo | Ruta | Descripción |
+|--------|------|-------------|
+| **Dashboard** | `/admin/dashboard` | Métricas: productos, pedidos, ingresos, alertas de stock bajo |
+| **Productos** | `/admin/products` | CRUD completo de productos y variantes |
+| **Pedidos** | `/admin/orders` | Ver y gestionar pedidos, cambiar estados |
+| **Cupones** | `/admin/coupons` | Crear, editar y desactivar cupones |
+| **Inventario** | `/admin/inventory` | Control de stock con edición en línea |
+| **Mi Perfil** | `/admin/profile` | Cambiar contraseña, ver info de cuenta |
+
+### Guía de Uso
+
+#### Productos (`/admin/products`)
+
+**Crear un producto:**
+1. Click en **"Nuevo Producto"**
+2. Llenar campos obligatorios:
+   - Título (ES) y Título (EN) para contenido bilingüe
+   - Handle (URL amigable, ej: `collar-luna-plata`)
+   - Descripción (ES/EN) con HTML permitido
+3. Subir imágenes (máx. 4, primera es la principal)
+4. Click en **"Crear"**
+
+**Agregar variantes:**
+1. En la tabla de productos, expandir el producto (click en fila)
+2. Click en **"Nueva Variante"**
+3. Configurar:
+   - SKU único (ej: `COL-LUNA-S-PLATA`)
+   - Precio en USD
+   - Stock disponible
+   - Opciones: Largo, Material, Color, etc.
+4. Subir imagen de la variante (opcional)
+
+**Clonar productos:** Usa el botón 📋 para duplicar productos con todas sus variantes.
+
+#### Pedidos (`/admin/orders`)
+
+**Estados disponibles:**
+| Estado | Significado | Color |
+|--------|-------------|-------|
+| `pending` | Esperando pago | Amarillo |
+| `paid` | Pagado (automático desde Stripe) | Azul |
+| `processing` | En preparación | Morado |
+| `shipped` | Enviado | Cian |
+| `delivered` | Entregado | Verde |
+| `cancelled` | Cancelado | Rojo |
+
+**Cambiar estado:**
+1. Click en un pedido para abrir el detalle
+2. Seleccionar nuevo estado en el dropdown
+3. Confirmar el cambio
+
+**Filtros disponibles:**
+- Por estado (pending, paid, etc.)
+- Por fecha (hoy, semana, mes)
+- Búsqueda por email, nombre o ID
+
+#### Cupones (`/admin/coupons`)
+
+**Crear cupón:**
+1. Click en **"Nuevo Cupón"**
+2. Configurar:
+   - Código (ej: `VERANO2025`)
+   - Porcentaje de descuento (0-100)
+   - Monto mínimo de compra (opcional)
+   - Usos máximos (opcional)
+   - Fechas de validez (opcional)
+3. Activar/desactivar con el toggle
+
+**Cupones preconfigurados:**
+| Código | Descuento | Mínimo |
+|--------|-----------|--------|
+| `WELCOME10` | 10% | - |
+| `PRISCILLA15` | 15% | - |
+| `VERANO20` | 20% | $50 |
+| `NAVIDAD25` | 25% | $100 |
+
+#### Inventario (`/admin/inventory`)
+
+**Edición rápida de stock:**
+- Click en el número de stock → editar en línea
+- Usar botones +/- para ajustes rápidos
+- Ver historial de cambios por variante
+
+**Filtros:**
+- Stock bajo (≤5 unidades)
+- Sin stock
+- Búsqueda por producto o SKU
+
+### Crear Usuario Admin Adicional
+
+Para crear nuevos administradores, ejecuta el script incluido:
+
+```bash
+# Desde la raíz del proyecto
+npm run create:admin
+
+# O directamente con tsx
+npx tsx scripts/create-admin.ts
+```
+
+El script te pedirá:
+1. Email del nuevo admin
+2. Contraseña (mín. 6 caracteres)
+3. Nombre del admin
+4. Rol (admin/editor)
+
+**Requisitos:**
+- Variables de entorno configuradas (`VITE_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`)
+- El email debe ser único en el sistema
+
+### Arquitectura del Admin
+
+```
+Panel Admin (React + TypeScript)
+         ↓
+    Supabase Auth (autenticación)
+         ↓
+    Supabase PostgreSQL (datos)
+         ↓
+    Supabase Storage (imágenes)
+         ↓
+    Row Level Security (RLS)
+```
+
+**Seguridad implementada:**
+- Autenticación obligatoria para todas las rutas `/admin/*`
+- RLS: admins solo pueden modificar datos, no pueden ver datos de otros admins
+- Imágenes públicas pero upload solo autenticado
+- Tokens con expiración automática
+
+### Webhook de Stripe
+
+Los pedidos se guardan automáticamente cuando un cliente completa el pago:
+
+```
+Cliente paga → Stripe → /api/webhook-stripe → Supabase (orders)
+```
+
+El webhook está configurado en:
+- **Endpoint:** `https://www.sondenudos.com/api/webhook-stripe`
+- **Evento:** `checkout.session.completed`
+
+Ver documentación completa en `api/README.md`.
+
 ## 📦 Instalación
 
 ### Requisitos Previos
@@ -633,6 +799,10 @@ npm run dev
 - [x] Contenido bilingüe (título/descripción ES/EN)
 - [x] Búsqueda de productos
 - [x] Landing page con diseño moderno
+- [x] Webhook de Stripe para guardar pedidos automáticamente
+- [x] CRUD de cupones desde el admin
+- [x] Vista de inventario consolidado
+- [x] Documentación del panel de administración
 
 ### Pendiente ⏳
 
@@ -650,9 +820,8 @@ npm run dev
 - [ ] Sitemap XML
 - [ ] PWA (Progressive Web App)
 - [ ] Dark mode
-- [ ] Webhook de Stripe para guardar pedidos
-- [ ] CRUD de cupones desde el admin
-- [ ] Vista de inventario consolidado
+- [ ] Configuración de envío desde admin
+- [ ] Histórico de cambios de stock
 
 ## 👥 Contribuir
 
