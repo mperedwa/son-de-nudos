@@ -114,6 +114,23 @@ export async function createStripeCheckoutSession(
       metadata: {
         couponCode: params.couponCode || '',
         shippingMethod: params.shippingMethod || 'shipping',
+        // Datos completos para el webhook (guardar orden en Supabase)
+        items: JSON.stringify(
+          params.items.map((item) => ({
+            productId: item.productId,
+            variantId: item.variantId,
+            title: item.title,
+            variantTitle: item.variantTitle,
+            price: item.unitPrice.amount,
+            quantity: item.quantity,
+            image: item.image || '',
+          }))
+        ),
+        subtotal: String(
+          params.items.reduce((sum, item) => sum + item.unitPrice.amount * item.quantity, 0)
+        ),
+        discount: String(params.discountAmount || 0),
+        shipping: String(params.shippingMethod === 'shipping' ? config.shippingCost : 0),
       },
     }
 

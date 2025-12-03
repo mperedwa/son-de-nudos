@@ -73,28 +73,6 @@ Actualmente los valores están hardcodeados en config.ts. Esta tarea los hace ed
 
 ---
 
-### TASK-004 | Webhook de Stripe para guardar pedidos
-
-**Priority**: Critical | **Category**: Backend | **Assigned**: @claude
-**Created**: 2025-11-23 | **Due**: 2025-11-30
-**Tags**: #stripe #api #supabase
-
-Endpoint que escucha eventos de Stripe y guarda pedidos automáticamente en Supabase.
-
-**Subtasks**:
-- [ ] Crear endpoint /api/webhooks/stripe
-- [ ] Verificar firma del webhook con Stripe secret
-- [ ] Escuchar evento checkout.session.completed
-- [ ] Extraer items, customer_email, shipping_address, amounts
-- [ ] Crear order en tabla orders de Supabase
-- [ ] Manejar errores y reintentos
-- [ ] Configurar webhook en Stripe Dashboard
-
-**Notes**:
-Crítico para que los pedidos de producción se guarden automáticamente. Sin esto, los pedidos de Stripe no aparecen en el admin.
-
----
-
 ### TASK-005 | Histórico de cambios de stock
 
 **Priority**: Medium | **Category**: Admin Panel | **Assigned**: @claude
@@ -209,3 +187,33 @@ Conectar la página pública de la tienda para que muestre productos desde Supab
 Los productos creados en el panel admin (`/admin/products`) ahora aparecen automáticamente en la tienda pública. Soporte bilingüe completo: muestra `title_en`/`description_html_en` cuando el usuario está en inglés.
 
 **Files**: `src/lib/supabase-public.ts`, `src/app/routes/index.tsx`, `src/app/routes/product/[handle].tsx`, `src/components/VariantSelector.tsx`, `src/i18n/locales/*/product.json`
+
+---
+
+### TASK-004 | Webhook de Stripe para guardar pedidos
+
+**Priority**: Critical | **Category**: Backend | **Assigned**: @claude
+**Created**: 2025-11-23 | **Completed**: 2025-12-03
+**Tags**: #stripe #api #supabase
+
+Endpoint que escucha eventos de Stripe y guarda pedidos automáticamente en Supabase.
+
+**Implementación**:
+- ✅ Creado endpoint `/api/webhook-stripe`
+- ✅ Verificación de firma con `stripe.webhooks.constructEvent()`
+- ✅ Evento soportado: `checkout.session.completed`
+- ✅ Extracción de items, customer_email, shipping_address, amounts desde metadata
+- ✅ Inserción en tabla `orders` con `SUPABASE_SERVICE_ROLE_KEY` (bypass RLS)
+- ✅ Manejo de duplicados (verifica `stripe_session_id` único)
+- ✅ Actualizado `src/server/stripe.ts` con metadata completa (items, subtotal, discount, shipping)
+- ✅ Documentado en `api/README.md` con instrucciones de configuración
+- ✅ Agregado `STRIPE_WEBHOOK_SECRET` a `.env.example`
+
+**Resultado**:
+Los pedidos de Stripe se guardan automáticamente en Supabase con status `paid`. Visibles inmediatamente en `/admin/orders`.
+
+**Configuración requerida**:
+1. Crear webhook en Stripe Dashboard → `https://www.sondenudos.com/api/webhook-stripe`
+2. Agregar `STRIPE_WEBHOOK_SECRET` en Vercel
+
+**Files**: `api/webhook-stripe.ts`, `src/server/stripe.ts`, `.env.example`, `api/README.md`

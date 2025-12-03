@@ -206,7 +206,7 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	✅ Panel básico de administración (Fase 11 - EN DESARROLLO).
 	•	Analítica avanzada con panel de métricas.
 
-5.1 Fase 11: Panel de Administración con Supabase ✅ PARCIALMENTE COMPLETADO (54%)
+5.1 Fase 11: Panel de Administración con Supabase ✅ PARCIALMENTE COMPLETADO (75%)
 
 **Estado de Implementación:**
 
@@ -275,10 +275,14 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	CRUD de Cupones (crear, editar, listar, activar/desactivar) - 537 líneas
 	•	Vista de Pedidos (tabla con filtros, detalle individual) - 580 líneas
 	•	Detalle de pedido con timeline de estados - 320 líneas
+	•	**Webhook de Stripe** (/api/webhook-stripe) - 200 líneas
+		- Verifica firma con `STRIPE_WEBHOOK_SECRET`
+		- Escucha `checkout.session.completed`
+		- Crea orders automáticamente en Supabase
+		- Bypass RLS con `SUPABASE_SERVICE_ROLE_KEY`
 
 ⏳ **Pendientes del Hito 11:**
 	•	Configuración de envío (/admin/settings)
-	•	Webhook de Stripe para guardar pedidos en orders
 	•	Histórico de cambios de stock (stock_history)
 	•	Tests E2E del admin panel
 
@@ -293,6 +297,7 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	src/components/admin/ImageUploader.tsx (288 líneas) - Single image uploader
 	•	src/components/admin/OrderStatusBadge.tsx (110 líneas) - Badge de estado
 	•	src/lib/storage.ts (227 líneas) - Storage helpers
+	•	api/webhook-stripe.ts (200 líneas) - Webhook para guardar pedidos
 
 **Migraciones SQL:**
 	•	supabase/migrations/20251116000000_initial_schema.sql - Schema completo
