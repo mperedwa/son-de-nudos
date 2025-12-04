@@ -234,6 +234,7 @@ Password: [REDACTED]
 | **Pedidos** | `/admin/orders` | Ver y gestionar pedidos, cambiar estados |
 | **Cupones** | `/admin/coupons` | Crear, editar y desactivar cupones |
 | **Inventario** | `/admin/inventory` | Control de stock con edición en línea |
+| **Configuración** | `/admin/settings` | Zonas de envío y costos |
 | **Mi Perfil** | `/admin/profile` | Cambiar contraseña, ver info de cuenta |
 
 ### Guía de Uso
@@ -370,6 +371,62 @@ El webhook está configurado en:
 - **Evento:** `checkout.session.completed`
 
 Ver documentación completa en `api/README.md`.
+
+## 🚚 Sistema de Zonas de Envío
+
+El proyecto incluye un sistema completo de envío por zonas con detección automática de país usando Google Places API.
+
+### Zonas de Envío
+
+| Zona | Países | Costo Default | Comportamiento |
+|------|--------|---------------|----------------|
+| **Zona 1** | 🇺🇸 Estados Unidos | $8.99 | Checkout normal |
+| **Zona 2** | 🇨🇦🇲🇽 Canadá, México | $18.99 | Checkout normal |
+| **Zona 3** | 🌍 Internacional | N/A | Mensaje "Contáctanos" |
+
+### Características
+
+- **Detección automática de país** mediante Google Places Autocomplete en checkout
+- **Costos configurables** desde el panel admin (`/admin/settings`)
+- **Umbral de envío gratis** configurable (default: $150)
+- **Integración con Stripe** - el costo de envío se calcula dinámicamente
+
+### Configuración de Costos (Admin)
+
+1. Ir a `/admin/settings`
+2. Configurar costos por zona:
+   - **Zona 1 (USA):** Costo estándar para Estados Unidos
+   - **Zona 2 (CA/MX):** Costo para Canadá y México
+   - **Umbral Envío Gratis:** Monto mínimo para envío sin cargo
+3. Guardar cambios
+
+### Google Places API
+
+Para que el autocompletado de direcciones funcione en producción:
+
+1. **Crear proyecto** en [Google Cloud Console](https://console.cloud.google.com/)
+2. **Habilitar APIs:**
+   - Places API
+   - Maps JavaScript API
+3. **Crear API Key:**
+   - Ir a Credentials → Create Credentials → API Key
+   - Agregar restricciones HTTP referrer:
+     - `https://www.sondenudos.com/*`
+     - `http://localhost:5174/*` (para desarrollo)
+4. **Configurar variable de entorno:**
+   ```bash
+   VITE_GOOGLE_PLACES_API_KEY=tu_api_key
+   ```
+
+> **Nota:** Si la API Key no está configurada, el checkout funciona normalmente pero el usuario debe ingresar su dirección manualmente sin autocompletado.
+
+### Archivos Clave
+
+| Archivo | Descripción |
+|---------|-------------|
+| `src/lib/shipping.ts` | Helpers para zonas y cálculo de costos |
+| `src/components/AddressAutocomplete.tsx` | Componente Google Places |
+| `src/app/routes/admin/settings.tsx` | Página de configuración |
 
 ## 📦 Instalación
 
@@ -803,6 +860,8 @@ npm run dev
 - [x] CRUD de cupones desde el admin
 - [x] Vista de inventario consolidado
 - [x] Documentación del panel de administración
+- [x] Sistema de zonas de envío con Google Places API
+- [x] Configuración de envío desde admin
 
 ### Pendiente ⏳
 
@@ -820,7 +879,6 @@ npm run dev
 - [ ] Sitemap XML
 - [ ] PWA (Progressive Web App)
 - [ ] Dark mode
-- [ ] Configuración de envío desde admin
 - [ ] Histórico de cambios de stock
 
 ## 👥 Contribuir

@@ -87,7 +87,7 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar sitio en producción	Deployment verificado con estado "Ready", configuración automática de Vite detectada correctamente, protección de acceso activada por defecto	2025-11-16
 ✅	Actualizar documentación con URLs	README.md actualizado con URLs de GitHub y Vercel, sección de deployment expandida con CI/CD, instrucciones para desactivar protección	2025-11-16
 
-Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (80% completado - Inicio: 16-Nov-2025)
+Hito 11 - Panel de Administración con Supabase 🔄 EN PROGRESO (93% completado - Inicio: 16-Nov-2025)
 
 Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Verificar/instalar Supabase CLI	Supabase CLI v2.48.3+ instalado y funcionando, comando supabase --version ejecuta correctamente	2025-11-16
@@ -125,7 +125,7 @@ Estado	Tarea	Criterios de aceptación	Fecha objetivo
 ✅	Implementar CRUD de cupones - Crear/Editar	CouponFormModal completo con validación Zod, porcentaje, monto mínimo, usos máximos, fechas de validez, toggle activo/inactivo	2025-11-17
 ✅	Implementar vista de pedidos	Página /admin/orders (580 líneas) con tabla de pedidos, OrderStatusBadge (6 estados), filtros por status/fecha, búsqueda por email/nombre/ID, paginación 10 items, 6 stats cards, alerta de pedidos pendientes	2025-11-18
 ✅	Implementar detalle de pedido	OrderDetailModal (320 líneas) con información cliente, dirección de envío, lista de items con imágenes, totales desglosados, timeline de estados, cambio de status con confirmación, Stripe session ID	2025-11-18
-⏳	Implementar configuración de envío	Página /admin/settings con formulario editable: costo de envío estándar, umbral de envío gratis, moneda, actualización en shipping_config table	2025-11-29
+✅	Implementar configuración de envío y zonas	Página /admin/settings (394 líneas) con sistema de 3 zonas: USA ($8.99), Canadá/México ($18.99), Internacional (contactar). Google Places Autocomplete en checkout para detección automática de país. Migración SQL para columnas zone_1_cost y zone_2_cost. Helpers en shipping.ts (getShippingZone, getShippingCost). Componente AddressAutocomplete.tsx con carga dinámica. Integración con Stripe metadata. Umbral envío gratis configurable	2025-12-04
 ✅	Crear webhook de Stripe para guardar pedidos	Endpoint /api/webhook-stripe creado: verifica firma con STRIPE_WEBHOOK_SECRET, escucha checkout.session.completed, extrae datos de metadata, crea order en Supabase con SUPABASE_SERVICE_ROLE_KEY (bypass RLS), manejo de duplicados por stripe_session_id. Actualizado stripe.ts con metadata completa (items, subtotal, discount, shipping). Documentado en api/README.md	2025-12-03
 ⏳	Implementar histórico de cambios de stock	Vista en /admin/inventory/history mostrando tabla de stock_history: variante, cambio, razón, stock anterior/nuevo, admin que lo hizo, fecha	2025-11-30
 ⏳	Añadir tests E2E del admin panel	Tests con Playwright: login, crear producto, editar stock, crear cupón, ver pedidos, verificar RLS funciona correctamente	2025-12-01

@@ -1,6 +1,6 @@
 # Kanban Board
 
-<!-- Config: Last Task ID: 009 -->
+<!-- Config: Last Task ID: 010 -->
 
 ## ⚙️ Configuration
 
@@ -49,27 +49,6 @@ Implementar cobertura de tests unitarios para las funciones de utilidad más cr�
 
 **Notes**:
 Pendiente para futura iteración. Asegurar cobertura de casos edge.
-
----
-
-### TASK-003 | Configuración de envío en admin panel
-
-**Priority**: High | **Category**: Admin Panel | **Assigned**: @claude
-**Created**: 2025-11-23 | **Due**: 2025-11-29
-**Tags**: #feature #admin #supabase
-
-Página /admin/settings con formulario editable para configurar costos de envío.
-
-**Subtasks**:
-- [ ] Crear página /admin/settings
-- [ ] Formulario para costo de envío estándar
-- [ ] Campo para umbral de envío gratis
-- [ ] Selector de moneda
-- [ ] Guardar en tabla shipping_config de Supabase
-- [ ] Cargar configuración actual al abrir
-
-**Notes**:
-Actualmente los valores están hardcodeados en config.ts. Esta tarea los hace editables desde el admin.
 
 ---
 
@@ -197,6 +176,32 @@ Los pedidos de Stripe se guardan automáticamente en Supabase con status `paid`.
 2. Agregar `STRIPE_WEBHOOK_SECRET` en Vercel
 
 **Files**: `api/webhook-stripe.ts`, `src/server/stripe.ts`, `.env.example`, `api/README.md`
+
+---
+
+### TASK-003 | Sistema de zonas de envío + Google Places
+
+**Priority**: High | **Category**: Admin Panel, Frontend | **Assigned**: @claude
+**Created**: 2025-11-23 | **Completed**: 2025-12-04
+**Tags**: #feature #admin #supabase #api
+
+Sistema de envío por zonas con autocompletado de direcciones usando Google Places API.
+
+**Implementación**:
+- ✅ Página `/admin/settings` para configurar costos de envío por zona
+- ✅ Sistema de 3 zonas: USA ($8.99), Canadá/México ($18.99), Internacional (contactar)
+- ✅ Google Places Autocomplete en checkout para detección automática de país
+- ✅ Migración SQL para columnas `zone_1_cost` y `zone_2_cost`
+- ✅ Helpers en `src/lib/shipping.ts` (getShippingZone, getShippingCost, isCountrySupported)
+- ✅ Componente `AddressAutocomplete.tsx` con carga dinámica de script
+- ✅ Integración con Stripe metadata (shippingZone, shippingCost dinámico)
+- ✅ Umbral de envío gratis configurable ($150 default)
+- ✅ Tipos TypeScript actualizados en `supabase.ts`
+
+**Resultado**:
+Los costos de envío son completamente configurables desde el admin. El checkout detecta automáticamente el país y calcula el costo según la zona. Pedidos internacionales muestran mensaje de contacto.
+
+**Files**: `src/lib/shipping.ts`, `src/components/AddressAutocomplete.tsx`, `src/app/routes/admin/settings.tsx`, `src/app/routes/checkout.tsx`, `src/server/stripe.ts`, `supabase/migrations/20251204000000_shipping_zones.sql`
 
 ---
 

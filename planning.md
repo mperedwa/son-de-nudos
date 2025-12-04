@@ -206,7 +206,7 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	✅ Panel básico de administración (Fase 11 - EN DESARROLLO).
 	•	Analítica avanzada con panel de métricas.
 
-5.1 Fase 11: Panel de Administración con Supabase ✅ PARCIALMENTE COMPLETADO (80%)
+5.1 Fase 11: Panel de Administración con Supabase ✅ PARCIALMENTE COMPLETADO (93%)
 
 **Estado de Implementación:**
 
@@ -282,7 +282,6 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 		- Bypass RLS con `SUPABASE_SERVICE_ROLE_KEY`
 
 ⏳ **Pendientes del Hito 11:**
-	•	Configuración de envío (/admin/settings)
 	•	Histórico de cambios de stock (stock_history)
 	•	Tests E2E del admin panel
 
@@ -327,8 +326,8 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	5.	admins: Usuarios administradores
 	•	id, email, password_hash, name, role
 	•	active, last_login_at
-	6.	shipping_config: Configuración de envío editable
-	•	id, standard_cost, free_shipping_threshold, currency
+	6.	shipping_config: Configuración de envío por zonas
+	•	id, zone_1_cost (USA), zone_2_cost (Canadá/México), free_shipping_threshold, currency
 	7.	stock_history: Histórico de movimientos de inventario
 	•	id, variant_id, change, reason, previous_stock, new_stock
 	•	admin_id, created_at
@@ -365,7 +364,7 @@ Este estilo debe guiar el diseño de todos los componentes, desde tarjetas de pr
 	•	/admin/orders - Gestión de pedidos (580 líneas) ✅
 	•	/admin/coupons - Gestión de cupones (537 líneas) ✅
 	•	/admin/inventory - Control de inventario (520 líneas) ✅
-	•	/admin/settings - Configuración de envío ⏳
+	•	/admin/settings - Configuración de envío por zonas ✅
 
 **Costo:** $0/mes (tier gratuito Supabase: 500MB database, 1GB storage, 2GB bandwidth)
 
@@ -382,6 +381,83 @@ Supabase pausa proyectos del tier gratuito después de 7 días sin conexiones. P
 	•	**Documentación:** api/README.md con guía completa
 
 El sistema funciona completamente automático sin intervención manual. El contador de inactividad se reinicia cada 5 días.
+
+5.2 Sistema de Zonas de Envío ✅ COMPLETADO (4-Dic-2025)
+
+**Implementación:**
+
+Sistema de envío por zonas con autocompletado de direcciones usando Google Places API, permitiendo configuración dinámica de costos desde el panel de administración.
+
+**Zonas de Envío:**
+
+| Zona | Países | Costo Default | Comportamiento |
+|------|--------|---------------|----------------|
+| Zona 1 | 🇺🇸 USA | $8.99 | Checkout normal |
+| Zona 2 | 🇨🇦🇲🇽 Canadá, México | $18.99 | Checkout normal |
+| Zona 3 | 🌍 Internacional | N/A | Mensaje "Contáctanos" |
+
+**Envío gratis:** Compras +$150 (configurable desde admin)
+
+**Archivos Creados:**
+	•	src/lib/shipping.ts (130 líneas) - Helpers de zona:
+		- getShippingZone(countryCode): Determina zona por código de país
+		- getShippingCost(zone, config, subtotal): Calcula costo según zona y umbral
+		- isCountrySupported(countryCode): Verifica si el país está soportado
+		- getZoneLabel(zone, lang): Etiqueta localizada de zona
+	•	src/components/AddressAutocomplete.tsx (277 líneas) - Componente Google Places:
+		- Carga dinámica del script desde VITE_GOOGLE_PLACES_API_KEY
+		- Extrae address, city, state, zipCode, country, countryCode
+		- Fallback graceful si API no disponible
+		- Traducciones ES/EN
+	•	src/app/routes/admin/settings.tsx (394 líneas) - Página de configuración:
+		- Formulario React Hook Form + Zod
+		- Costos por zona editables
+		- Umbral de envío gratis configurable
+		- Tabla informativa de zonas
+	•	supabase/migrations/20251204000000_shipping_zones.sql - Migración:
+		- Renombra standard_cost → zone_1_cost
+		- Agrega zone_2_cost para Canadá/México
+
+**Archivos Modificados:**
+	•	src/app/routes/checkout.tsx - Integración completa:
+		- AddressAutocomplete para entrada de dirección
+		- Detección automática de zona por país
+		- Bloqueo de checkout para Zona 3
+		- Cálculo dinámico de envío
+	•	src/server/stripe.ts - Metadata actualizada:
+		- shippingZone en metadata de sesión
+		- shippingCost dinámico (no hardcodeado)
+	•	src/lib/supabase.ts - Tipos actualizados:
+		- zone_1_cost y zone_2_cost en shipping_config
+
+**Flujo de Checkout:**
+
+```
+[Usuario escribe dirección]
+        ↓
+[Google Places Autocomplete]
+        ↓
+[Extrae countryCode del resultado]
+        ↓
+[getShippingZone(countryCode)]
+        ↓
+┌─────────────────────────────────────┐
+│ countryCode === 'US'      → Zona 1  │
+│ countryCode ∈ ['CA','MX'] → Zona 2  │
+│ else                      → Zona 3  │
+└─────────────────────────────────────┘
+        ↓
+[Si Zona 3: Mostrar mensaje y bloquear]
+        ↓
+[Si Zona 1-2: Calcular costo según config]
+        ↓
+[Stripe recibe shippingCost y shippingZone]
+```
+
+**Configuración Requerida:**
+	1.	Google Cloud Console: Crear proyecto, habilitar Places API y Maps JavaScript API
+	2.	API Key: Generar con restricciones HTTP referrer (www.sondenudos.com/*, localhost:5174/*)
+	3.	Vercel: Agregar VITE_GOOGLE_PLACES_API_KEY en Environment Variables
 
 6. Calidad, observabilidad y DevEx
 	•	Pruebas
