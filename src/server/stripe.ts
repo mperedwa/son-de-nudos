@@ -38,6 +38,8 @@ export type CreateCheckoutSessionParams = {
   discountAmount?: number
   customerEmail: string
   shippingMethod?: 'shipping' | 'pickup'
+  shippingCost?: number
+  shippingZone?: string
   successUrl?: string
   cancelUrl?: string
 }
@@ -77,19 +79,22 @@ export async function createStripeCheckoutSession(
       })
     )
 
-    // Agregar envío si aplica
+    // Agregar envío si aplica (usar shippingCost del parámetro o fallback a config)
     if (params.shippingMethod === 'shipping') {
-      const shippingCost = config.shippingCost
-      lineItems.push({
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: 'Envío estándar',
+      const shippingCost = params.shippingCost ?? config.shippingCost
+      // Solo agregar si hay costo de envío (no agregar si es envío gratis)
+      if (shippingCost > 0) {
+        lineItems.push({
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: params.shippingZone === 'ZONE_2' ? 'Envío internacional (Canadá/México)' : 'Envío estándar',
+            },
+            unit_amount: Math.round(shippingCost * 100),
           },
-          unit_amount: Math.round(shippingCost * 100),
-        },
-        quantity: 1,
-      })
+          quantity: 1,
+        })
+      }
     }
 
     // URLs de redirección
@@ -114,6 +119,7 @@ export async function createStripeCheckoutSession(
       metadata: {
         couponCode: params.couponCode || '',
         shippingMethod: params.shippingMethod || 'shipping',
+        shippingZone: params.shippingZone || 'ZONE_1',
         // Datos completos para el webhook (guardar orden en Supabase)
         items: JSON.stringify(
           params.items.map((item) => ({
@@ -130,7 +136,7 @@ export async function createStripeCheckoutSession(
           params.items.reduce((sum, item) => sum + item.unitPrice.amount * item.quantity, 0)
         ),
         discount: String(params.discountAmount || 0),
-        shipping: String(params.shippingMethod === 'shipping' ? config.shippingCost : 0),
+        shipping: String(params.shippingMethod === 'shipping' ? (params.shippingCost ?? config.shippingCost) : 0),
       },
     }
 

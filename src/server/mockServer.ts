@@ -237,6 +237,8 @@ export async function createCheckoutSession(params: {
   discountAmount?: number
   customerEmail: string
   shippingMethod?: 'shipping' | 'pickup'
+  shippingCost?: number
+  shippingZone?: string
   successUrl?: string
   cancelUrl?: string
 }): Promise<ApiResponse<{ sessionId: string; checkoutUrl: string }>> {
@@ -252,6 +254,8 @@ export async function createCheckoutSession(params: {
         discountAmount: params.discountAmount,
         customerEmail: params.customerEmail,
         shippingMethod: params.shippingMethod,
+        shippingCost: params.shippingCost,
+        shippingZone: params.shippingZone,
         successUrl: params.successUrl,
         cancelUrl: params.cancelUrl,
       })

@@ -120,7 +120,8 @@ export type Database = {
       shipping_config: {
         Row: {
           id: string
-          standard_cost: number
+          zone_1_cost: number // USA
+          zone_2_cost: number // Canadá, México
           free_shipping_threshold: number
           currency: string
           updated_at: string

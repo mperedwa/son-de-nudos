@@ -28,6 +28,28 @@
       ml('account', '1937919');
     </script>
     <!-- End MailerLite Universal -->
+
+    <!-- Google Places API (para autocompletado de direcciones en checkout) -->
+    <!-- NOTA: Reemplaza YOUR_API_KEY con tu clave de Google Places en producción -->
+    <!-- O configura la variable de entorno y usa un script loader en el componente -->
+    <script>
+      // Cargar Google Places API si está disponible la key en window.__GOOGLE_PLACES_KEY__
+      // Este valor se puede configurar desde el servidor o build
+      (function() {
+        var apiKey = window.__GOOGLE_PLACES_API_KEY__;
+        if (apiKey && apiKey !== 'YOUR_API_KEY') {
+          var script = document.createElement('script');
+          script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places&callback=initGooglePlaces';
+          script.async = true;
+          script.defer = true;
+          document.head.appendChild(script);
+        }
+      })();
+      // Callback cuando Google Maps carga
+      window.initGooglePlaces = function() {
+        console.log('[Google Places] API loaded successfully');
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>

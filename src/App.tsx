@@ -17,6 +17,7 @@ import AdminProducts from './app/routes/admin/products'
 import AdminInventory from './app/routes/admin/inventory'
 import AdminCoupons from './app/routes/admin/coupons'
 import AdminOrders from './app/routes/admin/orders'
+import AdminSettings from './app/routes/admin/settings'
 
 /**
  * Configuración principal de rutas
@@ -60,14 +61,7 @@ function App() {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="coupons" element={<AdminCoupons />} />
           <Route path="inventory" element={<AdminInventory />} />
-          <Route
-            path="settings"
-            element={
-              <div className="p-8 text-center text-[#6B5844]">
-                Configuración - Próximamente
-              </div>
-            }
-          />
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
       </Routes>
     </BrowserRouter>
