@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import CartDrawer from '@/components/CartDrawer'
 import SearchDrawer from '@/components/SearchDrawer'
 import SeoHead from '@/components/SeoHead'
+import { OrganizationSchema } from '@/components/ProductSchema'
 import { useUIStore } from '@/store/ui'
 
 /**
@@ -13,7 +14,8 @@ import { useUIStore } from '@/store/ui'
  * Envuelve todas las páginas con AnnouncementBar, Header, Footer y CartDrawer
  *
  * Componentes globales:
- * - SeoHead: Meta tags dinámicos desde store_settings
+ * - SeoHead: Meta tags dinámicos, favicon, canonical URLs
+ * - OrganizationSchema: JSON-LD para Google rich snippets
  * - AnnouncementBar: Mensajes promocionales desde store_settings
  * - Header con logo SVG, navegación, selector idioma y carrito
  * - Footer con redes sociales desde store_settings
@@ -39,6 +41,9 @@ export default function RootLayout() {
     <div className="min-h-screen flex flex-col">
       {/* SEO Meta Tags dinámicos desde store_settings */}
       <SeoHead />
+
+      {/* JSON-LD Schema para Google rich snippets */}
+      <OrganizationSchema />
 
       {/* Barra de anuncios rotativos */}
       <AnnouncementBar />

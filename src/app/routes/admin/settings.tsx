@@ -5,6 +5,8 @@ import { z } from 'zod'
 import { supabase, type Database, type AnnouncementMessage } from '@/lib/supabase'
 import { type ShippingConfig, DEFAULT_SHIPPING_CONFIG } from '@/lib/shipping'
 import { invalidateStoreSettingsCache } from '@/hooks/useStoreSettings'
+import { ImageUploader } from '@/components/admin/ImageUploader'
+import { deleteImage } from '@/lib/storage'
 
 type ShippingConfigRow = Database['public']['Tables']['shipping_config']['Row']
 type StoreSettingsRow = Database['public']['Tables']['store_settings']['Row']
@@ -12,7 +14,7 @@ type StoreSettingsRow = Database['public']['Tables']['store_settings']['Row']
 // ============================================================================
 // SECCIÓN ACTIVA
 // ============================================================================
-type SettingsSection = 'shipping' | 'seo' | 'social' | 'store' | 'banner'
+type SettingsSection = 'shipping' | 'seo' | 'social' | 'store' | 'banner' | 'branding' | 'legal' | 'seo-advanced'
 
 // ============================================================================
 // VALIDACIÓN CON ZOD - ENVÍO
@@ -61,6 +63,26 @@ const storeSchema = z.object({
 type StoreFormData = z.infer<typeof storeSchema>
 
 // ============================================================================
+// VALIDACIÓN CON ZOD - LEGAL (POLÍTICA DE DEVOLUCIONES)
+// ============================================================================
+const legalSchema = z.object({
+  return_policy_es: z.string().max(10000, 'Máximo 10,000 caracteres').optional().nullable(),
+  return_policy_en: z.string().max(10000, 'Máximo 10,000 caracteres').optional().nullable(),
+})
+type LegalFormData = z.infer<typeof legalSchema>
+
+// ============================================================================
+// VALIDACIÓN CON ZOD - SEO AVANZADO
+// ============================================================================
+const seoAdvancedSchema = z.object({
+  robots_txt: z.string().max(5000, 'Máximo 5,000 caracteres').optional().nullable(),
+  sitemap_enabled: z.boolean(),
+  schema_enabled: z.boolean(),
+  canonical_base_url: z.string().url('Debe ser una URL válida').optional().nullable().or(z.literal('')),
+})
+type SeoAdvancedFormData = z.infer<typeof seoAdvancedSchema>
+
+// ============================================================================
 // COMPONENTE SETTINGS
 // ============================================================================
 export default function AdminSettings() {
@@ -94,8 +116,25 @@ export default function AdminSettings() {
     resolver: zodResolver(storeSchema),
   })
 
+  const legalForm = useForm<LegalFormData>({
+    resolver: zodResolver(legalSchema),
+  })
+
+  const seoAdvancedForm = useForm<SeoAdvancedFormData>({
+    resolver: zodResolver(seoAdvancedSchema),
+    defaultValues: {
+      sitemap_enabled: true,
+      schema_enabled: true,
+    },
+  })
+
   // Banner messages state (manejado separado por su complejidad)
   const [bannerMessages, setBannerMessages] = useState<AnnouncementMessage[]>([])
+
+  // Branding states (logo y favicon)
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
+  const [faviconUrl, setFaviconUrl] = useState<string | null>(null)
+  const [savingBranding, setSavingBranding] = useState(false)
 
   // ============================================================================
   // CARGAR DATOS
@@ -153,6 +192,24 @@ export default function AdminSettings() {
             contact_phone: storeResult.data.contact_phone || '',
           })
           setBannerMessages(storeResult.data.announcement_messages || [])
+
+          // Branding
+          setLogoUrl(storeResult.data.logo_url || null)
+          setFaviconUrl(storeResult.data.favicon_url || null)
+
+          // Legal
+          legalForm.reset({
+            return_policy_es: storeResult.data.return_policy_es || '',
+            return_policy_en: storeResult.data.return_policy_en || '',
+          })
+
+          // SEO Avanzado
+          seoAdvancedForm.reset({
+            robots_txt: storeResult.data.robots_txt || 'User-agent: *\nAllow: /\nDisallow: /admin/',
+            sitemap_enabled: storeResult.data.sitemap_enabled ?? true,
+            schema_enabled: storeResult.data.schema_enabled ?? true,
+            canonical_base_url: storeResult.data.canonical_base_url || 'https://www.sondenudos.com',
+          })
         }
       } catch (error) {
         console.error('Error loading settings:', error)
@@ -300,6 +357,71 @@ export default function AdminSettings() {
     }
   }
 
+  // Guardar Branding (Logo o Favicon individualmente)
+  const onSaveBrandingField = async (field: 'logo_url' | 'favicon_url', value: string | null) => {
+    if (!storeSettings?.id) return
+    setSavingBranding(true)
+    try {
+      const { error } = await supabase
+        .from('store_settings')
+        .update({ [field]: value } as unknown as never)
+        .eq('id', storeSettings.id)
+      if (error) throw error
+      invalidateStoreSettingsCache()
+      showSuccess(field === 'logo_url' ? 'Logo actualizado' : 'Favicon actualizado')
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Error al guardar')
+    } finally {
+      setSavingBranding(false)
+    }
+  }
+
+  // Guardar Legal (Política de devoluciones)
+  const onSaveLegal = async (data: LegalFormData) => {
+    if (!storeSettings?.id) return
+    setSaving(true)
+    try {
+      const { error } = await supabase
+        .from('store_settings')
+        .update({
+          return_policy_es: data.return_policy_es || null,
+          return_policy_en: data.return_policy_en || null,
+        } as unknown as never)
+        .eq('id', storeSettings.id)
+      if (error) throw error
+      invalidateStoreSettingsCache()
+      showSuccess('Política de devoluciones guardada')
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Error al guardar')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  // Guardar SEO Avanzado
+  const onSaveSeoAdvanced = async (data: SeoAdvancedFormData) => {
+    if (!storeSettings?.id) return
+    setSaving(true)
+    try {
+      const { error } = await supabase
+        .from('store_settings')
+        .update({
+          robots_txt: data.robots_txt || null,
+          sitemap_enabled: data.sitemap_enabled,
+          schema_enabled: data.schema_enabled,
+          canonical_base_url: data.canonical_base_url || null,
+        } as unknown as never)
+        .eq('id', storeSettings.id)
+      if (error) throw error
+      invalidateStoreSettingsCache()
+      showSuccess('SEO avanzado guardado')
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Error al guardar')
+    } finally {
+      setSaving(false)
+    }
+  }
+
   // ============================================================================
   // RENDER
   // ============================================================================
@@ -314,9 +436,12 @@ export default function AdminSettings() {
   const sections = [
     { id: 'shipping' as const, icon: '📦', label: 'Envío' },
     { id: 'seo' as const, icon: '🔍', label: 'SEO' },
-    { id: 'social' as const, icon: '📱', label: 'Redes Sociales' },
-    { id: 'store' as const, icon: '🏪', label: 'Info Tienda' },
+    { id: 'social' as const, icon: '📱', label: 'Redes' },
+    { id: 'store' as const, icon: '🏪', label: 'Tienda' },
     { id: 'banner' as const, icon: '📢', label: 'Banner' },
+    { id: 'branding' as const, icon: '🎨', label: 'Marca' },
+    { id: 'legal' as const, icon: '⚖️', label: 'Legal' },
+    { id: 'seo-advanced' as const, icon: '🚀', label: 'SEO+' },
   ]
 
   return (
@@ -797,6 +922,215 @@ export default function AdminSettings() {
                 </button>
               </div>
             </div>
+          )}
+
+          {/* ============================================ */}
+          {/* SECCIÓN: BRANDING (Logo y Favicon) */}
+          {/* ============================================ */}
+          {activeSection === 'branding' && (
+            <div className="space-y-8">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800 text-sm">
+                <strong>Nota:</strong> El logo aparece en el header de tu tienda. El favicon aparece en
+                la pestaña del navegador.
+              </div>
+
+              {/* Logo */}
+              <div className="p-6 bg-white rounded-xl border border-[#d6ccc2]">
+                <h3 className="font-medium text-[#3C2F2F] mb-4 flex items-center gap-2">
+                  <span>🖼️</span> Logo de la tienda
+                </h3>
+                <p className="text-sm text-[#6B5844] mb-4">
+                  Recomendado: PNG o SVG con fondo transparente, 400x100px
+                </p>
+                <ImageUploader
+                  currentImageUrl={logoUrl}
+                  onImageChange={async (url) => {
+                    // Si hay logo anterior, eliminarlo
+                    if (logoUrl && url !== logoUrl) {
+                      try {
+                        await deleteImage(logoUrl)
+                      } catch (e) {
+                        console.warn('No se pudo eliminar logo anterior:', e)
+                      }
+                    }
+                    setLogoUrl(url)
+                    await onSaveBrandingField('logo_url', url)
+                  }}
+                  folder="branding"
+                  subfolder="logo"
+                  label="Logo"
+                  disabled={savingBranding}
+                />
+              </div>
+
+              {/* Favicon */}
+              <div className="p-6 bg-white rounded-xl border border-[#d6ccc2]">
+                <h3 className="font-medium text-[#3C2F2F] mb-4 flex items-center gap-2">
+                  <span>⭐</span> Favicon
+                </h3>
+                <p className="text-sm text-[#6B5844] mb-4">
+                  Recomendado: PNG cuadrado 512x512px o 32x32px
+                </p>
+                <ImageUploader
+                  currentImageUrl={faviconUrl}
+                  onImageChange={async (url) => {
+                    // Si hay favicon anterior, eliminarlo
+                    if (faviconUrl && url !== faviconUrl) {
+                      try {
+                        await deleteImage(faviconUrl)
+                      } catch (e) {
+                        console.warn('No se pudo eliminar favicon anterior:', e)
+                      }
+                    }
+                    setFaviconUrl(url)
+                    await onSaveBrandingField('favicon_url', url)
+                  }}
+                  folder="branding"
+                  subfolder="favicon"
+                  label="Favicon"
+                  disabled={savingBranding}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ============================================ */}
+          {/* SECCIÓN: LEGAL (Política de devoluciones) */}
+          {/* ============================================ */}
+          {activeSection === 'legal' && (
+            <form onSubmit={legalForm.handleSubmit(onSaveLegal)} className="space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-800 text-sm">
+                <strong>Importante:</strong> Esta política aparecerá en la página /politicas/devoluciones
+                y debe cumplir con las regulaciones de tu país.
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
+                    <span className="mr-2">🇪🇸</span>Política de devoluciones (Español)
+                  </label>
+                  <textarea
+                    {...legalForm.register('return_policy_es')}
+                    rows={10}
+                    placeholder="Escribe aquí tu política de devoluciones en español..."
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2] font-mono text-sm"
+                  />
+                  <p className="mt-1 text-xs text-[#6B5844]">
+                    {(legalForm.watch('return_policy_es') || '').length}/10,000 caracteres
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
+                    <span className="mr-2">🇺🇸</span>Return Policy (English)
+                  </label>
+                  <textarea
+                    {...legalForm.register('return_policy_en')}
+                    rows={10}
+                    placeholder="Write your return policy in English here..."
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2] font-mono text-sm"
+                  />
+                  <p className="mt-1 text-xs text-[#6B5844]">
+                    {(legalForm.watch('return_policy_en') || '').length}/10,000 caracteres
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4 border-t border-[#d6ccc2]">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-6 py-2.5 rounded-lg font-medium bg-gradient-to-r from-[#8B6F47] to-[#D4A574] text-white hover:opacity-90 disabled:opacity-50"
+                >
+                  {saving ? 'Guardando...' : 'Guardar Política'}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* ============================================ */}
+          {/* SECCIÓN: SEO AVANZADO */}
+          {/* ============================================ */}
+          {activeSection === 'seo-advanced' && (
+            <form onSubmit={seoAdvancedForm.handleSubmit(onSaveSeoAdvanced)} className="space-y-6">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800 text-sm">
+                <strong>SEO Técnico:</strong> Estas configuraciones afectan cómo Google indexa tu sitio.
+                Los cambios se reflejan automáticamente en /sitemap.xml y /robots.txt
+              </div>
+
+              <div className="space-y-6">
+                {/* URL Canónica Base */}
+                <div>
+                  <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
+                    URL Base Canónica
+                  </label>
+                  <input
+                    {...seoAdvancedForm.register('canonical_base_url')}
+                    placeholder="https://www.sondenudos.com"
+                    className="w-full max-w-md px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
+                  />
+                  <p className="mt-1 text-xs text-[#6B5844]">
+                    Evita contenido duplicado indicando la URL principal de tu sitio
+                  </p>
+                </div>
+
+                {/* Toggles */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <label className="flex items-center gap-3 p-4 bg-white rounded-xl border border-[#d6ccc2] cursor-pointer hover:bg-[#F5E6D3]/50 transition-colors">
+                    <input
+                      type="checkbox"
+                      {...seoAdvancedForm.register('sitemap_enabled')}
+                      className="w-5 h-5 rounded border-gray-300 text-[#8B6F47] focus:ring-[#8B6F47]"
+                    />
+                    <div>
+                      <span className="font-medium text-[#3C2F2F]">Sitemap automático</span>
+                      <p className="text-xs text-[#6B5844]">Genera /sitemap.xml con todos tus productos</p>
+                    </div>
+                  </label>
+
+                  <label className="flex items-center gap-3 p-4 bg-white rounded-xl border border-[#d6ccc2] cursor-pointer hover:bg-[#F5E6D3]/50 transition-colors">
+                    <input
+                      type="checkbox"
+                      {...seoAdvancedForm.register('schema_enabled')}
+                      className="w-5 h-5 rounded border-gray-300 text-[#8B6F47] focus:ring-[#8B6F47]"
+                    />
+                    <div>
+                      <span className="font-medium text-[#3C2F2F]">Schema Markup</span>
+                      <p className="text-xs text-[#6B5844]">JSON-LD para rich snippets en Google</p>
+                    </div>
+                  </label>
+                </div>
+
+                {/* robots.txt */}
+                <div>
+                  <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
+                    Contenido de robots.txt
+                  </label>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-red-800 text-xs mb-3">
+                    <strong>⚠️ Cuidado:</strong> Una configuración incorrecta puede desindexar tu sitio de Google.
+                    Si no estás seguro, no modifiques este campo.
+                  </div>
+                  <textarea
+                    {...seoAdvancedForm.register('robots_txt')}
+                    rows={8}
+                    className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2] font-mono text-sm"
+                  />
+                  <p className="mt-1 text-xs text-[#6B5844]">
+                    El Sitemap se agrega automáticamente al final si está habilitado
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-4 border-t border-[#d6ccc2]">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-6 py-2.5 rounded-lg font-medium bg-gradient-to-r from-[#8B6F47] to-[#D4A574] text-white hover:opacity-90 disabled:opacity-50"
+                >
+                  {saving ? 'Guardando...' : 'Guardar SEO Avanzado'}
+                </button>
+              </div>
+            </form>
           )}
         </div>
       </div>

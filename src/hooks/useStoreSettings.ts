@@ -4,7 +4,9 @@
  * Usado por:
  * - Footer.tsx (redes sociales)
  * - AnnouncementBar.tsx (mensajes del banner)
- * - Meta tags (SEO)
+ * - SeoHead.tsx (meta tags, favicon, canonical)
+ * - Header.tsx (logo dinámico)
+ * - ProductSchema.tsx (JSON-LD)
  * - Admin settings (edición)
  */
 
@@ -17,7 +19,7 @@ export type StoreSettings = Database['public']['Tables']['store_settings']['Row'
 // Valores por defecto cuando la DB no tiene datos
 const DEFAULT_SETTINGS: StoreSettings = {
   id: '',
-  // SEO
+  // SEO Básico
   meta_title: 'Son de Nudos by Priscilla - Artesanías Exclusivas',
   meta_description: 'Collares artesanales hechos a mano con amor y dedicación. Cada pieza es única.',
   meta_keywords: ['macramé', 'collares artesanales', 'joyería hecha a mano'],
@@ -43,6 +45,17 @@ const DEFAULT_SETTINGS: StoreSettings = {
   ],
   // Analytics
   google_analytics_id: null,
+  // Branding
+  logo_url: null,
+  favicon_url: null,
+  // Legal
+  return_policy_es: null,
+  return_policy_en: null,
+  // SEO Avanzado
+  robots_txt: 'User-agent: *\nAllow: /\nDisallow: /admin/',
+  sitemap_enabled: true,
+  schema_enabled: true,
+  canonical_base_url: 'https://www.sondenudos.com',
   // Metadata
   created_at: '',
   updated_at: '',
@@ -160,9 +173,58 @@ export function useSeoMeta() {
     keywords: settings.meta_keywords || DEFAULT_SETTINGS.meta_keywords,
     ogImage: settings.og_image,
     analyticsId: settings.google_analytics_id,
+    // Nuevos campos de branding
+    faviconUrl: settings.favicon_url,
+    // Nuevos campos de SEO avanzado
+    canonicalBaseUrl: settings.canonical_base_url || DEFAULT_SETTINGS.canonical_base_url,
+    schemaEnabled: settings.schema_enabled ?? true,
   }
 
   return { seoMeta, loading, error }
+}
+
+/**
+ * Hook específico para obtener branding (logo y favicon)
+ */
+export function useBranding() {
+  const { settings, loading, error } = useStoreSettings()
+
+  const branding = {
+    logoUrl: settings.logo_url,
+    faviconUrl: settings.favicon_url,
+    storeName: settings.store_name || DEFAULT_SETTINGS.store_name,
+  }
+
+  return { branding, loading, error }
+}
+
+/**
+ * Hook específico para obtener política de devoluciones
+ */
+export function useReturnPolicy(language: 'es' | 'en' = 'es') {
+  const { settings, loading, error } = useStoreSettings()
+
+  const returnPolicy = language === 'en'
+    ? settings.return_policy_en
+    : settings.return_policy_es
+
+  return { returnPolicy, loading, error }
+}
+
+/**
+ * Hook específico para obtener configuración SEO avanzado
+ */
+export function useSeoAdvanced() {
+  const { settings, loading, error } = useStoreSettings()
+
+  const seoAdvanced = {
+    robotsTxt: settings.robots_txt || DEFAULT_SETTINGS.robots_txt,
+    sitemapEnabled: settings.sitemap_enabled ?? true,
+    schemaEnabled: settings.schema_enabled ?? true,
+    canonicalBaseUrl: settings.canonical_base_url || DEFAULT_SETTINGS.canonical_base_url,
+  }
+
+  return { seoAdvanced, loading, error }
 }
 
 export default useStoreSettings

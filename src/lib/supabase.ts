@@ -146,7 +146,7 @@ export type Database = {
       store_settings: {
         Row: {
           id: string
-          // SEO
+          // SEO Básico
           meta_title: string | null
           meta_description: string | null
           meta_keywords: string[] | null
@@ -167,6 +167,17 @@ export type Database = {
           announcement_messages: AnnouncementMessage[] | null
           // Analytics
           google_analytics_id: string | null
+          // Branding (NUEVO)
+          logo_url: string | null
+          favicon_url: string | null
+          // Legal (NUEVO)
+          return_policy_es: string | null
+          return_policy_en: string | null
+          // SEO Avanzado (NUEVO)
+          robots_txt: string | null
+          sitemap_enabled: boolean | null
+          schema_enabled: boolean | null
+          canonical_base_url: string | null
           // Metadata
           created_at: string
           updated_at: string

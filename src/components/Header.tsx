@@ -4,6 +4,7 @@ import { useCartStore } from '@/store/cart'
 import { useUIStore } from '@/store/ui'
 import { useLanguageStore } from '@/store/language'
 import { useTranslation } from 'react-i18next'
+import { useBranding } from '@/hooks/useStoreSettings'
 
 /**
  * Header principal del sitio - Estilo Gemini
@@ -17,6 +18,10 @@ export default function Header() {
   const openCartDrawer = useUIStore((state) => state.openCartDrawer)
   const openSearch = useUIStore((state) => state.openSearch)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Logo dinámico desde store_settings (con fallback al default)
+  const { branding } = useBranding()
+  const logoUrl = branding.logoUrl || '/isotipo.png'
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0)
 
@@ -39,10 +44,10 @@ export default function Header() {
           {/* Logo - Centrado absoluto en móvil */}
           <div className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0 flex-shrink-0 flex items-center md:justify-start pointer-events-auto">
             <Link to="/" className="flex items-center gap-0">
-              {/* Isotipo - clave de sol */}
+              {/* Isotipo - clave de sol (dinámico desde admin) */}
               <img
-                src="/isotipo.png"
-                alt="Son de Nudos"
+                src={logoUrl}
+                alt={branding.storeName || 'Son de Nudos'}
                 className="h-12 md:h-14 w-auto"
               />
               <div className="md:text-left">

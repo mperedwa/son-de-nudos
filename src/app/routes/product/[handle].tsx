@@ -7,6 +7,7 @@ import ImageGallery from '@/components/ImageGallery'
 import Price from '@/components/Price'
 import VariantSelector from '@/components/VariantSelector'
 import AddToCartButton from '@/components/AddToCartButton'
+import ProductSchema from '@/components/ProductSchema'
 import { getPublicProductByHandle, type PublicProduct } from '@/lib/supabase-public'
 
 /**
@@ -141,6 +142,9 @@ export default function ProductPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* JSON-LD Schema para rich snippets en Google */}
+      <ProductSchema product={product} />
+
       <Breadcrumbs
         items={[
           { label: t('navigation:home'), href: '/' },

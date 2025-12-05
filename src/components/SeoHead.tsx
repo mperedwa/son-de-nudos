@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useSeoMeta } from '@/hooks/useStoreSettings'
 
 /**
@@ -10,11 +11,16 @@ import { useSeoMeta } from '@/hooks/useStoreSettings'
  * - meta description
  * - meta keywords
  * - Open Graph tags (og:title, og:description, og:image)
+ * - Twitter Card tags
+ * - Favicon dinámico (si está configurado)
+ * - Canonical URL
  * - Google Analytics (si está configurado)
  */
 export default function SeoHead() {
   const { seoMeta, loading } = useSeoMeta()
+  const location = useLocation()
 
+  // Actualizar meta tags básicos
   useEffect(() => {
     if (loading) return
 
@@ -34,6 +40,7 @@ export default function SeoHead() {
     // Actualizar Open Graph tags
     updateMetaTag('og:title', seoMeta.title || '', 'property')
     updateMetaTag('og:description', seoMeta.description || '', 'property')
+    updateMetaTag('og:type', 'website', 'property')
     if (seoMeta.ogImage) {
       updateMetaTag('og:image', seoMeta.ogImage, 'property')
     }
@@ -47,6 +54,47 @@ export default function SeoHead() {
     }
 
   }, [seoMeta, loading])
+
+  // Actualizar canonical URL
+  useEffect(() => {
+    if (loading) return
+
+    const canonicalUrl = `${seoMeta.canonicalBaseUrl}${location.pathname}`
+
+    // Buscar o crear link canonical
+    let link = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null
+
+    if (link) {
+      link.href = canonicalUrl
+    } else {
+      link = document.createElement('link')
+      link.rel = 'canonical'
+      link.href = canonicalUrl
+      document.head.appendChild(link)
+    }
+
+    // También actualizar og:url
+    updateMetaTag('og:url', canonicalUrl, 'property')
+
+  }, [seoMeta.canonicalBaseUrl, location.pathname, loading])
+
+  // Actualizar favicon dinámico
+  useEffect(() => {
+    if (loading || !seoMeta.faviconUrl) return
+
+    // Actualizar todos los link de favicon
+    const faviconLinks = document.querySelectorAll("link[rel*='icon']")
+
+    faviconLinks.forEach((link) => {
+      const linkEl = link as HTMLLinkElement
+      // Solo actualizar si no es apple-touch-icon (esos necesitan formato específico)
+      if (!linkEl.rel.includes('apple')) {
+        linkEl.href = seoMeta.faviconUrl!
+      }
+    })
+
+    console.log('[SeoHead] Favicon updated:', seoMeta.faviconUrl)
+  }, [seoMeta.faviconUrl, loading])
 
   // Cargar Google Analytics si está configurado
   useEffect(() => {

@@ -6,6 +6,7 @@ import ProductPage from './app/routes/product/[handle]'
 import CheckoutPage from './app/routes/checkout'
 import SuccessPage from './app/routes/success'
 import CancelPage from './app/routes/cancel'
+import ReturnPolicyPage from './app/routes/politicas/devoluciones'
 
 // Admin imports
 import { ProtectedRoute } from './components/ProtectedRoute'
@@ -41,6 +42,7 @@ function App() {
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="success" element={<SuccessPage />} />
           <Route path="cancel" element={<CancelPage />} />
+          <Route path="politicas/devoluciones" element={<ReturnPolicyPage />} />
         </Route>
 
         {/* Login del admin (público) */}

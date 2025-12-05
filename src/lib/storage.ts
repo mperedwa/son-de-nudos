@@ -10,9 +10,17 @@ import { supabase } from './supabase'
 // CONSTANTS
 // ============================================================================
 
-const BUCKET_NAME = 'product-images'
+const BUCKET_PRODUCT_IMAGES = 'product-images'
+const BUCKET_BRANDING = 'branding'
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB en bytes
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+
+/**
+ * Retorna el nombre del bucket según el tipo de carpeta
+ */
+function getBucketName(folder: StorageFolder): string {
+  return folder === 'branding' ? BUCKET_BRANDING : BUCKET_PRODUCT_IMAGES
+}
 
 // ============================================================================
 // TYPES
@@ -23,7 +31,7 @@ export interface ValidationResult {
   error?: string
 }
 
-export type StorageFolder = 'products' | 'variants'
+export type StorageFolder = 'products' | 'variants' | 'branding'
 
 // ============================================================================
 // VALIDATION
@@ -81,13 +89,15 @@ export async function uploadImage(
   // 2. Generar nombre único con UUID
   const fileExt = file.name.split('.').pop()
   const fileName = `${crypto.randomUUID()}.${fileExt}`
-  const filePath = `${folder}/${subfolder}/${fileName}`
+  // Para branding, usamos subfolder directamente sin folder prefix
+  const filePath = folder === 'branding' ? `${subfolder}/${fileName}` : `${folder}/${subfolder}/${fileName}`
+  const bucketName = getBucketName(folder)
 
-  console.log(`📤 Uploading image to: ${filePath}`)
+  console.log(`📤 Uploading image to: ${bucketName}/${filePath}`)
 
   // 3. Upload a Storage
   const { data, error } = await supabase.storage
-    .from(BUCKET_NAME)
+    .from(bucketName)
     .upload(filePath, file, {
       cacheControl: '3600',
       upsert: false, // No sobrescribir archivos existentes
@@ -101,7 +111,7 @@ export async function uploadImage(
   console.log('✅ Upload successful:', data.path)
 
   // 4. Obtener URL pública
-  const publicUrl = getPublicUrl(data.path)
+  const publicUrl = getPublicUrl(data.path, bucketName)
   return publicUrl
 }
 
@@ -115,17 +125,18 @@ export async function uploadImage(
  * @throws Error si el delete falla
  */
 export async function deleteImage(url: string): Promise<void> {
-  // 1. Extraer el path desde la URL
-  const path = extractPathFromUrl(url)
-  if (!path) {
+  // 1. Extraer el path y bucket desde la URL
+  const extracted = extractPathFromUrl(url)
+  if (!extracted) {
     console.warn('⚠️ Invalid URL format, skipping delete:', url)
     return
   }
 
-  console.log(`🗑️  Deleting image: ${path}`)
+  const { path, bucket } = extracted
+  console.log(`🗑️  Deleting image: ${bucket}/${path}`)
 
   // 2. Eliminar de Storage
-  const { error } = await supabase.storage.from(BUCKET_NAME).remove([path])
+  const { error } = await supabase.storage.from(bucket).remove([path])
 
   if (error) {
     console.error('❌ Delete error:', error)
@@ -138,14 +149,16 @@ export async function deleteImage(url: string): Promise<void> {
 /**
  * Elimina todos los archivos dentro de una carpeta
  * @param folderPath - Path de la carpeta (ej: 'products/collar-dorado')
+ * @param folder - Tipo de folder para determinar el bucket (default: 'products')
  */
-export async function deleteFolder(folderPath: string): Promise<void> {
-  console.log(`🗑️  Deleting folder: ${folderPath}`)
+export async function deleteFolder(folderPath: string, folder: StorageFolder = 'products'): Promise<void> {
+  const bucketName = getBucketName(folder)
+  console.log(`🗑️  Deleting folder: ${bucketName}/${folderPath}`)
 
   try {
     // 1. Listar todos los archivos en la carpeta
     const { data: files, error: listError } = await supabase.storage
-      .from(BUCKET_NAME)
+      .from(bucketName)
       .list(folderPath)
 
     if (listError) {
@@ -163,7 +176,7 @@ export async function deleteFolder(folderPath: string): Promise<void> {
 
     // 3. Eliminar todos los archivos
     const { error: deleteError } = await supabase.storage
-      .from(BUCKET_NAME)
+      .from(bucketName)
       .remove(filePaths)
 
     if (deleteError) {
@@ -185,34 +198,44 @@ export async function deleteFolder(folderPath: string): Promise<void> {
 /**
  * Obtiene la URL pública de un archivo en Storage
  * @param path - Path del archivo (ej: 'products/collar-dorado/main-uuid.jpg')
+ * @param bucketName - Nombre del bucket (default: product-images)
  * @returns URL pública completa
  */
-export function getPublicUrl(path: string): string {
-  const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(path)
+export function getPublicUrl(path: string, bucketName: string = BUCKET_PRODUCT_IMAGES): string {
+  const { data } = supabase.storage.from(bucketName).getPublicUrl(path)
   return data.publicUrl
 }
 
 /**
- * Extrae el path relativo desde una URL pública de Storage
+ * Extrae el path relativo y el bucket desde una URL pública de Storage
  * @param url - URL pública completa
- * @returns Path relativo o null si el formato es inválido
+ * @returns Objeto con path y bucket, o null si el formato es inválido
  *
  * @example
  * extractPathFromUrl('https://xxx.supabase.co/storage/v1/object/public/product-images/products/collar/main.jpg')
- * // Returns: 'products/collar/main.jpg'
+ * // Returns: { path: 'products/collar/main.jpg', bucket: 'product-images' }
  */
-function extractPathFromUrl(url: string): string | null {
+function extractPathFromUrl(url: string): { path: string; bucket: string } | null {
   try {
-    // Formato esperado: https://{project}.supabase.co/storage/v1/object/public/product-images/{path}
-    const bucketPrefix = `/storage/v1/object/public/${BUCKET_NAME}/`
-    const bucketIndex = url.indexOf(bucketPrefix)
+    // Formato esperado: https://{project}.supabase.co/storage/v1/object/public/{bucket}/{path}
+    const publicPrefix = '/storage/v1/object/public/'
+    const publicIndex = url.indexOf(publicPrefix)
 
-    if (bucketIndex === -1) {
+    if (publicIndex === -1) {
       return null
     }
 
-    const path = url.substring(bucketIndex + bucketPrefix.length)
-    return path
+    const afterPublic = url.substring(publicIndex + publicPrefix.length)
+    const slashIndex = afterPublic.indexOf('/')
+
+    if (slashIndex === -1) {
+      return null
+    }
+
+    const bucket = afterPublic.substring(0, slashIndex)
+    const path = afterPublic.substring(slashIndex + 1)
+
+    return { path, bucket }
   } catch (error) {
     console.error('Error extracting path from URL:', error)
     return null
@@ -223,4 +246,4 @@ function extractPathFromUrl(url: string): string | null {
 // EXPORTS
 // ============================================================================
 
-export { BUCKET_NAME, MAX_FILE_SIZE, ALLOWED_TYPES }
+export { BUCKET_PRODUCT_IMAGES, BUCKET_BRANDING, MAX_FILE_SIZE, ALLOWED_TYPES }
