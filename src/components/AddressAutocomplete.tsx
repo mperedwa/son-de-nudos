@@ -1,21 +1,14 @@
 /**
- * AddressAutocomplete - Google Places Autocomplete component
+ * AddressAutocomplete - Google Places Autocomplete component (NEW API)
  *
- * Provides address autocomplete functionality using Google Places API.
+ * Uses the new PlaceAutocompleteElement Web Component (replacing deprecated Autocomplete).
  * Extracts structured address data including country code for zone detection.
+ *
+ * @see https://developers.google.com/maps/documentation/javascript/place-autocomplete-element
  */
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-
-// Extend Window interface for Google Maps
-declare global {
-  interface Window {
-    google?: typeof google
-    initGooglePlaces?: () => void
-    __GOOGLE_PLACES_API_KEY__?: string
-  }
-}
 
 // Google Places API key from Vite env
 const GOOGLE_PLACES_API_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY as string | undefined
@@ -24,11 +17,11 @@ const GOOGLE_PLACES_API_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY as stri
 let scriptLoadingPromise: Promise<void> | null = null
 
 /**
- * Load Google Places script dynamically
+ * Load Google Places script dynamically with the new async loading
  */
 function loadGooglePlacesScript(): Promise<void> {
   // If already loaded, resolve immediately
-  if (window.google?.maps?.places) {
+  if (window.google?.maps?.places?.PlaceAutocompleteElement) {
     return Promise.resolve()
   }
 
@@ -46,12 +39,13 @@ function loadGooglePlacesScript(): Promise<void> {
   // Create loading promise
   scriptLoadingPromise = new Promise((resolve, reject) => {
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places`
+    // Updated URL with loading=async for the new API
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places&loading=async`
     script.async = true
     script.defer = true
 
     script.onload = () => {
-      console.log('[Google Places] Script loaded successfully')
+      console.log('[Google Places] Script loaded successfully (PlaceAutocompleteElement)')
       resolve()
     }
 
@@ -93,15 +87,18 @@ interface AddressAutocompleteProps {
 }
 
 /**
- * Extract address data from Google Places address_components
+ * Extract address data from the new Place object's addressComponents
+ * Note: New API uses shortText/longText instead of short_name/long_name
  */
-function extractAddressData(
-  components: google.maps.GeocoderAddressComponent[],
-  formattedAddress: string
+function extractAddressDataFromPlace(
+  place: google.maps.places.Place
 ): AddressData {
+  const components = place.addressComponents || []
+
   const getComponent = (type: string, useShortName = false): string => {
     const component = components.find((c) => c.types.includes(type))
-    return component ? (useShortName ? component.short_name : component.long_name) : ''
+    if (!component) return ''
+    return useShortName ? (component.shortText || '') : (component.longText || '')
   }
 
   const streetNumber = getComponent('street_number')
@@ -120,7 +117,7 @@ function extractAddressData(
   const address = [streetNumber, route].filter(Boolean).join(' ')
 
   return {
-    formattedAddress,
+    formattedAddress: place.formattedAddress || '',
     streetNumber,
     route,
     address,
@@ -133,6 +130,11 @@ function extractAddressData(
   }
 }
 
+// Custom event interface for gmp-placeselect
+interface PlaceSelectEvent extends Event {
+  place: google.maps.places.Place
+}
+
 export function AddressAutocomplete({
   onAddressSelect,
   onAddressChange,
@@ -142,41 +144,79 @@ export function AddressAutocomplete({
   error = false,
   className = '',
   id,
-  name,
   required = false
 }: AddressAutocompleteProps) {
   const { t } = useTranslation(['checkout'])
-  const inputRef = useRef<HTMLInputElement>(null)
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const autocompleteElementRef = useRef<google.maps.places.PlaceAutocompleteElement | null>(null)
   const [inputValue, setInputValue] = useState(defaultValue)
   const [isLoading, setIsLoading] = useState(true)
   const [apiError, setApiError] = useState(false)
 
-  // Initialize Google Places Autocomplete
-  const initAutocomplete = useCallback(() => {
-    if (!inputRef.current || !window.google?.maps?.places) {
+  // Initialize Google Places Autocomplete with the new PlaceAutocompleteElement
+  const initAutocomplete = useCallback(async () => {
+    if (!containerRef.current || !window.google?.maps?.places?.PlaceAutocompleteElement) {
       return false
     }
 
     try {
-      autocompleteRef.current = new window.google.maps.places.Autocomplete(inputRef.current, {
-        types: ['address'],
-        fields: ['address_components', 'formatted_address', 'geometry'],
-        // Prioritize USA, Canada, Mexico but allow all countries
-        componentRestrictions: undefined
+      // Create the new PlaceAutocompleteElement
+      const placeAutocomplete = new window.google.maps.places.PlaceAutocompleteElement({
+        // Configure for address input
+        componentRestrictions: undefined, // Allow all countries
       })
 
-      autocompleteRef.current.addListener('place_changed', () => {
-        const place = autocompleteRef.current?.getPlace()
+      // Set ID for styling
+      placeAutocomplete.id = 'address-autocomplete-input'
 
-        if (!place?.address_components || !place.formatted_address) {
+      // Store reference
+      autocompleteElementRef.current = placeAutocomplete
+
+      // Clear container and append the element
+      containerRef.current.innerHTML = ''
+      containerRef.current.appendChild(placeAutocomplete)
+
+      // Set default value if provided
+      if (defaultValue) {
+        // The input inside the web component needs to be accessed after it's rendered
+        setTimeout(() => {
+          const input = placeAutocomplete.querySelector('input')
+          if (input) {
+            input.value = defaultValue
+          }
+        }, 100)
+      }
+
+      // Listen for place selection with the new event
+      placeAutocomplete.addEventListener('gmp-placeselect', async (event) => {
+        const placeEvent = event as PlaceSelectEvent
+        const place = placeEvent.place
+
+        if (!place) {
           return
         }
 
-        const addressData = extractAddressData(place.address_components, place.formatted_address)
+        try {
+          // Fetch the address components (new API requires explicit fetch)
+          await place.fetchFields({ fields: ['addressComponents', 'formattedAddress'] })
 
-        setInputValue(place.formatted_address)
-        onAddressSelect(addressData)
+          const addressData = extractAddressDataFromPlace(place)
+
+          setInputValue(place.formattedAddress || '')
+          onAddressSelect(addressData)
+          onAddressChange?.(place.formattedAddress || '')
+        } catch (fetchError) {
+          console.error('Error fetching place details:', fetchError)
+        }
+      })
+
+      // Listen for input changes
+      placeAutocomplete.addEventListener('gmp-input', () => {
+        const input = placeAutocomplete.querySelector('input')
+        if (input) {
+          setInputValue(input.value)
+          onAddressChange?.(input.value)
+        }
       })
 
       setIsLoading(false)
@@ -188,7 +228,7 @@ export function AddressAutocomplete({
       setIsLoading(false)
       return false
     }
-  }, [onAddressSelect])
+  }, [onAddressSelect, onAddressChange, defaultValue])
 
   // Load Google Places script and initialize
   useEffect(() => {
@@ -213,45 +253,40 @@ export function AddressAutocomplete({
     }
   }, [initAutocomplete])
 
-  // Cleanup
-  useEffect(() => {
-    return () => {
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current)
-      }
-    }
-  }, [])
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setInputValue(value)
-    onAddressChange?.(value)
-  }
-
-  // Base styles
-  const baseStyles = `
-    w-full px-4 py-3 border rounded-lg transition-all duration-200
-    focus:outline-none focus:ring-2 focus:ring-[#8B6F47] focus:border-transparent
-    disabled:bg-gray-100 disabled:cursor-not-allowed
-  `
-
-  const errorStyles = error ? 'border-red-500 focus:ring-red-500' : 'border-[#d6ccc2]'
+  // Apply styles based on error state
+  const containerStyles = `
+    address-autocomplete-container
+    ${error ? 'address-autocomplete-error' : ''}
+    ${disabled ? 'address-autocomplete-disabled' : ''}
+    ${className}
+  `.trim()
 
   return (
     <div className="relative">
-      <input
-        ref={inputRef}
-        type="text"
+      {/* Container for the PlaceAutocompleteElement web component */}
+      <div
+        ref={containerRef}
         id={id}
-        name={name}
-        value={inputValue}
-        onChange={handleInputChange}
-        placeholder={placeholder || t('checkout:addressPlaceholder', 'Ingresa tu dirección')}
-        disabled={disabled || isLoading}
-        required={required}
-        autoComplete="off"
-        className={`${baseStyles} ${errorStyles} ${className}`}
-      />
+        className={containerStyles}
+        data-required={required}
+        aria-label={placeholder || t('checkout:addressPlaceholder', 'Ingresa tu dirección')}
+      >
+        {/* Fallback input shown while loading or on error */}
+        {(isLoading || apiError) && (
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value)
+              onAddressChange?.(e.target.value)
+            }}
+            placeholder={placeholder || t('checkout:addressPlaceholder', 'Ingresa tu dirección')}
+            disabled={disabled || isLoading}
+            required={required}
+            className="address-autocomplete-fallback-input"
+          />
+        )}
+      </div>
 
       {/* Loading indicator */}
       {isLoading && !apiError && (
