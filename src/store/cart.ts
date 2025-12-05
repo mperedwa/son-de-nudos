@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 /**
  * Tipos del carrito
@@ -43,7 +44,9 @@ export type CartState = {
  * Store del carrito con Zustand
  * Gestiona items, cantidades, cupones y totales
  */
-export const useCartStore = create<CartState>((set, get) => ({
+export const useCartStore = create<CartState>()(
+  persist(
+    (set, get) => ({
   items: [],
   couponCode: undefined,
   discountAmount: undefined,
@@ -181,4 +184,15 @@ export const useCartStore = create<CartState>((set, get) => ({
       currency: 'USD',
     }
   },
-}))
+    }),
+    {
+      name: 'son-de-nudos-cart',
+      // Solo persistir items y cupón, no las funciones
+      partialize: (state) => ({
+        items: state.items,
+        couponCode: state.couponCode,
+        discountAmount: state.discountAmount,
+      }),
+    }
+  )
+)

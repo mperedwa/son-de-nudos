@@ -1,6 +1,6 @@
 # Kanban Board
 
-<!-- Config: Last Task ID: 010 -->
+<!-- Config: Last Task ID: 011 -->
 
 ## ⚙️ Configuration
 
@@ -69,6 +69,28 @@ Vista en /admin/inventory/history mostrando el registro de todos los cambios de 
 
 **Notes**:
 La tabla stock_history ya existe y se llena automáticamente con el trigger. Solo falta la UI para visualizarla.
+
+---
+
+### TASK-011 | Sistema de Carritos Abandonados
+
+**Priority**: Medium | **Category**: Backend, Frontend | **Assigned**: @claude
+**Created**: 2025-12-05 | **Due**: 2025-12-20
+**Tags**: #feature #supabase #marketing
+
+Sistema para recuperar ventas de carritos abandonados. Requiere captura de email temprana y envío de correos de recordatorio.
+
+**Subtasks**:
+- [ ] Crear tabla `abandoned_carts` en Supabase (email, items, created_at, recovered, reminder_sent_at)
+- [ ] Capturar email del cliente al inicio del checkout (antes de completar)
+- [ ] Guardar estado del carrito en Supabase cuando hay email capturado
+- [ ] Endpoint para Vercel Cron Job que detecte carritos >24h sin comprar
+- [ ] Integración con MailerLite para enviar email de recordatorio con items
+- [ ] Página `/cart/recover?token=xxx` para restaurar carrito desde email
+- [ ] Dashboard en admin mostrando carritos abandonados y tasa de recuperación
+
+**Notes**:
+Requiere que el cliente ingrese email antes de abandonar. El localStorage ya guarda el carrito localmente (TASK completada hoy). Este feature agrega la capacidad de enviar recordatorios por correo.
 
 ---
 
