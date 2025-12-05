@@ -1,6 +1,6 @@
 # Kanban Board
 
-<!-- Config: Last Task ID: 11 -->
+<!-- Config: Last Task ID: 12 -->
 
 ## ⚙️ Configuration
 
@@ -121,6 +121,15 @@ Baja prioridad. Implementar después de estabilizar funcionalidades del admin.
 ## 👀 In Review
 
 ## ✅ Done
+
+### TASK-012 | Expansión de Admin Settings (SEO, Redes, Banner)
+**Priority**: High | **Category**: Admin Panel, Frontend | **Assigned**: @claude
+**Created**: 2025-12-05
+**Tags**: #feature #admin #supabase #seo
+
+Sistema completo de configuración de tienda desde el panel admin. **Implementación**: - ✅ Nueva tabla `store_settings` en Supabase con RLS - ✅ Hook `useStoreSettings` con cache de 5 minutos - ✅ 5 secciones en /admin/settings: Envío, SEO, Redes Sociales, Info Tienda, Banner - ✅ Footer lee redes sociales desde DB - ✅ AnnouncementBar lee mensajes desde DB (bilingüe) - ✅ SeoHead actualiza meta tags dinámicamente - ✅ Soporte para Google Analytics
+
+---
 
 ### TASK-008 | Implementar Supabase Keepalive con Vercel Cron Jobs
 **Priority**: High | **Category**: DevOps | **Assigned**: @claude

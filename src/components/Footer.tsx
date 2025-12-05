@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useSocialLinks } from '@/hooks/useStoreSettings'
 
 /**
  * Footer del sitio - Estilo Gemini
  * Fondo claro, texto oscuro, títulos terracota
  * Newsletter integrado con MailerLite
+ * Redes sociales cargadas desde Supabase (store_settings)
  */
 export default function Footer() {
   const { t } = useTranslation('navigation')
+  const { socialLinks } = useSocialLinks()
 
   return (
     <footer className="bg-[#F5F0EB] border-t border-stone-200 mt-auto">
@@ -98,42 +101,72 @@ export default function Footer() {
             {t('copyright')}
           </p>
 
-          {/* Redes sociales - Iconos simples */}
+          {/* Redes sociales - Cargadas desde store_settings */}
           <div className="flex gap-6">
-            <a
-              href="https://www.facebook.com/share/1CwiWSxH5L/?mibextid=wwXIfr"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-brand-terra transition-colors"
-              aria-label="Facebook"
-            >
-              <i className="fab fa-facebook-f text-lg"></i>
-            </a>
-            <a
-              href="https://www.instagram.com/son_de_nudos/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-brand-terra transition-colors"
-              aria-label="Instagram"
-            >
-              <i className="fab fa-instagram text-lg"></i>
-            </a>
-            <a
-              href="https://pinterest.com/sondenudos"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 hover:text-brand-terra transition-colors"
-              aria-label="Pinterest"
-            >
-              <i className="fab fa-pinterest-p text-lg"></i>
-            </a>
-            <a
-              href="mailto:hello@sondenudos.com"
-              className="text-gray-400 hover:text-brand-terra transition-colors"
-              aria-label="Email"
-            >
-              <i className="fas fa-envelope text-lg"></i>
-            </a>
+            {socialLinks.facebook && (
+              <a
+                href={socialLinks.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-brand-terra transition-colors"
+                aria-label="Facebook"
+              >
+                <i className="fab fa-facebook-f text-lg"></i>
+              </a>
+            )}
+            {socialLinks.instagram && (
+              <a
+                href={socialLinks.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-brand-terra transition-colors"
+                aria-label="Instagram"
+              >
+                <i className="fab fa-instagram text-lg"></i>
+              </a>
+            )}
+            {socialLinks.pinterest && (
+              <a
+                href={socialLinks.pinterest}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-brand-terra transition-colors"
+                aria-label="Pinterest"
+              >
+                <i className="fab fa-pinterest-p text-lg"></i>
+              </a>
+            )}
+            {socialLinks.tiktok && (
+              <a
+                href={socialLinks.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-brand-terra transition-colors"
+                aria-label="TikTok"
+              >
+                <i className="fab fa-tiktok text-lg"></i>
+              </a>
+            )}
+            {socialLinks.whatsapp && (
+              <a
+                href={socialLinks.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-brand-terra transition-colors"
+                aria-label="WhatsApp"
+              >
+                <i className="fab fa-whatsapp text-lg"></i>
+              </a>
+            )}
+            {socialLinks.email && (
+              <a
+                href={`mailto:${socialLinks.email}`}
+                className="text-gray-400 hover:text-brand-terra transition-colors"
+                aria-label="Email"
+              >
+                <i className="fas fa-envelope text-lg"></i>
+              </a>
+            )}
           </div>
         </div>
       </div>

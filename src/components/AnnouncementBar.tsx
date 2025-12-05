@@ -1,27 +1,25 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAnnouncementMessages } from '@/hooks/useStoreSettings'
 
 /**
  * Barra de anuncios con carrusel auto-rotativo
  * Muestra mensajes promocionales uno a la vez
  * Estilo Gemini: fondo terracota vibrante
+ * Mensajes cargados desde Supabase (store_settings.announcement_messages)
  */
 
 export default function AnnouncementBar() {
-  const { t } = useTranslation('announcements')
+  const { t, i18n } = useTranslation('announcements')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
-  // Obtener mensajes traducidos
-  const messages = [
-    t('freeShipping'),
-    t('welcome10'),
-    t('handmade'),
-    t('shippingUSA'),
-  ]
+  // Obtener mensajes desde store_settings (filtra solo activos)
+  const language = i18n.language?.startsWith('en') ? 'en' : 'es'
+  const { messages, loading } = useAnnouncementMessages(language)
 
   useEffect(() => {
-    if (isPaused) return
+    if (isPaused || messages.length === 0) return
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % messages.length)
@@ -29,6 +27,16 @@ export default function AnnouncementBar() {
 
     return () => clearInterval(interval)
   }, [isPaused, messages.length])
+
+  // Reset index when messages change (e.g., language change)
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [messages])
+
+  // No mostrar si no hay mensajes o están cargando
+  if (loading || messages.length === 0) {
+    return null
+  }
 
   return (
     <div

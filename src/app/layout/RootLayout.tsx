@@ -1,33 +1,26 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import AnnouncementBar from '@/components/AnnouncementBar'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CartDrawer from '@/components/CartDrawer'
 import SearchDrawer from '@/components/SearchDrawer'
+import SeoHead from '@/components/SeoHead'
 import { useUIStore } from '@/store/ui'
 
 /**
  * Layout global del sitio
  * Envuelve todas las páginas con AnnouncementBar, Header, Footer y CartDrawer
  *
- * Fase 2 completada:
- * - AnnouncementBar con carrusel auto-rotativo
+ * Componentes globales:
+ * - SeoHead: Meta tags dinámicos desde store_settings
+ * - AnnouncementBar: Mensajes promocionales desde store_settings
  * - Header con logo SVG, navegación, selector idioma y carrito
- * - Footer con links, newsletter y redes sociales
- *
- * Fase 5 en progreso:
+ * - Footer con redes sociales desde store_settings
  * - CartDrawer con atajo de teclado (Cmd/Ctrl + K)
  */
 export default function RootLayout() {
-  const { t, i18n } = useTranslation('common')
   const toggleCartDrawer = useUIStore((state) => state.toggleCartDrawer)
-
-  // Actualizar título del documento según idioma
-  useEffect(() => {
-    document.title = t('siteTitle')
-  }, [t, i18n.language])
 
   // Atajo de teclado para abrir carrito (Cmd/Ctrl + K)
   useEffect(() => {
@@ -44,6 +37,9 @@ export default function RootLayout() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* SEO Meta Tags dinámicos desde store_settings */}
+      <SeoHead />
+
       {/* Barra de anuncios rotativos */}
       <AnnouncementBar />
 

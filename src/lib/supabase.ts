@@ -143,8 +143,46 @@ export type Database = {
         Insert: Omit<Database['public']['Tables']['stock_history']['Row'], 'id' | 'created_at'>
         Update: never
       }
+      store_settings: {
+        Row: {
+          id: string
+          // SEO
+          meta_title: string | null
+          meta_description: string | null
+          meta_keywords: string[] | null
+          og_image: string | null
+          // Redes Sociales
+          instagram_url: string | null
+          facebook_url: string | null
+          pinterest_url: string | null
+          tiktok_url: string | null
+          whatsapp_number: string | null
+          contact_email: string | null
+          // Info Tienda
+          store_name: string | null
+          store_description: string | null
+          notification_email: string | null
+          contact_phone: string | null
+          // Banner Messages
+          announcement_messages: AnnouncementMessage[] | null
+          // Analytics
+          google_analytics_id: string | null
+          // Metadata
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['store_settings']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['store_settings']['Insert']>
+      }
     }
   }
+}
+
+// Type for announcement messages stored in JSONB
+export type AnnouncementMessage = {
+  text_es: string
+  text_en: string
+  active: boolean
 }
 
 // ==============================================================================
