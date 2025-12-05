@@ -75,11 +75,15 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filterAvailable, setFilterAvailable] = useState<'all' | 'available' | 'unavailable'>('all')
 
+  // Selection state for bulk actions
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [cloningProduct, setCloningProduct] = useState<Product | null>(null)
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null)
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false)
 
   // Fetch products
   useEffect(() => {
@@ -139,6 +143,40 @@ export default function ProductsPage() {
     setEditingProduct(null)
     setCloningProduct(null)
     setDeletingProduct(null)
+    setIsBulkDeleteModalOpen(false)
+  }
+
+  // Selection handlers
+  function handleToggleSelect(productId: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(productId)) {
+        next.delete(productId)
+      } else {
+        next.add(productId)
+      }
+      return next
+    })
+  }
+
+  function handleSelectAll() {
+    if (selectedIds.size === filteredProducts.length) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(filteredProducts.map((p) => p.id)))
+    }
+  }
+
+  function handleBulkDeleteClick() {
+    if (selectedIds.size > 0) {
+      setIsBulkDeleteModalOpen(true)
+    }
+  }
+
+  async function handleBulkDeleteConfirmed() {
+    await fetchProducts()
+    setSelectedIds(new Set())
+    handleCloseModals()
   }
 
   async function handleProductSaved() {
@@ -161,18 +199,34 @@ export default function ProductsPage() {
             Gestiona el catálogo de productos
           </p>
         </div>
-        <button
-          onClick={handleCreateClick}
-          className="
-            px-4 py-2 rounded-lg font-medium text-white
-            bg-gradient-to-r from-[#8B6F47] to-[#D4A574]
-            hover:from-[#6B5844] hover:to-[#8B6F47]
-            transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:ring-offset-2
-          "
-        >
-          + Nuevo Producto
-        </button>
+        <div className="flex items-center gap-3">
+          {selectedIds.size > 0 && (
+            <button
+              onClick={handleBulkDeleteClick}
+              className="
+                px-4 py-2 rounded-lg font-medium text-white
+                bg-gradient-to-r from-red-600 to-red-500
+                hover:from-red-700 hover:to-red-600
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
+              "
+            >
+              🗑️ Eliminar ({selectedIds.size})
+            </button>
+          )}
+          <button
+            onClick={handleCreateClick}
+            className="
+              px-4 py-2 rounded-lg font-medium text-white
+              bg-gradient-to-r from-[#8B6F47] to-[#D4A574]
+              hover:from-[#6B5844] hover:to-[#8B6F47]
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:ring-offset-2
+            "
+          >
+            + Nuevo Producto
+          </button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -225,6 +279,9 @@ export default function ProductsPage() {
         <div className="bg-white rounded-xl shadow-sm border border-[#D4A574]/20 overflow-hidden">
           <ProductsTable
             products={filteredProducts}
+            selectedIds={selectedIds}
+            onToggleSelect={handleToggleSelect}
+            onSelectAll={handleSelectAll}
             onEdit={handleEditClick}
             onClone={handleCloneClick}
             onDelete={handleDeleteClick}
@@ -266,6 +323,14 @@ export default function ProductsPage() {
           onDelete={handleProductDeleted}
         />
       )}
+
+      {isBulkDeleteModalOpen && (
+        <BulkDeleteConfirmModal
+          products={products.filter((p) => selectedIds.has(p.id))}
+          onClose={handleCloseModals}
+          onDelete={handleBulkDeleteConfirmed}
+        />
+      )}
     </div>
   )
 }
@@ -276,17 +341,33 @@ export default function ProductsPage() {
 
 interface ProductsTableProps {
   products: Product[]
+  selectedIds: Set<string>
+  onToggleSelect: (productId: string) => void
+  onSelectAll: () => void
   onEdit: (product: Product) => void
   onClone: (product: Product) => void
   onDelete: (product: Product) => void
 }
 
-function ProductsTable({ products, onEdit, onClone, onDelete }: ProductsTableProps) {
+function ProductsTable({ products, selectedIds, onToggleSelect, onSelectAll, onEdit, onClone, onDelete }: ProductsTableProps) {
+  const allSelected = products.length > 0 && selectedIds.size === products.length
+  const someSelected = selectedIds.size > 0 && selectedIds.size < products.length
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead className="bg-[#F5E6D3]">
           <tr>
+            <th className="px-4 py-3 text-left">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                ref={(el) => {
+                  if (el) el.indeterminate = someSelected
+                }}
+                onChange={onSelectAll}
+                className="w-4 h-4 rounded border-[#D4A574] text-[#8B6F47] focus:ring-[#D4A574] cursor-pointer"
+              />
+            </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-[#8B6F47] uppercase tracking-wider">
               Producto
             </th>
@@ -309,6 +390,8 @@ function ProductsTable({ products, onEdit, onClone, onDelete }: ProductsTablePro
             <ProductRow
               key={product.id}
               product={product}
+              isSelected={selectedIds.has(product.id)}
+              onToggleSelect={() => onToggleSelect(product.id)}
               onEdit={() => onEdit(product)}
               onClone={() => onClone(product)}
               onDelete={() => onDelete(product)}
@@ -326,12 +409,14 @@ function ProductsTable({ products, onEdit, onClone, onDelete }: ProductsTablePro
 
 interface ProductRowProps {
   product: Product
+  isSelected: boolean
+  onToggleSelect: () => void
   onEdit: () => void
   onClone: () => void
   onDelete: () => void
 }
 
-function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
+function ProductRow({ product, isSelected, onToggleSelect, onEdit, onClone, onDelete }: ProductRowProps) {
   const firstImage = product.images?.[0]
   const [isExpanded, setIsExpanded] = useState(false)
   const [variantsCount, setVariantsCount] = useState<number | null>(null)
@@ -350,7 +435,15 @@ function ProductRow({ product, onEdit, onClone, onDelete }: ProductRowProps) {
 
   return (
     <>
-      <tr className="hover:bg-[#F5E6D3]/30 transition-colors">
+      <tr className={`hover:bg-[#F5E6D3]/30 transition-colors ${isSelected ? 'bg-[#F5E6D3]/40' : ''}`}>
+      <td className="px-4 py-4">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={onToggleSelect}
+          className="w-4 h-4 rounded border-[#D4A574] text-[#8B6F47] focus:ring-[#D4A574] cursor-pointer"
+        />
+      </td>
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           {firstImage ? (
@@ -1078,6 +1171,138 @@ function DeleteConfirmModal({ product, onClose, onDelete }: DeleteConfirmModalPr
             "
           >
             {isDeleting ? 'Eliminando...' : 'Eliminar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================================
+// BULK DELETE CONFIRM MODAL
+// ============================================================================
+
+interface BulkDeleteConfirmModalProps {
+  products: Product[]
+  onClose: () => void
+  onDelete: () => void
+}
+
+function BulkDeleteConfirmModal({ products, onClose, onDelete }: BulkDeleteConfirmModalProps) {
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [progress, setProgress] = useState({ current: 0, total: 0 })
+
+  async function handleConfirmDelete() {
+    setIsDeleting(true)
+    setError(null)
+    setProgress({ current: 0, total: products.length })
+
+    try {
+      for (let i = 0; i < products.length; i++) {
+        const product = products[i]
+        setProgress({ current: i + 1, total: products.length })
+
+        // 1. Eliminar carpeta de imágenes del producto en Storage
+        await deleteFolder(`products/${product.handle}`)
+
+        // 2. Eliminar producto de la base de datos
+        const { error: deleteError } = await supabase
+          .from('products')
+          .delete()
+          .eq('id', product.id)
+
+        if (deleteError) {
+          console.error(`Error deleting product ${product.title}:`, deleteError)
+        }
+      }
+
+      onDelete()
+    } catch (err) {
+      console.error('Error in bulk delete:', err)
+      setError(err instanceof Error ? err.message : 'Error al eliminar productos')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+        <h2 className="text-xl font-semibold text-[#8B6F47] mb-4">
+          ¿Eliminar {products.length} productos?
+        </h2>
+
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
+        )}
+
+        <p className="text-[#6B5844] mb-4">
+          Estás a punto de eliminar los siguientes productos:
+        </p>
+
+        <div className="max-h-40 overflow-y-auto mb-4 border border-[#D4A574]/30 rounded-lg">
+          <ul className="divide-y divide-[#D4A574]/20">
+            {products.map((product) => (
+              <li key={product.id} className="px-3 py-2 text-sm text-[#6B5844] flex items-center gap-2">
+                {product.images?.[0] ? (
+                  <img src={product.images[0]} alt="" className="w-8 h-8 object-cover rounded" />
+                ) : (
+                  <span className="w-8 h-8 bg-[#F5E6D3] rounded flex items-center justify-center text-xs">📦</span>
+                )}
+                <span className="truncate">{product.title}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="text-sm text-red-600 mb-6">
+          ⚠️ Esta acción no se puede deshacer.
+        </p>
+
+        {isDeleting && (
+          <div className="mb-4">
+            <div className="flex justify-between text-sm text-[#6B5844] mb-1">
+              <span>Eliminando...</span>
+              <span>{progress.current} / {progress.total}</span>
+            </div>
+            <div className="h-2 bg-[#F5E6D3] rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-300"
+                style={{ width: `${(progress.current / progress.total) * 100}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            disabled={isDeleting}
+            className="
+              px-4 py-2 rounded-lg font-medium text-[#6B5844]
+              bg-white border-2 border-[#D4A574]/30
+              hover:bg-[#F5E6D3]
+              disabled:opacity-50 disabled:cursor-not-allowed
+              transition-colors
+            "
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={handleConfirmDelete}
+            disabled={isDeleting}
+            className="
+              px-4 py-2 rounded-lg font-medium text-white
+              bg-gradient-to-r from-red-600 to-red-500
+              hover:from-red-700 hover:to-red-600
+              disabled:opacity-50 disabled:cursor-not-allowed
+              transition-all duration-200
+            "
+          >
+            {isDeleting ? `Eliminando ${progress.current}/${progress.total}...` : `Eliminar ${products.length} productos`}
           </button>
         </div>
       </div>
