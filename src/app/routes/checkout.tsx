@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 import { useCartStore } from '@/store/cart'
 import { formatMoney } from '@/lib/money'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -249,13 +251,13 @@ export default function CheckoutPage() {
                 <label htmlFor="phone" className="block text-sm font-medium text-brand-dark mb-2">
                   {t('checkout:phone')}
                 </label>
-                <input
-                  type="tel"
+                <PhoneInput
                   id="phone"
+                  defaultCountry="US"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-4 py-3 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-terra focus:border-transparent"
+                  onChange={(value) => setPhone(value || '')}
                   placeholder={t('checkout:phonePlaceholder')}
+                  className="phone-input-checkout"
                 />
               </div>
             </div>
@@ -394,10 +396,11 @@ export default function CheckoutPage() {
                     />
                   </svg>
                   <span>
-                    {t(
-                      'checkout:shippingZonesNote',
-                      `Envío: USA $${shippingConfig.zone_1_cost.toFixed(2)}, Canadá/México $${shippingConfig.zone_2_cost.toFixed(2)}. Gratis en compras +$${shippingConfig.free_shipping_threshold.toFixed(0)}.`
-                    )}
+                    {t('checkout:shippingZonesNote', {
+                      zone1: shippingConfig.zone_1_cost.toFixed(2),
+                      zone2: shippingConfig.zone_2_cost.toFixed(2),
+                      threshold: shippingConfig.free_shipping_threshold.toFixed(0)
+                    })}
                   </span>
                 </div>
               </div>

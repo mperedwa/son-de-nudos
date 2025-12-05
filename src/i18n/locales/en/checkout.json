@@ -25,5 +25,6 @@
   "completeOrder": "Complete Order",
   "termsAcceptance": "By completing your order you accept our terms and conditions",
   "requiredFieldsAlert": "Please complete all required fields",
-  "shippingInfoAlert": "Please complete shipping information"
+  "shippingInfoAlert": "Please complete shipping information",
+  "shippingZonesNote": "Shipping: USA ${{zone1}}, Canada/Mexico ${{zone2}}. Free on orders +${{threshold}}."
 }

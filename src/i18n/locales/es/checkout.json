@@ -25,5 +25,6 @@
   "completeOrder": "Completar pedido",
   "termsAcceptance": "Al completar tu pedido aceptas nuestros términos y condiciones",
   "requiredFieldsAlert": "Por favor completa todos los campos requeridos",
-  "shippingInfoAlert": "Por favor completa la información de envío"
+  "shippingInfoAlert": "Por favor completa la información de envío",
+  "shippingZonesNote": "Envío: USA ${{zone1}}, Canadá/México ${{zone2}}. Gratis en compras +${{threshold}}."
 }
