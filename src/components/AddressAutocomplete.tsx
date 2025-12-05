@@ -147,16 +147,32 @@ export function AddressAutocomplete({
   required = false
 }: AddressAutocompleteProps) {
   const { t } = useTranslation(['checkout'])
-  const containerRef = useRef<HTMLDivElement>(null)
+  // Separate ref for the web component container (outside React's control)
+  const webComponentContainerRef = useRef<HTMLDivElement>(null)
   const autocompleteElementRef = useRef<google.maps.places.PlaceAutocompleteElement | null>(null)
   const [inputValue, setInputValue] = useState(defaultValue)
   const [isLoading, setIsLoading] = useState(true)
   const [apiError, setApiError] = useState(false)
+  const [isReady, setIsReady] = useState(false)
+
+  // Stable references for callbacks
+  const onAddressSelectRef = useRef(onAddressSelect)
+  const onAddressChangeRef = useRef(onAddressChange)
+
+  useEffect(() => {
+    onAddressSelectRef.current = onAddressSelect
+    onAddressChangeRef.current = onAddressChange
+  }, [onAddressSelect, onAddressChange])
 
   // Initialize Google Places Autocomplete with the new PlaceAutocompleteElement
   const initAutocomplete = useCallback(async () => {
-    if (!containerRef.current || !window.google?.maps?.places?.PlaceAutocompleteElement) {
+    if (!webComponentContainerRef.current || !window.google?.maps?.places?.PlaceAutocompleteElement) {
       return false
+    }
+
+    // Prevent double initialization
+    if (autocompleteElementRef.current) {
+      return true
     }
 
     try {
@@ -172,9 +188,8 @@ export function AddressAutocomplete({
       // Store reference
       autocompleteElementRef.current = placeAutocomplete
 
-      // Clear container and append the element
-      containerRef.current.innerHTML = ''
-      containerRef.current.appendChild(placeAutocomplete)
+      // Append to the container (don't clear - it's empty by design)
+      webComponentContainerRef.current.appendChild(placeAutocomplete)
 
       // Set default value if provided
       if (defaultValue) {
@@ -203,24 +218,29 @@ export function AddressAutocomplete({
           const addressData = extractAddressDataFromPlace(place)
 
           setInputValue(place.formattedAddress || '')
-          onAddressSelect(addressData)
-          onAddressChange?.(place.formattedAddress || '')
+          onAddressSelectRef.current(addressData)
+          onAddressChangeRef.current?.(place.formattedAddress || '')
         } catch (fetchError) {
           console.error('Error fetching place details:', fetchError)
         }
       })
 
-      // Listen for input changes
-      placeAutocomplete.addEventListener('gmp-input', () => {
+      // Listen for input changes (if the event exists)
+      const handleInput = () => {
         const input = placeAutocomplete.querySelector('input')
         if (input) {
           setInputValue(input.value)
-          onAddressChange?.(input.value)
+          onAddressChangeRef.current?.(input.value)
         }
-      })
+      }
+
+      // Try both possible event names
+      placeAutocomplete.addEventListener('gmp-input', handleInput)
+      placeAutocomplete.addEventListener('input', handleInput)
 
       setIsLoading(false)
       setApiError(false)
+      setIsReady(true)
       return true
     } catch (err) {
       console.error('Error initializing Google Places:', err)
@@ -228,7 +248,7 @@ export function AddressAutocomplete({
       setIsLoading(false)
       return false
     }
-  }, [onAddressSelect, onAddressChange, defaultValue])
+  }, [defaultValue]) // Only depend on defaultValue
 
   // Load Google Places script and initialize
   useEffect(() => {
@@ -250,6 +270,15 @@ export function AddressAutocomplete({
 
     return () => {
       mounted = false
+      // Clean up the web component on unmount
+      if (autocompleteElementRef.current && webComponentContainerRef.current) {
+        try {
+          webComponentContainerRef.current.removeChild(autocompleteElementRef.current)
+        } catch {
+          // Ignore if already removed
+        }
+        autocompleteElementRef.current = null
+      }
     }
   }, [initAutocomplete])
 
@@ -261,35 +290,41 @@ export function AddressAutocomplete({
     ${className}
   `.trim()
 
+  // Show fallback input only when API has error (not during loading if ready)
+  const showFallback = apiError || (isLoading && !isReady)
+  const showWebComponent = !apiError
+
   return (
     <div className="relative">
       {/* Container for the PlaceAutocompleteElement web component */}
+      {/* This div is intentionally empty - React doesn't control its children */}
       <div
-        ref={containerRef}
+        ref={webComponentContainerRef}
         id={id}
         className={containerStyles}
         data-required={required}
         aria-label={placeholder || t('checkout:addressPlaceholder', 'Ingresa tu dirección')}
-      >
-        {/* Fallback input shown while loading or on error */}
-        {(isLoading || apiError) && (
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => {
-              setInputValue(e.target.value)
-              onAddressChange?.(e.target.value)
-            }}
-            placeholder={placeholder || t('checkout:addressPlaceholder', 'Ingresa tu dirección')}
-            disabled={disabled || isLoading}
-            required={required}
-            className="address-autocomplete-fallback-input"
-          />
-        )}
-      </div>
+        style={{ display: showWebComponent ? 'block' : 'none' }}
+      />
+
+      {/* Fallback input shown only on error */}
+      {showFallback && (
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value)
+            onAddressChange?.(e.target.value)
+          }}
+          placeholder={placeholder || t('checkout:addressPlaceholder', 'Ingresa tu dirección')}
+          disabled={disabled || (isLoading && !apiError)}
+          required={required}
+          className="address-autocomplete-fallback-input"
+        />
+      )}
 
       {/* Loading indicator */}
-      {isLoading && !apiError && (
+      {isLoading && !apiError && !isReady && (
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
           <div className="w-5 h-5 border-2 border-[#8B6F47] border-t-transparent rounded-full animate-spin" />
         </div>
