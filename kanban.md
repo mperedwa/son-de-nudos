@@ -1,20 +1,24 @@
 # Kanban Board
 
-<!-- Config: Last Task ID: 011 -->
+<!-- Config: Last Task ID: 11 -->
 
 ## ⚙️ Configuration
 
-**Columns**: 📝 To Do | 🚀 In Progress | 👀 In Review | ✅ Done
-**Categories**: Frontend, Backend, Admin Panel, Database, DevOps, Design, i18n, Tests, Documentation
+**Columns**: 📝 To Do (todo) | 🚀 In Progress (in-progress) | 👀 In Review (in-review) | ✅ Done (done)
+
+**Categories**: Frontend, Backend, Admin Panel, Database, DevOps, Design, i18n, Tests, Documentation, Backend, Frontend, Admin Panel, Frontend
+
 **Users**: @mario, @claude
-**Tags**: #feature, #bug, #refactor, #docs, #performance, #security, #ui, #api, #stripe, #supabase
+
+**Priorities**: 🔴 Critical | 🟠 High | 🟡 Medium | 🟢 Low
+
+**Tags**: #feature, #bug, #refactor, #docs, #performance, #security, #ui, #api, #stripe, #supabase #api #feature #tests #admin #marketing #devops #vercel #backend #i18n #stripe #docs
 
 ---
 
 ## 📝 To Do
 
 ### TASK-001 | Integrar Shopify Storefront API
-
 **Priority**: Low | **Category**: Backend | **Assigned**: @claude
 **Created**: 2025-11-23 | **Due**: 2025-12-08
 **Tags**: #api #feature
@@ -33,7 +37,6 @@ Tarea opcional, no prioritaria. Solo implementar si se requiere integración con
 ---
 
 ### TASK-002 | Pruebas unitarias para money.ts y filters.ts
-
 **Priority**: Medium | **Category**: Tests | **Assigned**: @claude
 **Created**: 2025-11-23 | **Due**: 2025-12-09
 **Tags**: #tests
@@ -53,7 +56,6 @@ Pendiente para futura iteración. Asegurar cobertura de casos edge.
 ---
 
 ### TASK-005 | Histórico de cambios de stock
-
 **Priority**: Medium | **Category**: Admin Panel | **Assigned**: @claude
 **Created**: 2025-11-23 | **Due**: 2025-11-30
 **Tags**: #feature #admin #supabase
@@ -73,7 +75,6 @@ La tabla stock_history ya existe y se llena automáticamente con el trigger. Sol
 ---
 
 ### TASK-011 | Sistema de Carritos Abandonados
-
 **Priority**: Medium | **Category**: Backend, Frontend | **Assigned**: @claude
 **Created**: 2025-12-05 | **Due**: 2025-12-20
 **Tags**: #feature #supabase #marketing
@@ -95,7 +96,6 @@ Requiere que el cliente ingrese email antes de abandonar. El localStorage ya gua
 ---
 
 ### TASK-006 | Tests E2E del admin panel
-
 **Priority**: Low | **Category**: Tests | **Assigned**: @claude
 **Created**: 2025-11-23 | **Due**: 2025-12-01
 **Tags**: #tests #admin
@@ -123,133 +123,37 @@ Baja prioridad. Implementar después de estabilizar funcionalidades del admin.
 ## ✅ Done
 
 ### TASK-008 | Implementar Supabase Keepalive con Vercel Cron Jobs
-
 **Priority**: High | **Category**: DevOps | **Assigned**: @claude
-**Created**: 2025-12-01 | **Completed**: 2025-12-01
+**Created**: 2025-12-01
 **Tags**: #devops #supabase #vercel #backend
 
-Sistema automático para evitar que Supabase pause el proyecto por inactividad en el tier gratuito.
-
-**Implementación**:
-- ✅ Endpoint serverless `/api/keepalive` creado
-- ✅ Query simple `SELECT id FROM products LIMIT 1` para mantener DB activa
-- ✅ Vercel Cron Job configurado en `vercel.json` (schedule: `0 0 */5 * *`)
-- ✅ Autenticación con `CRON_SECRET` para seguridad
-- ✅ Instalado `@vercel/node` para tipos TypeScript
-- ✅ Documentado `CRON_SECRET` en `.env.example`
-- ✅ Creado `api/README.md` con guía completa
-- ✅ Variable de entorno configurada en Vercel Dashboard
-
-**Resultado**:
-El proyecto de Supabase se mantiene activo automáticamente. Cron job ejecuta cada 5 días, evitando los 7 días de inactividad que causan la pausa.
-
-**Files**: `api/keepalive.ts`, `vercel.json`, `.env.example`, `api/README.md`
-
----
+Sistema automático para evitar que Supabase pause el proyecto por inactividad en el tier gratuito. **Implementación**: - ✅ Endpoint serverless `/api/keepalive` creado - ✅ Query simple `SELECT id FROM 
 
 ### TASK-009 | Conectar página pública a Supabase
-
 **Priority**: Critical | **Category**: Backend, Frontend | **Assigned**: @claude
-**Created**: 2025-12-02 | **Completed**: 2025-12-02
+**Created**: 2025-12-02
 **Tags**: #feature #supabase #i18n
 
-Conectar la página pública de la tienda para que muestre productos desde Supabase en lugar del JSON estático.
-
-**Implementación**:
-- ✅ Creado `supabase-public.ts` con API pública de solo lectura
-- ✅ Funciones: `getPublicProducts()`, `getPublicProductByHandle()`, `searchPublicProducts()`
-- ✅ Actualizado `index.tsx` para cargar desde Supabase con soporte bilingüe
-- ✅ Actualizado `[handle].tsx` para cargar producto individual desde Supabase
-- ✅ Actualizado `VariantSelector.tsx` con traducciones de opciones
-- ✅ Corregido error de TypeScript que causaba fallo de deployment
-- ✅ Handle automático desde título en sistema de importación Excel
-
-**Resultado**:
-Los productos creados en el panel admin (`/admin/products`) ahora aparecen automáticamente en la tienda pública. Soporte bilingüe completo: muestra `title_en`/`description_html_en` cuando el usuario está en inglés.
-
-**Files**: `src/lib/supabase-public.ts`, `src/app/routes/index.tsx`, `src/app/routes/product/[handle].tsx`, `src/components/VariantSelector.tsx`, `src/i18n/locales/*/product.json`
-
----
+Conectar la página pública de la tienda para que muestre productos desde Supabase en lugar del JSON estático. **Implementación**: - ✅ Creado `supabase-public.ts` con API pública de solo lectura - ✅ Fu
 
 ### TASK-004 | Webhook de Stripe para guardar pedidos
-
 **Priority**: Critical | **Category**: Backend | **Assigned**: @claude
-**Created**: 2025-11-23 | **Completed**: 2025-12-03
+**Created**: 2025-11-23
 **Tags**: #stripe #api #supabase
 
-Endpoint que escucha eventos de Stripe y guarda pedidos automáticamente en Supabase.
-
-**Implementación**:
-- ✅ Creado endpoint `/api/webhook-stripe`
-- ✅ Verificación de firma con `stripe.webhooks.constructEvent()`
-- ✅ Evento soportado: `checkout.session.completed`
-- ✅ Extracción de items, customer_email, shipping_address, amounts desde metadata
-- ✅ Inserción en tabla `orders` con `SUPABASE_SERVICE_ROLE_KEY` (bypass RLS)
-- ✅ Manejo de duplicados (verifica `stripe_session_id` único)
-- ✅ Actualizado `src/server/stripe.ts` con metadata completa (items, subtotal, discount, shipping)
-- ✅ Documentado en `api/README.md` con instrucciones de configuración
-- ✅ Agregado `STRIPE_WEBHOOK_SECRET` a `.env.example`
-
-**Resultado**:
-Los pedidos de Stripe se guardan automáticamente en Supabase con status `paid`. Visibles inmediatamente en `/admin/orders`.
-
-**Configuración requerida**:
-1. Crear webhook en Stripe Dashboard → `https://www.sondenudos.com/api/webhook-stripe`
-2. Agregar `STRIPE_WEBHOOK_SECRET` en Vercel
-
-**Files**: `api/webhook-stripe.ts`, `src/server/stripe.ts`, `.env.example`, `api/README.md`
-
----
+Endpoint que escucha eventos de Stripe y guarda pedidos automáticamente en Supabase. **Implementación**: - ✅ Creado endpoint `/api/webhook-stripe` - ✅ Verificación de firma con `stripe.webhooks.constr
 
 ### TASK-003 | Sistema de zonas de envío + Google Places
-
 **Priority**: High | **Category**: Admin Panel, Frontend | **Assigned**: @claude
-**Created**: 2025-11-23 | **Completed**: 2025-12-04
+**Created**: 2025-11-23
 **Tags**: #feature #admin #supabase #api
 
-Sistema de envío por zonas con autocompletado de direcciones usando Google Places API.
-
-**Implementación**:
-- ✅ Página `/admin/settings` para configurar costos de envío por zona
-- ✅ Sistema de 3 zonas: USA ($8.99), Canadá/México ($18.99), Internacional (contactar)
-- ✅ Google Places Autocomplete en checkout para detección automática de país
-- ✅ Migración SQL para columnas `zone_1_cost` y `zone_2_cost`
-- ✅ Helpers en `src/lib/shipping.ts` (getShippingZone, getShippingCost, isCountrySupported)
-- ✅ Componente `AddressAutocomplete.tsx` con carga dinámica de script
-- ✅ Integración con Stripe metadata (shippingZone, shippingCost dinámico)
-- ✅ Umbral de envío gratis configurable ($150 default)
-- ✅ Tipos TypeScript actualizados en `supabase.ts`
-
-**Resultado**:
-Los costos de envío son completamente configurables desde el admin. El checkout detecta automáticamente el país y calcula el costo según la zona. Pedidos internacionales muestran mensaje de contacto.
-
-**Files**: `src/lib/shipping.ts`, `src/components/AddressAutocomplete.tsx`, `src/app/routes/admin/settings.tsx`, `src/app/routes/checkout.tsx`, `src/server/stripe.ts`, `supabase/migrations/20251204000000_shipping_zones.sql`
-
----
+Sistema de envío por zonas con autocompletado de direcciones usando Google Places API. **Implementación**: - ✅ Página `/admin/settings` para configurar costos de envío por zona - ✅ Sistema de 3 zonas:
 
 ### TASK-007 | Documentar admin panel en README
-
 **Priority**: Medium | **Category**: Documentation | **Assigned**: @claude
-**Created**: 2025-11-23 | **Completed**: 2025-12-03
+**Created**: 2025-11-23
 **Tags**: #docs
 
-Agregar sección completa en README.md documentando el panel de administración.
+Agregar sección completa en README.md documentando el panel de administración. **Implementación**: - ✅ Documentado URL de acceso (producción y local) - ✅ Credenciales por defecto con advertencia de se
 
-**Implementación**:
-- ✅ Documentado URL de acceso (producción y local)
-- ✅ Credenciales por defecto con advertencia de seguridad
-- ✅ Tabla de módulos con rutas y descripciones
-- ✅ Guía de uso detallada para cada módulo:
-  - Productos: crear, agregar variantes, clonar
-  - Pedidos: estados, cambiar estado, filtros
-  - Cupones: crear, configurar, cupones preconfigurados
-  - Inventario: edición rápida, filtros
-- ✅ Instrucciones para crear usuarios admin adicionales
-- ✅ Diagrama de arquitectura del admin
-- ✅ Documentación del webhook de Stripe
-- ✅ Actualizado roadmap con tareas completadas
-
-**Resultado**:
-Documentación completa del panel admin en README.md. Cualquier usuario puede entender cómo usar el sistema sin ayuda externa.
-
-**Files**: `README.md`
