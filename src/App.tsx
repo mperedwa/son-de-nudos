@@ -19,6 +19,7 @@ import AdminInventory from './app/routes/admin/inventory'
 import AdminCoupons from './app/routes/admin/coupons'
 import AdminOrders from './app/routes/admin/orders'
 import AdminSettings from './app/routes/admin/settings'
+import AdminCollections from './app/routes/admin/collections'
 
 /**
  * Configuración principal de rutas
@@ -60,6 +61,7 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="profile" element={<AdminProfile />} />
           <Route path="products" element={<AdminProducts />} />
+          <Route path="collections" element={<AdminCollections />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="coupons" element={<AdminCoupons />} />
           <Route path="inventory" element={<AdminInventory />} />

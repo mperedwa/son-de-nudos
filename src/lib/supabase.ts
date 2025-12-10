@@ -28,11 +28,29 @@ export type Database = {
           compare_at_price: number | null
           tags: string[]
           available_for_sale: boolean
+          collection_id: string | null
           created_at: string
           updated_at: string
         }
         Insert: Omit<Database['public']['Tables']['products']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['products']['Insert']>
+      }
+      collections: {
+        Row: {
+          id: string
+          handle: string
+          name_es: string
+          name_en: string
+          description_es: string | null
+          description_en: string | null
+          image_url: string | null
+          sort_order: number
+          visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: Omit<Database['public']['Tables']['collections']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Database['public']['Tables']['collections']['Insert']>
       }
       variants: {
         Row: {
@@ -201,6 +219,9 @@ export type AnnouncementMessage = {
   text_en: string
   active: boolean
 }
+
+// Type helper for Collections
+export type Collection = Database['public']['Tables']['collections']['Row']
 
 // ==============================================================================
 // CUSTOM TYPES FOR INVENTORY MANAGEMENT
