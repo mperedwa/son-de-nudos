@@ -1,6 +1,6 @@
 # Kanban Board
 
-<!-- Config: Last Task ID: 12 -->
+<!-- Config: Last Task ID: 13 -->
 
 ## ⚙️ Configuration
 
@@ -121,6 +121,17 @@ Baja prioridad. Implementar después de estabilizar funcionalidades del admin.
 ## 👀 In Review
 
 ## ✅ Done
+
+### TASK-013 | Sistema de Colecciones Musicales
+**Priority**: High | **Category**: Admin Panel, Frontend, Database | **Assigned**: @claude
+**Created**: 2025-12-10 | **Completed**: 2025-12-10
+**Tags**: #feature #admin #supabase #i18n
+
+Sistema completo de colecciones temáticas musicales que permite agrupar productos bajo colecciones con metadata rica y navegación dedicada. **Implementación**: - ✅ Tabla `collections` en Supabase con campos bilingües (name_es/en, description_es/en) - ✅ Columna `collection_id` nullable en `products` (FK con ON DELETE SET NULL) - ✅ RLS policies (lectura pública visible=true, escritura solo admins) - ✅ Índices de performance (handle, visible, collection_id) - ✅ 3 colecciones seed: "Verano Forte", "Invierno Pianissimo", "Primavera Allegro" - ✅ Admin CRUD completo `/admin/collections` (750+ líneas) con ImageUploader - ✅ Handle auto-generado desde name_es con normalización - ✅ Dropdown en productos para asignar colección - ✅ Página pública `/colecciones` con grid de colecciones visibles - ✅ Página detalle `/colecciones/:handle` con productos filtrados - ✅ Breadcrumbs enriquecidos incluyendo nivel de colección - ✅ FiltersDrawer con checkboxes de colecciones - ✅ Landing page carga dinámicamente las 3 primeras colecciones - ✅ Soporte bilingüe ES/EN en toda la implementación - ✅ Backward compatibility (productos sin colección siguen funcionando)
+
+**Commits**: 57820d1 (Fase 1&2), 305d0d1 (Fase 3)
+
+---
 
 ### TASK-012 | Expansión de Admin Settings (SEO, Redes, Banner)
 **Priority**: High | **Category**: Admin Panel, Frontend | **Assigned**: @claude

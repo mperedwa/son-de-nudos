@@ -459,6 +459,139 @@ Sistema de envío por zonas con autocompletado de direcciones usando Google Plac
 	2.	API Key: Generar con restricciones HTTP referrer (www.sondenudos.com/*, localhost:5174/*)
 	3.	Vercel: Agregar VITE_GOOGLE_PLACES_API_KEY en Environment Variables
 
+5.3 Sistema de Colecciones Musicales ✅ COMPLETADO (10-Dic-2025)
+
+**Implementación:**
+
+Sistema completo de colecciones temáticas musicales (ej: "Verano Forte", "Invierno Pianissimo", "Primavera Allegro") que permite agrupar productos bajo colecciones con metadata rica (imágenes, descripciones bilingües) y navegación dedicada en el frontend.
+
+**Arquitectura:**
+
+Relación 1:N - Un producto pertenece a UNA colección (o ninguna):
+```
+collections (tabla principal)
+    ↓ 1:N
+products.collection_id (FK opcional)
+```
+
+**Base de Datos:**
+
+Migración `supabase/migrations/20251210000000_collections.sql`:
+- **Tabla collections** con campos:
+  - id, handle (unique), name_es, name_en
+  - description_es, description_en (descripciones opcionales)
+  - image_url (URL de imagen en Storage)
+  - sort_order (ordenar colecciones en landing)
+  - visible (ocultar colecciones en desarrollo)
+  - created_at, updated_at
+- **Columna nueva en products:**
+  - collection_id UUID REFERENCES collections(id) ON DELETE SET NULL
+- **Índices:**
+  - idx_collections_handle, idx_collections_visible
+  - idx_products_collection_id
+- **RLS Policies:**
+  - Lectura pública: solo colecciones con visible = true
+  - Escritura: solo usuarios autenticados (admins)
+- **Datos iniciales:**
+  - 3 colecciones: "Verano Forte", "Invierno Pianissimo", "Primavera Allegro"
+
+**Archivos Creados (Frontend Público):**
+
+1. **src/app/routes/colecciones/index.tsx** (185 líneas)
+   - Grid de colecciones visibles con contador de productos
+   - Responsive: 1 columna móvil, 2 tablet, 3 desktop
+   - Links a páginas de detalle
+
+2. **src/app/routes/colecciones/[handle].tsx** (164 líneas)
+   - Página de detalle de colección
+   - Productos filtrados por collection_id
+   - Breadcrumbs: Inicio → Colecciones → [Nombre Colección]
+   - Empty state para colecciones vacías
+
+**Archivos Creados (Admin Panel):**
+
+3. **src/app/routes/admin/collections.tsx** (750+ líneas)
+   - CRUD completo de colecciones
+   - CollectionFormModal con React Hook Form + Zod
+   - ImageUploader integrado (carpeta 'collections' en Storage)
+   - Handle auto-generado desde name_es en modo CREATE
+   - DeleteConfirmModal con cleanup de Storage
+   - Contador de productos por colección
+   - Toggle de visibilidad
+
+**Archivos Modificados:**
+
+- **src/app/routes/admin/products.tsx**: Dropdown para asignar colección
+- **src/components/AdminLayout.tsx**: Item "Colecciones 📚" en sidebar
+- **src/lib/filters.ts**: Lógica de filtrado por collectionIds
+- **src/components/FiltersDrawer.tsx**: Sección con checkboxes de colecciones
+- **src/components/landing/CategoriesSection.tsx**: Carga dinámica desde DB
+- **src/lib/supabase-public.ts**: JOIN con collections en getPublicProductByHandle
+- **src/app/routes/product/[handle].tsx**: Breadcrumbs con nivel de colección
+- **src/App.tsx**: Rutas `/colecciones` y `/colecciones/:handle`
+- **src/types/models.ts**: collectionId y collectionIds en FilterOptions
+- **src/lib/supabase.ts**: Tipos para tabla collections
+- **src/lib/storage.ts**: Soporte para carpeta 'collections'
+
+**Traducciones:**
+
+- **src/i18n/locales/es/filters.json**: "collection": "Colección"
+- **src/i18n/locales/en/filters.json**: "collection": "Collection"
+
+**Flujo de Usuario:**
+
+```
+[Landing Page]
+    ↓
+[Sección "Colecciones" muestra las 3 primeras dinámicamente]
+    ↓
+[Click en colección → /colecciones/verano-forte]
+    ↓
+[Página con productos filtrados de esa colección]
+    ↓
+[Click en producto → /product/do-mayor]
+    ↓
+[Breadcrumb incluye: Inicio > Tienda > Verano Forte > Do Mayor]
+```
+
+**Flujo Admin:**
+
+```
+[Admin Panel → /admin/collections]
+    ↓
+[Crear colección con nombre ES/EN, descripción, imagen]
+    ↓
+[/admin/products → Dropdown "Colección"]
+    ↓
+[Asignar producto a colección]
+    ↓
+[Producto aparece automáticamente en /colecciones/:handle]
+```
+
+**Casos Edge Manejados:**
+
+- Producto sin colección (collection_id = NULL) → visible en tienda general
+- Eliminar colección → productos quedan huérfanos (collection_id = NULL)
+- Handle único: "do-mayor", "do-mayor-invierno" diferenciados
+- Colección visible=false → no aparece en frontend público
+- Colección vacía (sin productos) → mensaje "Próximamente productos disponibles"
+
+**Backward Compatibility:**
+
+- Productos existentes sin colección siguen funcionando
+- collection_id es nullable (opcional)
+- No se requiere asignación inmediata
+
+**Características Clave:**
+
+✅ URLs semánticas: `/colecciones/verano-forte`
+✅ Breadcrumbs ricos para SEO
+✅ Nombres bilingües ES/EN
+✅ Metadata rica (imagen, descripción por colección)
+✅ Escalable para futuras colecciones
+✅ Colecciones vacías permitidas (preparar lanzamientos)
+✅ Filtrar por múltiples colecciones en FiltersDrawer
+
 6. Calidad, observabilidad y DevEx
 	•	Pruebas
 	•	Jest o Vitest con Testing Library para React.

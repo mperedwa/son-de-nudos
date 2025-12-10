@@ -7,7 +7,8 @@ E-commerce moderno y minimalista para venta de collares artesanales, construido 
 ### Funcionalidades Implementadas
 
 - **Catálogo de productos** con grid responsivo (2/3/4 columnas)
-- **Filtros avanzados** por disponibilidad, precio, material, color y largo
+- **Sistema de colecciones** temáticas musicales con páginas dedicadas
+- **Filtros avanzados** por disponibilidad, precio, material, color, largo y colección
 - **Ordenamiento múltiple** (destacados, precio, nombre, fecha)
 - **Selector de variantes inteligente** con validación de disponibilidad en tiempo real
 - **Carrito de compras** con drawer lateral y atajo de teclado (Cmd/Ctrl + K)
@@ -19,9 +20,9 @@ E-commerce moderno y minimalista para venta de collares artesanales, construido 
 - **Galería de imágenes** con miniaturas y hover effects
 - **Accesibilidad** con navegación por teclado y aria labels
 - **Panel de Administración** con Supabase (Auth, Storage, Real-time)
-- **Contenido bilingüe** para productos (título y descripción ES/EN)
+- **Contenido bilingüe** para productos y colecciones (título y descripción ES/EN)
 - **Búsqueda de productos** con SearchDrawer
-- **Landing page** con diseño moderno y secciones modulares
+- **Landing page** con diseño modular y colecciones dinámicas
 
 ### Experiencia de Usuario
 
@@ -231,10 +232,11 @@ Password: [REDACTED]
 |--------|------|-------------|
 | **Dashboard** | `/admin/dashboard` | Métricas: productos, pedidos, ingresos, alertas de stock bajo |
 | **Productos** | `/admin/products` | CRUD completo de productos y variantes |
+| **Colecciones** | `/admin/collections` | Gestión de colecciones temáticas con imágenes y nombres bilingües |
 | **Pedidos** | `/admin/orders` | Ver y gestionar pedidos, cambiar estados |
 | **Cupones** | `/admin/coupons` | Crear, editar y desactivar cupones |
 | **Inventario** | `/admin/inventory` | Control de stock con edición en línea |
-| **Configuración** | `/admin/settings` | Zonas de envío y costos |
+| **Configuración** | `/admin/settings` | Zonas de envío, SEO, redes sociales y banner |
 | **Mi Perfil** | `/admin/profile` | Cambiar contraseña, ver info de cuenta |
 
 ### Guía de Uso
@@ -247,6 +249,7 @@ Password: [REDACTED]
    - Título (ES) y Título (EN) para contenido bilingüe
    - Handle (URL amigable, ej: `collar-luna-plata`)
    - Descripción (ES/EN) con HTML permitido
+   - Colección (opcional): asignar a una colección temática
 3. Subir imágenes (máx. 4, primera es la principal)
 4. Click en **"Crear"**
 
