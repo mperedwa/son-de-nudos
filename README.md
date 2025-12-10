@@ -428,6 +428,40 @@ Para que el autocompletado de direcciones funcione en producción:
 | `src/components/AddressAutocomplete.tsx` | Componente Google Places |
 | `src/app/routes/admin/settings.tsx` | Página de configuración |
 
+## ⚙️ Panel de Configuración
+
+El panel de administración incluye una página completa de configuración (`/admin/settings`) con 8 secciones:
+
+| Sección | Descripción |
+|---------|-------------|
+| 📦 **Envío** | Costos por zona (USA $8.99, CA/MX $18.99), umbral envío gratis |
+| 🔍 **SEO** | Meta título, descripción, keywords, imagen Open Graph, Google Analytics |
+| 📱 **Redes** | URLs de Instagram, Facebook, Pinterest, TikTok, WhatsApp, email |
+| 🏪 **Tienda** | Nombre, descripción, email de notificaciones, teléfono |
+| 📢 **Banner** | Hasta 4 mensajes rotativos bilingües con toggle activo/inactivo |
+| 🎨 **Marca** | Logo personalizado y favicon (subir desde admin) |
+| ⚖️ **Legal** | Política de devoluciones bilingüe (ES/EN) |
+| 🚀 **SEO+** | robots.txt, sitemap automático, Schema markup, URL canónica |
+
+### SEO y Rich Snippets
+
+El proyecto incluye SEO avanzado completamente funcional:
+
+- **Sitemap automático**: `/sitemap.xml` genera XML con todos los productos disponibles
+- **robots.txt configurable**: `/robots.txt` se puede editar desde el admin
+- **Schema markup (JSON-LD)**: Rich snippets para productos (precio, disponibilidad)
+- **OrganizationSchema**: Información de la tienda para Google
+- **Canonical URLs**: Evita contenido duplicado
+- **Open Graph**: Imágenes optimizadas para compartir en redes sociales
+
+### Página de Política de Devoluciones
+
+Ruta pública: `/politicas/devoluciones`
+
+- Contenido editable desde admin (sección Legal)
+- Soporte bilingüe automático según idioma del usuario
+- Se recomienda incluir: plazos, condiciones, proceso, reembolsos
+
 ## 📦 Instalación
 
 ### Requisitos Previos
@@ -862,6 +896,14 @@ npm run dev
 - [x] Documentación del panel de administración
 - [x] Sistema de zonas de envío con Google Places API
 - [x] Configuración de envío desde admin
+- [x] Panel de configuración completo (8 secciones)
+- [x] SEO básico (meta tags, Open Graph, keywords)
+- [x] SEO avanzado (sitemap.xml, robots.txt, canonical URLs)
+- [x] Schema markup JSON-LD (Product, Organization)
+- [x] Redes sociales dinámicas desde admin
+- [x] Banner de anuncios configurable (bilingüe)
+- [x] Branding dinámico (logo y favicon desde admin)
+- [x] Política de devoluciones (página pública bilingüe)
 
 ### Pendiente ⏳
 
@@ -874,9 +916,6 @@ npm run dev
 - [ ] Comparador de productos
 - [ ] Filtros avanzados (rango de precio con slider)
 - [ ] Ordenamiento por popularidad real
-- [ ] Integración con Google Analytics
-- [ ] SEO optimization
-- [ ] Sitemap XML
 - [ ] PWA (Progressive Web App)
 - [ ] Dark mode
 - [ ] Histórico de cambios de stock

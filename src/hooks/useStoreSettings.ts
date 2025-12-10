@@ -24,6 +24,11 @@ const DEFAULT_SETTINGS: StoreSettings = {
   meta_description: 'Collares artesanales hechos a mano con amor y dedicación. Cada pieza es única.',
   meta_keywords: ['macramé', 'collares artesanales', 'joyería hecha a mano'],
   og_image: null,
+  // SEO Bilingüe
+  meta_title_es: 'Son de Nudos by Priscilla - Artesanías Exclusivas',
+  meta_title_en: 'Son de Nudos by Priscilla - Handmade Artisan Jewelry',
+  meta_description_es: 'Collares y accesorios de macramé hechos a mano con amor. Cada pieza es única y especial.',
+  meta_description_en: 'Handmade macramé necklaces and accessories crafted with love. Each piece is unique and special.',
   // Redes Sociales
   instagram_url: 'https://www.instagram.com/son_de_nudos/',
   facebook_url: 'https://www.facebook.com/share/1CwiWSxH5L/?mibextid=wwXIfr',
@@ -163,13 +168,26 @@ export function useSocialLinks() {
 
 /**
  * Hook específico para obtener SEO meta tags
+ * Soporta idiomas bilingües (ES/EN)
+ *
+ * @param lang - Idioma deseado ('es' | 'en')
+ * @returns Configuración SEO según el idioma seleccionado
  */
-export function useSeoMeta() {
+export function useSeoMeta(lang: 'es' | 'en' = 'es') {
   const { settings, loading, error } = useStoreSettings()
 
+  // Lógica de fallback: Si hay campos bilingües, usarlos; si no, usar los antiguos
+  const title = lang === 'en'
+    ? (settings.meta_title_en || settings.meta_title || DEFAULT_SETTINGS.meta_title_en)
+    : (settings.meta_title_es || settings.meta_title || DEFAULT_SETTINGS.meta_title_es)
+
+  const description = lang === 'en'
+    ? (settings.meta_description_en || settings.meta_description || DEFAULT_SETTINGS.meta_description_en)
+    : (settings.meta_description_es || settings.meta_description || DEFAULT_SETTINGS.meta_description_es)
+
   const seoMeta = {
-    title: settings.meta_title || DEFAULT_SETTINGS.meta_title,
-    description: settings.meta_description || DEFAULT_SETTINGS.meta_description,
+    title,
+    description,
     keywords: settings.meta_keywords || DEFAULT_SETTINGS.meta_keywords,
     ogImage: settings.og_image,
     analyticsId: settings.google_analytics_id,

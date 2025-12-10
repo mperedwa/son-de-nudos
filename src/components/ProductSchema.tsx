@@ -1,4 +1,4 @@
-import { useSeoMeta } from '@/hooks/useStoreSettings'
+import { useSeoMeta, useStoreSettings } from '@/hooks/useStoreSettings'
 import type { Product } from '@/types/models'
 
 /**
@@ -22,6 +22,7 @@ interface ProductSchemaProps {
 
 export default function ProductSchema({ product }: ProductSchemaProps) {
   const { seoMeta } = useSeoMeta()
+  const { settings } = useStoreSettings()
 
   // No renderizar si schema está deshabilitado
   if (!seoMeta.schemaEnabled) {
@@ -45,11 +46,11 @@ export default function ProductSchema({ product }: ProductSchemaProps) {
     sku: product.variants[0]?.sku || product.handle,
     brand: {
       '@type': 'Brand',
-      name: 'Son de Nudos',
+      name: settings.store_name || 'Son de Nudos',
     },
     manufacturer: {
       '@type': 'Organization',
-      name: 'Son de Nudos by Priscilla',
+      name: settings.store_name || 'Son de Nudos by Priscilla',
     },
     offers: {
       '@type': 'Offer',
@@ -61,7 +62,7 @@ export default function ProductSchema({ product }: ProductSchemaProps) {
         : 'https://schema.org/OutOfStock',
       seller: {
         '@type': 'Organization',
-        name: 'Son de Nudos',
+        name: settings.store_name || 'Son de Nudos',
       },
       // Si hay precio de comparación, mostrar como precio anterior
       ...(product.compareAtPrice && {
@@ -108,6 +109,7 @@ export default function ProductSchema({ product }: ProductSchemaProps) {
  */
 export function StoreSchema() {
   const { seoMeta } = useSeoMeta()
+  const { settings } = useStoreSettings()
 
   if (!seoMeta.schemaEnabled) {
     return null
@@ -118,8 +120,8 @@ export function StoreSchema() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Store',
-    name: 'Son de Nudos',
-    description: seoMeta.description || 'Artesanías exclusivas hechas a mano con macramé',
+    name: settings.store_name || 'Son de Nudos',
+    description: settings.store_description || seoMeta.description || 'Artesanías exclusivas hechas a mano con macramé',
     url: baseUrl,
     logo: `${baseUrl}/favicon-512.png`,
     image: seoMeta.ogImage || `${baseUrl}/og-image.jpg`,
@@ -148,6 +150,7 @@ export function StoreSchema() {
  */
 export function OrganizationSchema() {
   const { seoMeta } = useSeoMeta()
+  const { settings } = useStoreSettings()
 
   if (!seoMeta.schemaEnabled) {
     return null
@@ -158,16 +161,17 @@ export function OrganizationSchema() {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Son de Nudos',
-    alternateName: 'Son de Nudos by Priscilla',
+    name: settings.store_name || 'Son de Nudos',
+    alternateName: settings.store_name || 'Son de Nudos by Priscilla',
     url: baseUrl,
     logo: `${baseUrl}/favicon-512.png`,
-    description: 'Artesanías exclusivas de macramé hechas a mano',
+    description: settings.store_description || 'Artesanías exclusivas de macramé hechas a mano',
     foundingDate: '2020',
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer service',
-      email: 'hello@sondenudos.com',
+      email: settings.contact_email || 'hello@sondenudos.com',
+      ...(settings.contact_phone && { telephone: settings.contact_phone }),
       availableLanguage: ['Spanish', 'English'],
     },
     sameAs: [

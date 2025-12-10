@@ -30,10 +30,13 @@ type ShippingConfigFormData = z.infer<typeof shippingConfigSchema>
 // VALIDACIÓN CON ZOD - SEO
 // ============================================================================
 const seoSchema = z.object({
-  meta_title: z.string().max(70, 'Máximo 70 caracteres para SEO').optional().nullable(),
-  meta_description: z.string().max(160, 'Máximo 160 caracteres para SEO').optional().nullable(),
+  // Campos bilingües
+  meta_title_es: z.string().max(70, 'Máximo 70 caracteres').optional().nullable(),
+  meta_title_en: z.string().max(70, 'Máximo 70 caracteres').optional().nullable(),
+  meta_description_es: z.string().max(160, 'Máximo 160 caracteres').optional().nullable(),
+  meta_description_en: z.string().max(160, 'Máximo 160 caracteres').optional().nullable(),
+  // Campos comunes
   meta_keywords: z.string().optional().nullable(), // Comma separated
-  og_image: z.string().url('Debe ser una URL válida').optional().nullable().or(z.literal('')),
   google_analytics_id: z.string().optional().nullable(),
 })
 type SeoFormData = z.infer<typeof seoSchema>
@@ -136,6 +139,9 @@ export default function AdminSettings() {
   const [faviconUrl, setFaviconUrl] = useState<string | null>(null)
   const [savingBranding, setSavingBranding] = useState(false)
 
+  // SEO state (imagen Open Graph)
+  const [ogImageUrl, setOgImageUrl] = useState<string | null>(null)
+
   // ============================================================================
   // CARGAR DATOS
   // ============================================================================
@@ -171,12 +177,16 @@ export default function AdminSettings() {
           setStoreSettings(storeResult.data)
           // Reset all forms with data
           seoForm.reset({
-            meta_title: storeResult.data.meta_title,
-            meta_description: storeResult.data.meta_description,
+            meta_title_es: storeResult.data.meta_title_es || storeResult.data.meta_title || '',
+            meta_title_en: storeResult.data.meta_title_en || storeResult.data.meta_title || '',
+            meta_description_es: storeResult.data.meta_description_es || storeResult.data.meta_description || '',
+            meta_description_en: storeResult.data.meta_description_en || storeResult.data.meta_description || '',
             meta_keywords: storeResult.data.meta_keywords?.join(', ') || '',
-            og_image: storeResult.data.og_image || '',
             google_analytics_id: storeResult.data.google_analytics_id || '',
           })
+
+          // Cargar imagen Open Graph
+          setOgImageUrl(storeResult.data.og_image || null)
           socialForm.reset({
             instagram_url: storeResult.data.instagram_url || '',
             facebook_url: storeResult.data.facebook_url || '',
@@ -269,10 +279,14 @@ export default function AdminSettings() {
       const { error } = await supabase
         .from('store_settings')
         .update({
-          meta_title: data.meta_title || null,
-          meta_description: data.meta_description || null,
+          // Campos bilingües
+          meta_title_es: data.meta_title_es || null,
+          meta_title_en: data.meta_title_en || null,
+          meta_description_es: data.meta_description_es || null,
+          meta_description_en: data.meta_description_en || null,
+          // Campos comunes
           meta_keywords: keywords,
-          og_image: data.og_image || null,
+          og_image: ogImageUrl || null,
           google_analytics_id: data.google_analytics_id || null,
         } as unknown as never)
         .eq('id', storeSettings.id)
@@ -283,6 +297,25 @@ export default function AdminSettings() {
       showError(err instanceof Error ? err.message : 'Error al guardar')
     } finally {
       setSaving(false)
+    }
+  }
+
+  // Guardar campo individual de SEO (para imagen OG que se sube directamente)
+  const onSaveSeoField = async (field: 'og_image', value: string | null) => {
+    if (!storeSettings?.id) return
+    setSavingBranding(true) // Reutilizamos este estado
+    try {
+      const { error } = await supabase
+        .from('store_settings')
+        .update({ [field]: value } as unknown as never)
+        .eq('id', storeSettings.id)
+      if (error) throw error
+      invalidateStoreSettingsCache()
+      showSuccess('Imagen Open Graph actualizada')
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Error al guardar')
+    } finally {
+      setSavingBranding(false)
     }
   }
 
@@ -583,40 +616,84 @@ export default function AdminSettings() {
             <form onSubmit={seoForm.handleSubmit(onSaveSeo)} className="space-y-6">
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800 text-sm">
                 <strong>Importante para publicidad:</strong> Estos datos aparecen en Google y cuando
-                compartes tu tienda en redes sociales.
+                compartes tu tienda en redes sociales. Configura meta tags específicos por idioma.
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
+                {/* Título SEO Bilingüe */}
                 <div>
-                  <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
-                    Título de la página (máx. 70 caracteres)
-                  </label>
-                  <input
-                    {...seoForm.register('meta_title')}
-                    placeholder="Son de Nudos by Priscilla - Artesanías Exclusivas"
-                    className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
-                  />
-                  <p className="mt-1 text-xs text-[#6B5844]">
-                    {(seoForm.watch('meta_title') || '').length}/70 caracteres
-                  </p>
+                  <h3 className="font-medium text-[#3C2F2F] mb-3">Título de la página (máx. 70 caracteres)</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-[#6B5844] mb-2">
+                        <span className="mr-2">🇪🇸</span>Español
+                      </label>
+                      <input
+                        {...seoForm.register('meta_title_es')}
+                        placeholder="Son de Nudos by Priscilla - Artesanías Exclusivas"
+                        maxLength={70}
+                        className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
+                      />
+                      <p className="mt-1 text-xs text-[#6B5844]">
+                        {(seoForm.watch('meta_title_es') || '').length}/70 caracteres
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-[#6B5844] mb-2">
+                        <span className="mr-2">🇺🇸</span>English
+                      </label>
+                      <input
+                        {...seoForm.register('meta_title_en')}
+                        placeholder="Son de Nudos by Priscilla - Handmade Artisan Jewelry"
+                        maxLength={70}
+                        className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
+                      />
+                      <p className="mt-1 text-xs text-[#6B5844]">
+                        {(seoForm.watch('meta_title_en') || '').length}/70 caracteres
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
+                {/* Descripción SEO Bilingüe */}
                 <div>
-                  <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
-                    Meta descripción (máx. 160 caracteres)
-                  </label>
-                  <textarea
-                    {...seoForm.register('meta_description')}
-                    rows={3}
-                    placeholder="Collares artesanales hechos a mano con amor..."
-                    className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
-                  />
-                  <p className="mt-1 text-xs text-[#6B5844]">
-                    {(seoForm.watch('meta_description') || '').length}/160 caracteres
-                  </p>
+                  <h3 className="font-medium text-[#3C2F2F] mb-3">Meta descripción (máx. 160 caracteres)</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm text-[#6B5844] mb-2">
+                        <span className="mr-2">🇪🇸</span>Español
+                      </label>
+                      <textarea
+                        {...seoForm.register('meta_description_es')}
+                        rows={3}
+                        placeholder="Collares y accesorios de macramé hechos a mano con amor..."
+                        maxLength={160}
+                        className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
+                      />
+                      <p className="mt-1 text-xs text-[#6B5844]">
+                        {(seoForm.watch('meta_description_es') || '').length}/160 caracteres
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm text-[#6B5844] mb-2">
+                        <span className="mr-2">🇺🇸</span>English
+                      </label>
+                      <textarea
+                        {...seoForm.register('meta_description_en')}
+                        rows={3}
+                        placeholder="Handmade macramé necklaces and accessories crafted with love..."
+                        maxLength={160}
+                        className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
+                      />
+                      <p className="mt-1 text-xs text-[#6B5844]">
+                        {(seoForm.watch('meta_description_en') || '').length}/160 caracteres
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
+                {/* Palabras clave */}
+                <div className="border-t border-[#d6ccc2] pt-6">
                   <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
                     Palabras clave (separadas por coma)
                   </label>
@@ -625,23 +702,40 @@ export default function AdminSettings() {
                     placeholder="macramé, collares artesanales, joyería hecha a mano"
                     className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
                   />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
-                    Imagen Open Graph (URL)
-                  </label>
-                  <input
-                    {...seoForm.register('og_image')}
-                    placeholder="https://ejemplo.com/imagen.jpg"
-                    className="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B6F47] border-[#d6ccc2]"
-                  />
                   <p className="mt-1 text-xs text-[#6B5844]">
-                    Imagen que aparece al compartir en Facebook/Twitter (1200x630px recomendado)
+                    Palabras clave para SEO (opcional)
                   </p>
                 </div>
 
-                <div className="border-t border-[#d6ccc2] pt-4">
+                {/* Imagen Open Graph */}
+                <div className="border-t border-[#d6ccc2] pt-6">
+                  <h3 className="font-medium text-[#3C2F2F] mb-2">Imagen Open Graph</h3>
+                  <p className="text-sm text-[#6B5844] mb-4">
+                    Imagen que aparece al compartir en Facebook/Twitter (1200x630px recomendado)
+                  </p>
+                  <ImageUploader
+                    currentImageUrl={ogImageUrl}
+                    onImageChange={async (url) => {
+                      // Si hay imagen anterior, eliminarla
+                      if (ogImageUrl && url !== ogImageUrl) {
+                        try {
+                          await deleteImage(ogImageUrl)
+                        } catch (e) {
+                          console.warn('No se pudo eliminar imagen OG anterior:', e)
+                        }
+                      }
+                      setOgImageUrl(url)
+                      await onSaveSeoField('og_image', url)
+                    }}
+                    folder="seo"
+                    subfolder="og-images"
+                    label="Imagen Open Graph"
+                    disabled={savingBranding}
+                  />
+                </div>
+
+                {/* Google Analytics */}
+                <div className="border-t border-[#d6ccc2] pt-6">
                   <label className="block text-sm font-medium text-[#3C2F2F] mb-2">
                     Google Analytics ID
                   </label>

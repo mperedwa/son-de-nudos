@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useSeoMeta } from '@/hooks/useStoreSettings'
 
 /**
  * Componente para gestionar meta tags SEO dinámicamente
  * Carga configuración desde store_settings en Supabase
+ *
+ * Soporta contenido bilingüe (ES/EN) detectando el idioma actual
  *
  * Actualiza:
  * - document.title
@@ -17,7 +20,9 @@ import { useSeoMeta } from '@/hooks/useStoreSettings'
  * - Google Analytics (si está configurado)
  */
 export default function SeoHead() {
-  const { seoMeta, loading } = useSeoMeta()
+  const { i18n } = useTranslation()
+  const currentLang = i18n.language === 'en' ? 'en' : 'es' // Detectar idioma actual
+  const { seoMeta, loading } = useSeoMeta(currentLang) // Pasar idioma al hook
   const location = useLocation()
 
   // Actualizar meta tags básicos
