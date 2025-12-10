@@ -7,6 +7,8 @@ import CheckoutPage from './app/routes/checkout'
 import SuccessPage from './app/routes/success'
 import CancelPage from './app/routes/cancel'
 import ReturnPolicyPage from './app/routes/politicas/devoluciones'
+import CollectionsIndexPage from './app/routes/colecciones/index'
+import CollectionDetailPage from './app/routes/colecciones/[handle]'
 
 // Admin imports
 import { ProtectedRoute } from './components/ProtectedRoute'
@@ -44,6 +46,8 @@ function App() {
           <Route path="success" element={<SuccessPage />} />
           <Route path="cancel" element={<CancelPage />} />
           <Route path="politicas/devoluciones" element={<ReturnPolicyPage />} />
+          <Route path="colecciones" element={<CollectionsIndexPage />} />
+          <Route path="colecciones/:handle" element={<CollectionDetailPage />} />
         </Route>
 
         {/* Login del admin (público) */}

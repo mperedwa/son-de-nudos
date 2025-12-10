@@ -33,6 +33,7 @@ export type Product = {
   tags: string[]
   availableForSale: boolean
   createdAt: string
+  collectionId?: string | null
 }
 
 export type CartItem = {
@@ -55,6 +56,7 @@ export type FilterOptions = {
   materials?: string[]
   colors?: string[]
   lengths?: string[]
+  collectionIds?: string[]
 }
 
 /**

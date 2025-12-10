@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { FilterOptions, Product } from '@/types/models'
 import { getPriceRange, getUniqueOptionValues } from '@/lib/filters'
+import { supabase, type Collection } from '@/lib/supabase'
 
 /**
  * Drawer lateral para filtros de colección
@@ -29,13 +30,31 @@ export default function FiltersDrawer({
   onApplyFilters,
   allProducts,
 }: FiltersDrawerProps) {
-  const { t } = useTranslation('filters')
+  const { t, i18n } = useTranslation('filters')
   const [filters, setFilters] = useState<FilterOptions>(initialFilters)
+  const [collections, setCollections] = useState<Collection[]>([])
 
   // Sincronizar con filters externos cuando cambian
   useEffect(() => {
     setFilters(initialFilters)
   }, [initialFilters])
+
+  // Cargar colecciones disponibles
+  useEffect(() => {
+    async function loadCollections() {
+      const { data } = await supabase
+        .from('collections')
+        .select('*')
+        .eq('visible', true)
+        .order('sort_order', { ascending: true })
+        .returns<Collection[]>()
+
+      if (data) {
+        setCollections(data)
+      }
+    }
+    loadCollections()
+  }, [])
 
   // Extraer opciones disponibles de todos los productos
   const priceRange = getPriceRange(allProducts)
@@ -55,7 +74,7 @@ export default function FiltersDrawer({
   }
 
   const toggleArrayFilter = (
-    key: 'materials' | 'colors' | 'lengths',
+    key: 'materials' | 'colors' | 'lengths' | 'collectionIds',
     value: string
   ) => {
     const current = filters[key] || []
@@ -216,6 +235,28 @@ export default function FiltersDrawer({
                       className="w-4 h-4 text-brand-terra focus:ring-brand-terra border-gray-300 rounded"
                     />
                     <span className="text-sm text-brand-dark">{length}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Colecciones */}
+          {collections.length > 0 && (
+            <div>
+              <h3 className="font-medium text-brand-dark mb-3">{t('collection')}</h3>
+              <div className="space-y-2">
+                {collections.map((collection) => (
+                  <label key={collection.id} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={filters.collectionIds?.includes(collection.id) || false}
+                      onChange={() => toggleArrayFilter('collectionIds', collection.id)}
+                      className="w-4 h-4 text-brand-terra focus:ring-brand-terra border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-brand-dark">
+                      {i18n.language === 'en' ? collection.name_en : collection.name_es}
+                    </span>
                   </label>
                 ))}
               </div>

@@ -40,6 +40,14 @@ export interface PublicProduct {
   // Opciones únicas disponibles (para el VariantSelector)
   options: string[]
   createdAt: string
+  // Colección asociada (nullable si el producto no tiene colección)
+  collectionId: string | null
+  collection: {
+    id: string
+    handle: string
+    name_es: string
+    name_en: string
+  } | null
 }
 
 /**
@@ -107,7 +115,7 @@ function extractUniqueOptions(variants: VariantRow[]): string[] {
 /**
  * Transforma un producto de Supabase al formato público
  */
-function transformProduct(product: ProductRow, variants: VariantRow[]): PublicProduct {
+function transformProduct(product: ProductRow, variants: VariantRow[], collection?: any): PublicProduct {
   const transformedVariants: PublicVariant[] = variants.map((v) => ({
     id: v.id,
     title: v.title,
@@ -135,6 +143,13 @@ function transformProduct(product: ProductRow, variants: VariantRow[]): PublicPr
     variants: transformedVariants,
     options: extractUniqueOptions(variants),
     createdAt: product.created_at,
+    collectionId: product.collection_id,
+    collection: collection ? {
+      id: collection.id,
+      handle: collection.handle,
+      name_es: collection.name_es,
+      name_en: collection.name_en,
+    } : null,
   }
 }
 
@@ -193,12 +208,15 @@ export async function getPublicProducts(): Promise<PublicProduct[]> {
  * Retorna null si no existe o no está disponible
  */
 export async function getPublicProductByHandle(handle: string): Promise<PublicProduct | null> {
-  // 1. Obtener el producto
+  // 1. Obtener el producto con su colección (si tiene)
   const { data: product, error: productError } = (await supabase
     .from('products')
-    .select('*')
+    .select(`
+      *,
+      collection:collections(id, handle, name_es, name_en)
+    `)
     .eq('handle', handle)
-    .single()) as { data: ProductRow | null; error: any }
+    .single()) as { data: any | null; error: any }
 
   if (productError) {
     if (productError.code === 'PGRST116') {
@@ -226,7 +244,7 @@ export async function getPublicProductByHandle(handle: string): Promise<PublicPr
   }
 
   // 3. Transformar al formato público
-  return transformProduct(product, variants || [])
+  return transformProduct(product, variants || [], product.collection)
 }
 
 /**

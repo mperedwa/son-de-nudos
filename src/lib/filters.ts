@@ -61,6 +61,13 @@ export function filterProducts(products: Product[], filters: FilterOptions): Pro
     )
   }
 
+  // Filtro: Colecciones
+  if (filters.collectionIds && filters.collectionIds.length > 0) {
+    filtered = filtered.filter((p) =>
+      p.collectionId && filters.collectionIds!.includes(p.collectionId)
+    )
+  }
+
   return filtered
 }
 

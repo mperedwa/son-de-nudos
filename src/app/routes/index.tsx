@@ -40,6 +40,7 @@ function transformToProduct(p: PublicProduct, lang: string): Product {
     tags: p.tags,
     availableForSale: p.availableForSale,
     createdAt: p.createdAt,
+    collectionId: p.collectionId,
   }
 }
 

@@ -41,6 +41,7 @@ function transformToProduct(p: PublicProduct, lang: string): Product {
     tags: p.tags,
     availableForSale: p.availableForSale,
     createdAt: p.createdAt,
+    collectionId: p.collectionId,
   }
 }
 
@@ -60,6 +61,7 @@ export default function ProductPage() {
 
   // Estados
   const [product, setProduct] = useState<Product | null>(null)
+  const [publicProduct, setPublicProduct] = useState<PublicProduct | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({})
@@ -76,9 +78,10 @@ export default function ProductPage() {
       setError(null)
 
       try {
-        const publicProduct = await getPublicProductByHandle(handle)
-        if (publicProduct) {
-          setProduct(transformToProduct(publicProduct, i18n.language))
+        const fetchedProduct = await getPublicProductByHandle(handle)
+        if (fetchedProduct) {
+          setPublicProduct(fetchedProduct)
+          setProduct(transformToProduct(fetchedProduct, i18n.language))
         } else {
           setError(t('messages:productNotFound', 'Producto no encontrado'))
         }
@@ -149,7 +152,12 @@ export default function ProductPage() {
         items={[
           { label: t('navigation:home'), href: '/' },
           { label: t('navigation:shop'), href: '/' },
-          { label: t('navigation:necklaces'), href: '/' },
+          ...(publicProduct?.collection
+            ? [{
+                label: i18n.language === 'en' ? publicProduct.collection.name_en : publicProduct.collection.name_es,
+                href: `/colecciones/${publicProduct.collection.handle}`,
+              }]
+            : []),
           { label: product.title, href: `/product/${handle}` },
         ]}
       />
