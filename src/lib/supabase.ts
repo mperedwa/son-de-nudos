@@ -146,9 +146,15 @@ export type Database = {
       store_settings: {
         Row: {
           id: string
-          // SEO Básico
+          // SEO Básico (LEGACY - mantener por backward compatibility)
           meta_title: string | null
           meta_description: string | null
+          // SEO Bilingüe (NUEVO)
+          meta_title_es: string | null
+          meta_title_en: string | null
+          meta_description_es: string | null
+          meta_description_en: string | null
+          // SEO Común
           meta_keywords: string[] | null
           og_image: string | null
           // Redes Sociales
@@ -167,13 +173,13 @@ export type Database = {
           announcement_messages: AnnouncementMessage[] | null
           // Analytics
           google_analytics_id: string | null
-          // Branding (NUEVO)
+          // Branding
           logo_url: string | null
           favicon_url: string | null
-          // Legal (NUEVO)
+          // Legal
           return_policy_es: string | null
           return_policy_en: string | null
-          // SEO Avanzado (NUEVO)
+          // SEO Avanzado
           robots_txt: string | null
           sitemap_enabled: boolean | null
           schema_enabled: boolean | null

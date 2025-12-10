@@ -31,7 +31,7 @@ export interface ValidationResult {
   error?: string
 }
 
-export type StorageFolder = 'products' | 'variants' | 'branding'
+export type StorageFolder = 'products' | 'variants' | 'branding' | 'seo' | 'collections'
 
 // ============================================================================
 // VALIDATION
