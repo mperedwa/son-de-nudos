@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { supabase } from '@/lib/supabase'
+import { supabase, type Collection } from '@/lib/supabase'
 import type { Database } from '@/lib/supabase'
 import { MultiImageUploader } from '@/components/admin/MultiImageUploader'
 import { ImageUploader } from '@/components/admin/ImageUploader'
@@ -33,6 +33,7 @@ const productSchema = z.object({
   tags: z.array(z.string()),
   images: z.array(z.string().url('Debe ser una URL válida')),
   available_for_sale: z.boolean(),
+  collection_id: z.string().uuid().nullable(),
 })
 
 type ProductFormData = z.infer<typeof productSchema>
@@ -800,6 +801,23 @@ interface ProductFormModalProps {
 function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [collections, setCollections] = useState<Collection[]>([])
+
+  // Cargar colecciones al montar
+  useEffect(() => {
+    async function loadCollections() {
+      const { data, error } = await supabase
+        .from('collections')
+        .select('*')
+        .order('sort_order', { ascending: true })
+        .returns<Collection[]>()
+
+      if (!error && data) {
+        setCollections(data)
+      }
+    }
+    loadCollections()
+  }, [])
 
   const {
     register,
@@ -822,6 +840,7 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
             tags: product.tags,
             images: product.images,
             available_for_sale: product.available_for_sale,
+            collection_id: product.collection_id,
           }
         : {
             title: product.title,
@@ -834,6 +853,7 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
             tags: product.tags,
             images: product.images,
             available_for_sale: product.available_for_sale,
+            collection_id: product.collection_id,
           }
       : {
           title: '',
@@ -846,6 +866,7 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
           tags: [],
           images: [],
           available_for_sale: true,
+          collection_id: null,
         },
   })
 
@@ -961,6 +982,31 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
             />
             {errors.handle && (
               <p className="mt-1 text-sm text-red-600">{errors.handle.message}</p>
+            )}
+          </div>
+
+          {/* Collection Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-[#6B5844] mb-2">
+              Colección (opcional)
+            </label>
+            <select
+              {...register('collection_id')}
+              className={`
+                w-full px-4 py-2 rounded-lg border-2
+                focus:outline-none focus:ring-2 focus:ring-[#D4A574] focus:border-transparent
+                ${errors.collection_id ? 'border-red-300 bg-red-50' : 'border-[#D4A574]/30'}
+              `}
+            >
+              <option value="">Sin colección</option>
+              {collections.map((collection) => (
+                <option key={collection.id} value={collection.id}>
+                  {collection.name_es} / {collection.name_en}
+                </option>
+              ))}
+            </select>
+            {errors.collection_id && (
+              <p className="mt-1 text-sm text-red-600">{errors.collection_id.message}</p>
             )}
           </div>
 
