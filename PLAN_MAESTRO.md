@@ -1,5 +1,7 @@
 # Plan Maestro - Son de Nudos by Priscilla
 
+> **Actualización 2 de septiembre de 2026:** este documento conserva el historial original del proyecto. Para la recuperación, seguridad y lanzamiento comercial vigente, usar [PLAN_EJECUCION_LANZAMIENTO.md](./PLAN_EJECUCION_LANZAMIENTO.md). Las marcas de “completado” incluidas aquí describen la implementación de 2025 y no sustituyen la validación actual de producción.
+
 **Fecha de inicio**: 14 de Noviembre, 2025
 **Proyecto**: Ecommerce de collares artesanales
 **Stack**: Vite + React + TypeScript + TailwindCSS + Zustand + React Router
