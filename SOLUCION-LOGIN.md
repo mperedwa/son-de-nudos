@@ -1,5 +1,7 @@
 # Solución al Problema de Login del Admin Panel
 
+> **Documento histórico.** La instancia Supabase usada durante este diagnóstico ya no está disponible. No reutilices credenciales, IDs ni comandos de esta guía en una instancia nueva.
+
 ## Diagnóstico Completo
 
 Después de exhaustivas pruebas, se confirmó que:
@@ -40,8 +42,8 @@ El error "502 Bad Gateway" + CORS es causado por extensiones bloqueando las peti
 1. Abre Chrome en modo incógnito: `Cmd+Shift+N` (Mac) o `Ctrl+Shift+N` (Windows)
 2. Ve a: http://localhost:5174/admin/login
 3. Ingresa:
-   - Email: `admin@sondenudos.com`
-   - Password: `[REDACTED]`
+   - Email del administrador vigente
+   - Contraseña almacenada en el gestor de contraseñas
 4. ✅ Debería funcionar perfectamente
 
 ### Opción 2: Deshabilitar Extensiones Temporalmente
@@ -76,34 +78,12 @@ Después de hacer login exitosamente, deberías ver:
 
 ## Credenciales del Admin
 
-```
-Email:    admin@sondenudos.com
-Password: [REDACTED]
-Role:     superadmin
-User ID:  97c9a86c-6bc8-4e80-9587-fc5e13806096
-```
+No hay credenciales por defecto. Deben crearse para la instancia vigente con `npm run create:admin` y conservarse fuera del repositorio.
 
 ## Para Cambiar la Contraseña
 
-Si quieres cambiar la contraseña del admin:
-
-```bash
-# Crear script temporal
-npx tsx --env-file=.env -e "
-import { createClient } from '@supabase/supabase-js';
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-supabase.auth.admin.updateUserById(
-  '97c9a86c-6bc8-4e80-9587-fc5e13806096',
-  { password: 'nueva_contraseña_aqui' }
-).then(() => console.log('✅ Contraseña actualizada'));
-"
-```
+Si quieres cambiar la contraseña, usa el formulario `/admin/profile` o el dashboard de autenticación de la instancia vigente. No pases contraseñas mediante argumentos de shell ni scripts temporales.
 
 ## Conclusión
 
-El sistema de autenticación está funcionando correctamente. El problema era causado por extensiones del navegador interfiriendo con las peticiones HTTP.
-
-**ESTADO FINAL: ✅ TODO FUNCIONAL**
+En noviembre de 2025 el problema observado se atribuyó a extensiones del navegador. Esta conclusión no representa el estado actual; la recuperación de Supabase debe completarse y validarse nuevamente.

@@ -85,7 +85,7 @@ async function applyRLSPolicies() {
     // 4. Verify policies were created
     console.log('4️⃣  Verificando políticas...')
 
-    const { data: verifyData, error: verifyError } = await supabase
+    const { data: _verifyData, error: verifyError } = await supabase
       .from('admins')
       .select('id')
       .limit(1)
@@ -101,9 +101,7 @@ async function applyRLSPolicies() {
     console.log('='.repeat(70))
     console.log('\n💡 Ahora puedes intentar hacer login en:')
     console.log('   http://localhost:5174/admin/login')
-    console.log('\n📧 Credenciales:')
-    console.log('   Email: admin@sondenudos.com')
-    console.log('   Password: [REDACTED]')
+    console.log('\n🔐 Usa las credenciales administradas fuera del repositorio')
     console.log('\n' + '='.repeat(70) + '\n')
   } catch (error) {
     console.error('\n❌ Error aplicando políticas:', error)

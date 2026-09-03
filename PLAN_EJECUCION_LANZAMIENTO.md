@@ -1,9 +1,9 @@
 # Plan de ejecución para el lanzamiento de Son de Nudos
 
-- **Versión:** 1.0
+- **Versión:** 1.1
 - **Fecha base:** 2 de septiembre de 2026
 - **Estado:** listo para ejecución
-- **Estrategia recomendada:** catálogo propio en `sondenudos.com` con compra en Etsy para el MVP; Stripe propio queda como evolución posterior.
+- **Estrategia aprobada:** catálogo y checkout propio en `sondenudos.com`, con Stripe Checkout como procesador de pagos.
 
 ## 1. Objetivo
 
@@ -33,21 +33,21 @@ La revisión de producción y del repositorio encontró la siguiente línea base
 La primera versión comercial utilizará:
 
 1. Son de Nudos como sitio de marca, catálogo, colecciones y descubrimiento.
-2. Etsy como checkout y sistema de órdenes.
+2. Stripe Checkout como procesador de pagos y Supabase como registro operativo de órdenes.
 3. Supabase como fuente del catálogo y del panel administrativo.
 4. Vercel como hosting y despliegue continuo.
 
-Este camino reduce el riesgo y permite vender antes. La integración Stripe actual no se habilitará parcialmente: permanecerá fuera de producción hasta que exista un backend seguro y pruebas de compra reales.
+El checkout existente se conservará como base visual, pero no se habilitará parcialmente. La sesión de Stripe, precios, variantes, descuentos y envío se validarán en el servidor antes de cobrar. El webhook será la fuente de verdad para confirmar la orden pagada.
 
 ### Decisiones que requieren al propietario
 
 Antes de cerrar la Fase 0 hay que confirmar:
 
 - Si se conserva el proyecto Supabase anterior o se crea uno nuevo.
-- Acceso vigente a Vercel, registrador del dominio, Supabase, Etsy, Instagram y MailerLite.
-- Ciudad/estado real de operación y territorios de envío.
-- Política de fabricación: inventario disponible, piezas únicas o fabricación bajo pedido.
-- Idioma principal de entrada: español o inglés.
+- Acceso vigente a Vercel, registrador del dominio, Supabase, Stripe, Instagram y MailerLite.
+- Códigos postales exactos de entrega local y tarifa final para los 48 estados contiguos y Washington, D. C.
+- Cualquier excepción al plazo estándar aprobado de 1–3 días laborables para piezas bajo pedido.
+- Excepciones de contenido que no puedan publicarse en ambos idiomas.
 - Fecha objetivo de lanzamiento.
 
 Las llaves y contraseñas se introducen directamente en los paneles de los proveedores. Nunca se escriben en el repositorio, tickets, commits ni documentación.
@@ -92,8 +92,8 @@ Cada cierre debe registrar:
 
 #### Alcance
 
-- Confirmar el camino Etsy para el MVP o documentar formalmente una decisión diferente.
-- Inventariar accesos a Vercel, dominio, Supabase, Etsy, Instagram y MailerLite.
+- Registrar Stripe como camino de compra aprobado para el MVP.
+- Inventariar accesos a Vercel, dominio, Supabase, Stripe, Instagram y MailerLite.
 - Rotar contraseñas y llaves potencialmente expuestas.
 - Retirar credenciales de README, guías, scripts y datos de ejemplo.
 - Evaluar si es necesario limpiar las credenciales del historial Git.
@@ -111,7 +111,7 @@ Cada cierre debe registrar:
 #### Validación
 
 ```bash
-git grep -n -E '[REDACTED]|service_role|sk_live|sk_test'
+npm run security:scan
 npm run build
 ```
 
@@ -119,7 +119,8 @@ La búsqueda no debe encontrar credenciales reales. Los falsos positivos documen
 
 #### Puerta de salida
 
-- Todos los servicios tienen un propietario y acceso confirmado.
+- GitHub, Vercel, dominio, Supabase y Stripe tienen propietario y acceso confirmado.
+- Cada servicio opcional no verificado queda deshabilitado o asignado explícitamente a una fase posterior.
 - No queda una credencial operativa publicada.
 - El camino de compra del MVP está decidido.
 - Existe una decisión explícita de recuperar o reemplazar Supabase.
@@ -140,11 +141,13 @@ La búsqueda no debe encontrar credenciales reales. Los falsos positivos documen
 - Crear una función o política común que valide la tabla de administradores activos.
 - Reemplazar políticas que permiten escritura a cualquier usuario autenticado.
 - Restringir productos públicos a los publicados y disponibles.
+- Modelar por producto o variante `ready_to_ship` y `made_to_order`, con stock y plazo de preparación explícitos; usar 1–3 días laborables como plazo estándar bajo pedido.
 - Validar cupones mediante función segura o endpoint, sin exponer la tabla completa.
 - Limitar la configuración pública a campos que realmente necesita la tienda.
 - Corregir las políticas del bucket de imágenes.
 - Configurar variables separadas para desarrollo, preview y producción.
-- Incorporar una comprobación de salud que no exponga secretos.
+- Incorporar una comprobación de salud diaria, autenticada y sin secretos expuestos.
+- Verificar en Vercel que el cron `/api/keepalive` obtiene `200` contra el proyecto nuevo y revisar sus logs durante al menos una ejecución programada.
 
 #### Entregables
 
@@ -167,46 +170,57 @@ La búsqueda no debe encontrar credenciales reales. Los falsos positivos documen
 - No hay errores de conexión en portada, tienda ni panel.
 - Las pruebas negativas de RLS fallan con acceso denegado.
 - La URL de Supabase y sus llaves corresponden al ambiente correcto.
+- El cron diario genera actividad real de base de datos y falla de forma visible si pierde acceso.
 - `npm run build` y la nueva prueba de autorización pasan.
 
 ---
 
-### Fase 2 — Camino de compra vendible mediante Etsy
+### Fase 2 — Checkout Stripe validado por servidor
 
-- **Duración estimada:** 2–3 días
+- **Duración estimada:** 4–6 días
 - **Depende de:** Fase 1
-- **Rama:** `codex/fase-2-checkout-etsy`
-- **Commit de cierre:** `feat(commerce): connect product purchases to verified Etsy listings`
+- **Rama:** `codex/fase-2-checkout-stripe`
+- **Commit de cierre:** `feat(payments): add server-validated Stripe checkout`
 
 #### Alcance
 
-- Añadir a cada producto un enlace verificado a su listing de Etsy.
-- Mostrar “Comprar en Etsy” solamente cuando el producto esté disponible y tenga enlace válido.
-- Preservar idioma, producto y colección en la experiencia previa al clic.
-- Registrar eventos de producto visto, intención de compra y salida a Etsy.
-- Retirar o bloquear el checkout simulado, `/success` engañoso y cualquier CTA que aparente cobrar dentro del sitio.
-- Explicar claramente que el pago, envío y orden se completan en Etsy.
-- Definir comportamiento para piezas agotadas o fabricadas bajo pedido.
+- Reemplazar la creación de sesiones en el navegador por `POST /api/checkout/create-session` en Vercel.
+- Enviar al servidor solamente IDs de variante, cantidades, código de cupón y método/destino de entrega.
+- Consultar en Supabase precios, stock, cupones y configuración de envío; nunca confiar en importes enviados por el navegador.
+- Crear la Checkout Session mediante la clave secreta exclusiva del servidor y redirigir a la página alojada por Stripe.
+- Eliminar el recogido en domicilio y ofrecer entrega local gratuita solo en códigos postales aprobados de Fort Myers, Naples, Cape Coral y Lehigh Acres.
+- No publicar la dirección residencial; coordinar día y horario de entrega después de la compra.
+- Limitar el lanzamiento a los 48 estados contiguos y Washington, D. C.; Canadá, México, Alaska, Hawái y otros destinos permanecerán deshabilitados.
+- Hacer que Stripe recopile o verifique la dirección definitiva usada para calcular el envío.
+- Convertir el webhook en un proceso idempotente que valide `payment_status`, persista la orden y descuente inventario de forma segura.
+- Manejar `checkout.session.completed`, pagos asíncronos exitosos/fallidos y eventos duplicados.
+- Incluir `{CHECKOUT_SESSION_ID}` en la URL de éxito y verificar la sesión antes de mostrar una confirmación.
+- Retirar completamente el modo mock y cualquier confirmación falsa de pago de producción.
 
 #### Entregables
 
-- Flujo colección → producto → Etsy funcional en móvil y escritorio.
-- Catálogo sin caminos de pago simulados.
-- Eventos de conversión documentados.
+- Flujo catálogo → carrito → Stripe → confirmación verificada, funcional en móvil y escritorio.
+- Endpoint de creación de sesión protegido y validado.
+- Webhook firmado, idempotente y conectado a órdenes e inventario.
+- Matriz de precios, descuentos, entrega local, envío y stock probada en modo test.
 
 #### Pruebas mínimas
 
-- Todos los enlaces apuntan al listing correcto y usan HTTPS.
-- Un producto agotado no ofrece compra.
-- Un producto sin listing muestra una alternativa clara de contacto o aviso.
-- No existe una forma pública de llegar a una confirmación falsa de pago.
-- Los eventos no contienen información personal.
+- Alterar precio, descuento, envío o stock en el navegador no altera el importe cobrado.
+- Una variante agotada no puede iniciar el cobro salvo que esté habilitada explícitamente como `made_to_order` y muestre el plazo estándar de 1–3 días laborables o una excepción específica.
+- Una dirección fuera de los 48 estados contiguos y Washington, D. C. no puede completar el checkout.
+- La entrega local gratuita solo aparece para códigos postales aprobados y el navegador no puede forzarla.
+- El envío por zona produce el total correcto en Stripe y en Supabase.
+- Un webhook repetido no duplica órdenes ni descuenta inventario dos veces.
+- La página de éxito no confirma una compra impagada o inexistente.
+- Los errores y eventos analíticos no contienen información personal ni secretos.
 
 #### Puerta de salida
 
-- Se prueba manualmente una compra o checkout de Etsy hasta el último paso seguro.
-- El propietario confirma que precios, stock y variantes coinciden con Etsy.
-- No se muestra ninguna promesa de pago, envío o recogido no respaldada.
+- Pasan las pruebas automatizadas del cálculo y las pruebas de integración del endpoint/webhook.
+- Se completa una compra de extremo a extremo en Stripe test mode.
+- Se completa una compra real controlada de importe mínimo antes de habilitar el CTA público.
+- Precios, stock, impuestos, entrega local, envío, reembolsos y recibos reflejan la operación aprobada.
 
 ---
 
@@ -221,12 +235,13 @@ La búsqueda no debe encontrar credenciales reales. Los falsos positivos documen
 
 - Separar categorías de producto de colecciones narrativas o estacionales.
 - Corregir filtros y navegación de collares, bolsos y vestibles.
-- Completar por producto: nombre ES/EN, SKU, precio, stock, materiales, dimensiones, cuidados, variantes, tiempo de preparación y enlace Etsy.
+- Completar por producto: nombre ES/EN, SKU, precio, stock, modo de preparación, materiales, dimensiones, cuidados, variantes y tiempo de preparación.
 - Publicar fotografías reales: portada, detalle, escala, reverso/interior, variante y empaque.
 - Convertir imágenes a WebP/AVIF con tamaños responsivos.
 - Sustituir Unsplash, imágenes rotas y placeholders.
 - Publicar una historia real de Priscilla, su proceso y la relación entre música y macramé.
 - Revisar traducciones y evitar mezclar inglés y español en la misma experiencia.
+- Detectar ES/EN desde el navegador, persistir la elección manual y usar inglés como respaldo.
 
 #### Entregables
 
@@ -238,7 +253,7 @@ La búsqueda no debe encontrar credenciales reales. Los falsos positivos documen
 #### Validación
 
 - Ninguna imagen devuelve 404.
-- No se publica un producto sin foto principal, precio, disponibilidad y enlace de compra.
+- No se publica un producto sin foto principal, precio, disponibilidad y checkout operativo.
 - Los filtros solo muestran categorías relevantes.
 - Todas las imágenes informativas tienen texto alternativo útil.
 - La portada no contiene fotografías genéricas presentadas como obra o retrato de la artista.
@@ -246,7 +261,7 @@ La búsqueda no debe encontrar credenciales reales. Los falsos positivos documen
 #### Puerta de salida
 
 - Priscilla aprueba fotografías, precios, nombres y descripciones.
-- Catálogo web y Etsy coinciden.
+- Catálogo, Stripe y datos administrativos coinciden en precios, moneda y disponibilidad.
 - La identidad se reconoce como “boho editorial contemporáneo / lujo artesanal orgánico”.
 
 ---
@@ -262,7 +277,7 @@ La búsqueda no debe encontrar credenciales reales. Los falsos positivos documen
 
 - Resolver errores y advertencias relevantes de ESLint.
 - Añadir pruebas unitarias para precios, filtros, carrito y permisos.
-- Añadir pruebas de integración del catálogo y navegación a Etsy.
+- Añadir pruebas de integración del catálogo, carrito y navegación a Stripe.
 - Añadir un recorrido E2E del visitante y otro del administrador.
 - Sanitizar o eliminar la inserción directa de HTML de producto.
 - Añadir una página 404 real y estados de carga, vacío y error.
@@ -314,6 +329,7 @@ El script de pruebas deberá incorporarse al proyecto durante esta fase.
 - Añadir productos, colecciones e imágenes al sitemap.
 - Generar title, description, canonical, Open Graph y JSON-LD específicos por ruta.
 - Sincronizar `<html lang>` con el idioma activo y añadir `hreflang` ES/EN.
+- Publicar metadatos equivalentes en ambos idiomas y evitar que el contenido bilingüe dependa únicamente de JavaScript para su indexación.
 - Prerenderizar o renderizar en servidor las páginas que deben indexarse.
 - Evitar soft 404 y excluir administración, checkout y estados privados del índice.
 - Publicar privacidad, cookies, términos, envíos, devoluciones y cuidados.
@@ -333,7 +349,7 @@ El script de pruebas deberá incorporarse al proyecto durante esta fase.
 
 - No hay metadatos genéricos en productos o colecciones.
 - No existen URLs indexables que muestren pantalla vacía.
-- Se dispone de una línea base de visitas, vistas de producto y clics hacia Etsy.
+- Se dispone de una línea base de visitas, vistas de producto, inicio de checkout y compras verificadas.
 
 ---
 
@@ -348,7 +364,7 @@ El script de pruebas deberá incorporarse al proyecto durante esta fase.
 
 - Crear un despliegue preview desde el commit candidato.
 - Ejecutar la matriz de pruebas completa.
-- Verificar catálogo, enlaces Etsy, formularios, newsletter, Instagram y panel.
+- Verificar catálogo, carrito, Stripe, webhook, formularios, newsletter, Instagram y panel.
 - Probar redirecciones de dominio, HTTPS, 404, sitemap y robots.
 - Confirmar backup y procedimiento de rollback.
 - Corregir únicamente defectos de lanzamiento; cualquier mejora nueva vuelve al backlog.
@@ -361,7 +377,7 @@ El script de pruebas deberá incorporarse al proyecto durante esta fase.
 - [ ] Supabase saludable y con respaldo.
 - [ ] Credenciales rotadas y fuera del repositorio.
 - [ ] Catálogo aprobado y sin placeholders.
-- [ ] Precios y stock coinciden con Etsy.
+- [ ] Precios, stock, envío y totales coinciden entre sitio, Stripe y Supabase.
 - [ ] No existe checkout simulado accesible.
 - [ ] Build, lint y pruebas pasan.
 - [ ] Accesibilidad y rendimiento cumplen la puerta acordada.
@@ -385,33 +401,22 @@ Si aparece un fallo que impida navegar, comprar o administrar:
 - No hay errores críticos durante las primeras 24 horas.
 - Se completa la revisión de siete días y los problemas no críticos pasan al backlog.
 
-## 6. Evolución posterior — Checkout Stripe propio
+## 6. Decisión técnica de Stripe
 
-Stripe se planifica después de estabilizar el MVP. No se habilita reutilizando el flujo cliente actual.
+Se usará Stripe Checkout alojado por Stripe para el MVP. La página propia seguirá recopilando la información mínima necesaria para presentar opciones, pero el servidor recalculará todos los importes y Stripe recogerá o verificará la dirección definitiva. La entrega local gratuita se decidirá en el servidor mediante una lista de códigos postales aprobados; no habrá recogido en la residencia ni se publicará su dirección. La clave secreta permanecerá únicamente en variables cifradas de Vercel.
 
-- **Rama sugerida:** `codex/fase-7-stripe-servidor`
-- **Commit sugerido:** `feat(payments): add server-validated Stripe checkout`
-
-Requisitos mínimos:
-
-- Endpoint servidor para crear Checkout Sessions.
-- Precios, variantes, descuentos y envío consultados y calculados en servidor.
-- Webhook verificado e idempotente.
-- Actualización atómica de orden, inventario y uso del cupón.
-- Validación de `session_id` antes de mostrar una compra exitosa.
-- Manejo de pago fallido, cancelación, reembolso y eventos asíncronos.
-- Pruebas en Stripe test mode y una compra real controlada antes de habilitarlo.
+El código existente de `src/server/stripe.ts` es una referencia insegura porque se importa desde el cliente y acepta precios, descuentos y envío calculados por el navegador. Se sustituirá, no se activará. La confirmación depende del webhook y del estado real de la Checkout Session, nunca de una simple redirección del navegador.
 
 ## 7. Orden de trabajo y calendario
 
 | Semana | Trabajo principal | Resultado |
 |---|---|---|
 | 1 | Fases 0 y 1 | Infraestructura recuperada y acceso seguro |
-| 2 | Fases 2 y 3 | Catálogo real con compra en Etsy |
+| 2 | Fases 2 y 3 | Checkout Stripe seguro y catálogo real |
 | 3 | Fases 4 y 5 | Calidad, rendimiento, accesibilidad y SEO |
 | Cierre | Fase 6 | Publicación y observación |
 
-Duración estimada del MVP: **8–14 días laborables**, condicionada por la entrega y aprobación de fotografías y fichas de producto.
+Duración estimada del MVP: **10–17 días laborables**, condicionada por la entrega y aprobación de fotografías, fichas de producto y reglas comerciales.
 
 ## 8. Registro de ejecución
 
@@ -419,9 +424,9 @@ Esta tabla se actualiza al cerrar cada fase:
 
 | Fase | Estado | Rama | Commit | Evidencia / notas |
 |---|---|---|---|---|
-| 0 | Pendiente | `codex/fase-0-linea-base` | — | — |
+| 0 | Completada | `codex/fase-0-linea-base` | `chore(launch): establish secure production baseline` | Historial redactado, infraestructura crítica verificada y operación base aprobada |
 | 1 | Pendiente | `codex/fase-1-supabase-seguro` | — | — |
-| 2 | Pendiente | `codex/fase-2-checkout-etsy` | — | — |
+| 2 | Pendiente | `codex/fase-2-checkout-stripe` | — | — |
 | 3 | Pendiente | `codex/fase-3-catalogo-real` | — | — |
 | 4 | Pendiente | `codex/fase-4-calidad-web` | — | — |
 | 5 | Pendiente | `codex/fase-5-seo-legal` | — | — |
@@ -431,7 +436,7 @@ Esta tabla se actualiza al cerrar cada fase:
 
 Son de Nudos se considera listo para anunciar públicamente cuando:
 
-- Una persona puede descubrir una colección, entender una pieza y llegar al listing correcto para comprarla.
+- Una persona puede descubrir una colección, entender una pieza, pagar mediante Stripe y recibir una confirmación verificable.
 - El sitio no muestra datos simulados como si fueran transacciones reales.
 - Visitantes y usuarios no administradores no pueden modificar datos.
 - Fotografías, precios, disponibilidad, descripción y políticas representan el negocio real.

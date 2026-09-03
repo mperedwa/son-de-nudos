@@ -2,8 +2,13 @@
 
 import { Client } from 'pg'
 
-// Construir connection string desde .env
-const connectionString = `postgresql://postgres.mxpmbzdenlelrlcwmjmg:[REDACTED]@aws-0-us-east-1.pooler.supabase.com:6543/postgres`
+const connectionString = process.env.SUPABASE_DB_URL
+
+if (!connectionString) {
+  console.error('❌ Falta SUPABASE_DB_URL en el entorno local')
+  console.error('   Usa una URL de conexión obtenida desde Supabase y no la guardes en Git')
+  process.exit(1)
+}
 
 async function applyRLSPolicies() {
   const client = new Client({ connectionString })
@@ -86,9 +91,7 @@ async function applyRLSPolicies() {
     console.log('='.repeat(70))
     console.log('\n💡 Ahora puedes intentar hacer login en:')
     console.log('   http://localhost:5174/admin/login')
-    console.log('\n📧 Credenciales:')
-    console.log('   Email: admin@sondenudos.com')
-    console.log('   Password: [REDACTED]')
+    console.log('\n🔐 Usa las credenciales administradas fuera del repositorio')
     console.log('\n' + '='.repeat(70) + '\n')
   } catch (error) {
     console.error('\n❌ Error:', error)

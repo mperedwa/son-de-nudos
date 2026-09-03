@@ -4,9 +4,10 @@ import { createClient } from '@supabase/supabase-js'
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+const ADMIN_ID = process.env.ADMIN_USER_ID
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  console.error('❌ Faltan variables de entorno')
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !ADMIN_ID) {
+  console.error('❌ Faltan VITE_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY o ADMIN_USER_ID')
   process.exit(1)
 }
 
@@ -22,7 +23,7 @@ async function verifyRLS() {
 
   try {
     // 1. Verificar si RLS está habilitado en la tabla
-    const { data: rls, error: rlsError } = await supabase
+    const { data: _rls, error: rlsError } = await supabase
       .from('admins')
       .select('*')
       .limit(0)
@@ -35,8 +36,6 @@ async function verifyRLS() {
     }
 
     // 2. Intentar leer con el admin user ID real
-    const ADMIN_ID = '97c9a86c-6bc8-4e80-9587-fc5e13806096'
-
     console.log('\n2️⃣  Intentando leer registro de admin con SERVICE_ROLE_KEY...')
     const { data: adminData, error: adminError } = await supabase
       .from('admins')
@@ -80,9 +79,7 @@ async function verifyRLS() {
     console.log('\n💡 SIGUIENTE PASO:')
     console.log('   Intenta hacer login nuevamente en:')
     console.log('   http://localhost:5174/admin/login')
-    console.log('\n📧 Credenciales:')
-    console.log('   Email: admin@sondenudos.com')
-    console.log('   Password: [REDACTED]')
+    console.log('\n🔐 Usa las credenciales administradas fuera del repositorio')
     console.log('\n🔍 Si sigue fallando, revisa la consola del navegador para ver el error exacto')
     console.log('\n' + '='.repeat(70) + '\n')
   } catch (error) {

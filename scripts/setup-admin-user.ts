@@ -9,7 +9,8 @@
  * Solo debe ejecutarse una vez en setup inicial.
  *
  * Uso:
- *   npm run setup:admin
+ *   Configura ADMIN_EMAIL, ADMIN_PASSWORD y opcionalmente ADMIN_NAME en .env.
+ *   Luego ejecuta: npm run setup:admin
  */
 
 import { createClient } from '@supabase/supabase-js'
@@ -20,11 +21,15 @@ import { createClient } from '@supabase/supabase-js'
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !ADMIN_EMAIL || !ADMIN_PASSWORD) {
   console.error('❌ Error: Variables de entorno faltantes')
   console.error('   VITE_SUPABASE_URL:', SUPABASE_URL ? '✓' : '✗')
   console.error('   SUPABASE_SERVICE_ROLE_KEY:', SUPABASE_SERVICE_KEY ? '✓' : '✗')
+  console.error('   ADMIN_EMAIL:', ADMIN_EMAIL ? '✓' : '✗')
+  console.error('   ADMIN_PASSWORD:', ADMIN_PASSWORD ? '✓' : '✗')
   console.error('\n💡 Asegúrate de tener un archivo .env con estas variables')
   process.exit(1)
 }
@@ -42,9 +47,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
 // ============================================================================
 
 const ADMIN_USER = {
-  email: 'admin@sondenudos.com',
-  password: '[REDACTED]',
-  name: 'Admin Principal',
+  email: ADMIN_EMAIL,
+  password: ADMIN_PASSWORD,
+  name: process.env.ADMIN_NAME || 'Admin Principal',
   role: 'superadmin' as const,
 }
 
@@ -128,12 +133,11 @@ async function setupAdminUser() {
     console.log('\n' + '='.repeat(70))
     console.log('✅ SETUP COMPLETADO EXITOSAMENTE')
     console.log('='.repeat(70))
-    console.log('\n📋 Credenciales del usuario admin:')
+    console.log('\n📋 Usuario admin creado:')
     console.log(`   Email:    ${ADMIN_USER.email}`)
-    console.log(`   Password: ${ADMIN_USER.password}`)
     console.log(`   Role:     ${ADMIN_USER.role}`)
     console.log(`   User ID:  ${userId}`)
-    console.log('\n💡 Puedes usar estas credenciales para acceder a:')
+    console.log('\n💡 Usa la contraseña guardada en tu gestor para acceder a:')
     console.log('   http://localhost:5174/admin/login')
     console.log('\n' + '='.repeat(70) + '\n')
   } catch (error) {

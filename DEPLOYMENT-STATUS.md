@@ -1,5 +1,7 @@
 # Estado del Deployment - Panel de Administración
 
+> **Documento histórico (noviembre de 2025).** El proyecto Supabase descrito aquí ya no está disponible en la cuenta actualmente autenticada. Consulta [PLAN_EJECUCION_LANZAMIENTO.md](PLAN_EJECUCION_LANZAMIENTO.md) y `docs/FASE-0-LINEA-BASE.md` para el estado vigente.
+
 ## ✅ DEPLOYMENT EXITOSO
 
 **Fecha:** 16 de Noviembre de 2025
@@ -12,14 +14,9 @@
 - **Panel de Admin:** https://www.sondenudos.com/admin/login
 - **Dashboard:** https://www.sondenudos.com/admin/dashboard
 
-## 🔐 Credenciales de Acceso
+## 🔐 Acceso administrativo
 
-```
-Email:    admin@sondenudos.com
-Password: [REDACTED]
-Role:     superadmin
-User ID:  97c9a86c-6bc8-4e80-9587-fc5e13806096
-```
+Las credenciales históricas fueron retiradas del documento. La nueva instancia no tendrá credenciales por defecto; el propietario debe crear el administrador y guardar el acceso en un gestor de contraseñas.
 
 ## ✅ Variables de Entorno Configuradas
 
@@ -140,7 +137,7 @@ vercel logs
 ```
 
 4. **Verificar RLS en Supabase:**
-   - Ve a: https://supabase.com/dashboard/project/mxpmbzdenlelrlcwmjmg/editor
+   - Abre el proyecto vigente desde el dashboard de Supabase.
    - Ejecuta: `SELECT * FROM pg_policies WHERE tablename = 'admins';`
 
 ### Si las variables de entorno no funcionan:
@@ -172,10 +169,8 @@ vercel --prod --yes
 Para verificar que todo funciona:
 
 1. Abre: https://www.sondenudos.com/admin/login
-2. Ingresa:
-   - Email: `admin@sondenudos.com`
-   - Password: `[REDACTED]`
-3. Deberías ser redirigido a: `/admin/dashboard`
-4. Deberías ver el dashboard con estadísticas
+2. Usa el acceso vigente guardado fuera del repositorio.
+3. Deberías ser redirigido a: `/admin/dashboard`.
+4. Deberías ver el dashboard con estadísticas.
 
 Si todo funciona correctamente, ¡el panel de administración está listo para usar! 🎉

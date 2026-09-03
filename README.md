@@ -217,14 +217,13 @@ El proyecto incluye un **panel de administración completo** para gestionar prod
 | **Producción** | https://www.sondenudos.com/admin/login |
 | **Local** | http://localhost:5174/admin/login |
 
-### Credenciales por Defecto
+### Creación y acceso seguro
 
-```
-Email:    admin@sondenudos.com
-Password: [REDACTED]
-```
+No existen credenciales administrativas por defecto. Crea el primer usuario con
+`npm run create:admin`, guarda la contraseña generada en un gestor de contraseñas
+y configura los secretos únicamente en `.env` local o en el proveedor correspondiente.
 
-> ⚠️ **Importante:** Cambia la contraseña en producción desde `/admin/profile`
+Nunca publiques emails administrativos, contraseñas, IDs de usuario o llaves en Git.
 
 ### Funcionalidades Disponibles
 

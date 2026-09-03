@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "security:scan": "bash scripts/check-no-secrets.sh",
     "preview": "vite preview",
     "migrate": "tsx --env-file=.env scripts/migrate-to-supabase.ts",
     "migrate:dry": "tsx --env-file=.env scripts/migrate-to-supabase.ts --dry-run --verbose",

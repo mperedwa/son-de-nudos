@@ -10,7 +10,7 @@
 
 ## 📊 Resumen Ejecutivo
 
-**Son de Nudos by Priscilla** es una tienda web moderna y minimalista enfocada en collares artesanales, con una estética cálida inspirada en tonos tierra. El proyecto implementa una experiencia de compra fluida con filtros avanzados, selección de variantes, carrito lateral inteligente y checkout flexible (Stripe o Shopify).
+**Son de Nudos by Priscilla** es una tienda web moderna y minimalista enfocada en piezas artesanales, con una estética cálida inspirada en tonos tierra. El proyecto implementa una experiencia de compra fluida con filtros, selección de variantes, carrito y Stripe Checkout. Para la ejecución vigente, consultar `PLAN_EJECUCION_LANZAMIENTO.md`.
 
 ### Documentos de Referencia
 - **PRD.md**: Product Requirements Document (visión, objetivos, historias de usuario)

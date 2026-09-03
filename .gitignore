@@ -23,11 +23,14 @@ dist-ssr
 *.sln
 *.sw?
 
-# Environment variables
-.env
-.env.local
-.env.*.local
-.env.production
+# Environment variables and local credentials
+.env*
+!.env.example
+*.pem
+*.key
+*.p12
+credentials*.json
+secrets*.json
 
 # Vercel
 .vercel

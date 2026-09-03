@@ -3,34 +3,46 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 /**
  * Supabase Keepalive Endpoint
  *
- * Evita que Supabase pause el proyecto por inactividad (tier gratuito)
- * Se ejecuta automáticamente cada 5 días vía Vercel Cron Job
+ * Genera actividad diaria de base de datos para reducir el riesgo de que
+ * Supabase pause un proyecto gratuito por inactividad.
  *
- * Hace una query simple SELECT a la base de datos para mantenerla activa
+ * Hace una consulta SELECT de solo lectura a la tabla de productos.
  */
 
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse,
 ) {
+  res.setHeader('Cache-Control', 'no-store')
+
   try {
+    if (req.method !== 'GET') {
+      res.setHeader('Allow', 'GET')
+      return res.status(405).json({ error: 'Method not allowed' })
+    }
+
     // Solo permitir llamadas desde Vercel Cron o desarrollo local
     const authHeader = req.headers.authorization
     const isDev = process.env.NODE_ENV === 'development'
-    const isVercelCron = authHeader === `Bearer ${process.env.CRON_SECRET}`
+    const cronSecret = process.env.CRON_SECRET
+    const isVercelCron = Boolean(cronSecret) && authHeader === `Bearer ${cronSecret}`
+
+    if (!isDev && !cronSecret) {
+      console.error('Keepalive error: CRON_SECRET is not configured')
+      return res.status(500).json({ error: 'Keepalive is not configured' })
+    }
 
     if (!isDev && !isVercelCron) {
       return res.status(401).json({ error: 'Unauthorized' })
     }
 
-    // Crear cliente Supabase con variables de entorno
-    const supabaseUrl = process.env.VITE_SUPABASE_URL
-    const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
+    // Preferir variables exclusivas del servidor y mantener compatibilidad temporal.
+    const supabaseUrl = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY ?? process.env.VITE_SUPABASE_ANON_KEY
 
     if (!supabaseUrl || !supabaseAnonKey) {
       return res.status(500).json({
         error: 'Missing Supabase configuration',
-        message: 'VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set'
       })
     }
 
@@ -38,13 +50,14 @@ export default async function handler(
     // Solo lectura, no requiere autenticación especial
     const response = await fetch(`${supabaseUrl}/rest/v1/products?select=id&limit=1`, {
       headers: {
-        'apikey': supabaseAnonKey,
-        'Authorization': `Bearer ${supabaseAnonKey}`,
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`,
       },
+      signal: AbortSignal.timeout(8_000),
     })
 
     if (!response.ok) {
-      throw new Error(`Supabase query failed: ${response.statusText}`)
+      throw new Error(`Supabase query failed with status ${response.status}`)
     }
 
     const data = await response.json()
@@ -52,15 +65,15 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       message: 'Supabase keepalive ping successful',
-      timestamp: new Date().toISOString(),
+      checkedAt: new Date().toISOString(),
       recordsFound: data.length,
     })
   } catch (error) {
     console.error('Keepalive error:', error)
-    return res.status(500).json({
+    return res.status(502).json({
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString(),
+      error: 'Supabase keepalive failed',
+      checkedAt: new Date().toISOString(),
     })
   }
 }

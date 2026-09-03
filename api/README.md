@@ -4,18 +4,20 @@ Endpoints API serverless para Son de Nudos.
 
 ## `/api/keepalive`
 
-**Supabase Keepalive** - Evita que el proyecto de Supabase se pause por inactividad en el tier gratuito.
+**Supabase Keepalive** - Genera actividad de base de datos para reducir el riesgo de pausa por inactividad en el tier gratuito.
 
 ### ¿Por qué es necesario?
 
-Supabase pausa los proyectos del tier gratuito después de **7 días de inactividad** (sin conexiones a la base de datos). Este endpoint hace un ping cada 5 días para mantener el proyecto activo.
+Supabase puede pausar proyectos gratuitos con poca actividad durante un periodo de siete días. Este endpoint realiza una consulta diaria como medida preventiva. No es una garantía contractual de disponibilidad; para una tienda que requiera disponibilidad garantizada debe evaluarse un plan de pago.
 
 ### ¿Cómo funciona?
 
-1. **Vercel Cron Job** ejecuta automáticamente el endpoint cada 5 días (`0 0 */5 * *`)
+1. **Vercel Cron Job** ejecuta automáticamente el endpoint una vez al día (`17 13 * * *`)
 2. El endpoint hace una query simple `SELECT id FROM products LIMIT 1`
 3. Si la query es exitosa, retorna `200 OK`
-4. Esto cuenta como actividad en Supabase y reinicia el contador de inactividad
+4. La consulta genera actividad real de base de datos
+
+La ejecución se programa a las 13:17 UTC. En Vercel Hobby la hora exacta puede variar dentro de la hora programada.
 
 ### Configuración
 
@@ -31,14 +33,17 @@ Supabase pausa los proyectos del tier gratuito después de **7 días de inactivi
 #### 2. Verificar que las variables de Supabase estén configuradas
 
 Asegúrate de que estas variables estén en Vercel:
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_ANON_KEY`
+
+- `SUPABASE_URL`
+- `SUPABASE_ANON_KEY`
+
+Mientras se completa la migración, el endpoint también admite `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` como compatibilidad temporal.
 
 ### Probar manualmente
 
 ```bash
 # Desarrollo local
-curl http://localhost:3000/api/keepalive
+curl http://localhost:5174/api/keepalive
 
 # Producción (requiere CRON_SECRET)
 curl -H "Authorization: Bearer TU_CRON_SECRET" https://tudominio.com/api/keepalive
@@ -50,7 +55,7 @@ curl -H "Authorization: Bearer TU_CRON_SECRET" https://tudominio.com/api/keepali
 {
   "success": true,
   "message": "Supabase keepalive ping successful",
-  "timestamp": "2025-12-01T12:00:00.000Z",
+  "checkedAt": "2026-09-02T13:17:00.000Z",
   "recordsFound": 1
 }
 ```
@@ -62,9 +67,9 @@ Puedes ver las ejecuciones del cron job en:
 
 ### Cron Schedule
 
-- **Schedule:** `0 0 */5 * *` (cada 5 días a medianoche UTC)
+- **Schedule:** `17 13 * * *` (diario a las 13:17 UTC; aproximado en Hobby)
 - **Configurado en:** `vercel.json`
-- **Documentación:** https://vercel.com/docs/cron-jobs
+- **Documentación:** [Vercel Cron Jobs](https://vercel.com/docs/cron-jobs) y [Supabase: Free Project Pausing](https://supabase.com/docs/guides/platform/free-project-pausing)
 
 ---
 

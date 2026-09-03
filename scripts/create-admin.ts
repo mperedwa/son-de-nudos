@@ -9,11 +9,11 @@
  * IMPORTANTE: Este script usa SERVICE_ROLE_KEY para crear usuarios.
  *
  * Uso:
- *   npm run create:admin -- --email user@example.com --name "User Name" [--password "pass"] [--role admin|superadmin]
+ *   npm run create:admin -- --email user@example.com --name "User Name" [--role admin|superadmin]
  *
  * Ejemplos:
  *   npm run create:admin -- --email priscilla@sondenudos.com --name Priscilla
- *   npm run create:admin -- --email admin@sondenudos.com --name "Admin" --password "MyPassword123" --role superadmin
+ *   npm run create:admin -- --email owner@example.com --name "Store Owner" --role superadmin
  */
 
 import { createClient } from '@supabase/supabase-js'
@@ -127,8 +127,8 @@ function printUsage() {
   # Crear admin con contraseña generada
   npm run create:admin -- --email priscilla@sondenudos.com --name Priscilla
 
-  # Crear superadmin con contraseña personalizada
-  npm run create:admin -- --email admin@sondenudos.com --name "Admin Principal" --password "MyPass123" --role superadmin
+  # Crear superadmin con contraseña segura generada automáticamente
+  npm run create:admin -- --email owner@example.com --name "Store Owner" --role superadmin
   `)
 }
 

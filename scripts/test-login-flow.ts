@@ -4,9 +4,11 @@ import { createClient } from '@supabase/supabase-js'
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY
+const TEST_ADMIN_EMAIL = process.env.TEST_ADMIN_EMAIL
+const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD
 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('❌ Faltan variables de entorno')
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !TEST_ADMIN_EMAIL || !TEST_ADMIN_PASSWORD) {
+  console.error('❌ Faltan variables de Supabase o credenciales TEST_ADMIN_* locales')
   process.exit(1)
 }
 
@@ -23,12 +25,12 @@ async function testLoginFlow() {
 
   try {
     // 1. Hacer login
-    console.log('1️⃣  Intentando login con admin@sondenudos.com...')
+    console.log(`1️⃣  Intentando login con ${TEST_ADMIN_EMAIL}...`)
 
     const { data: authData, error: authError } =
       await supabase.auth.signInWithPassword({
-        email: 'admin@sondenudos.com',
-        password: '[REDACTED]',
+        email: TEST_ADMIN_EMAIL,
+        password: TEST_ADMIN_PASSWORD,
       })
 
     if (authError) {
