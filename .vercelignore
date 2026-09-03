@@ -1,0 +1,11 @@
+.claude/
+.git/
+.vercel/
+.env
+.env.*
+node_modules/
+dist/
+coverage/
+docs/
+scripts/
+supabase/

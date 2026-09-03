@@ -200,7 +200,6 @@ export function useAuth(): UseAuthReturn {
       // Actualizar last_login_at
       await supabase
         .from('admins')
-        // @ts-expect-error - Supabase types inference issue with Update type
         .update({ last_login_at: new Date().toISOString() })
         .eq('id', admin.id)
 

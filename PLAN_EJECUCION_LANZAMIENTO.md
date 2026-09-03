@@ -425,7 +425,7 @@ Esta tabla se actualiza al cerrar cada fase:
 | Fase | Estado | Rama | Commit | Evidencia / notas |
 |---|---|---|---|---|
 | 0 | Completada | `codex/fase-0-linea-base` | `chore(launch): establish secure production baseline` | Historial redactado, infraestructura crítica verificada y operación base aprobada |
-| 1 | Pendiente | `codex/fase-1-supabase-seguro` | — | — |
+| 1 | Completada | `codex/fase-1-supabase-seguro` | `fix(security): restore Supabase and enforce admin authorization` | Producción conectada al proyecto nuevo, 22/22 pruebas RLS, administrador activo y cron verificado con `200` |
 | 2 | Pendiente | `codex/fase-2-checkout-stripe` | — | — |
 | 3 | Pendiente | `codex/fase-3-catalogo-real` | — | — |
 | 4 | Pendiente | `codex/fase-4-calidad-web` | — | — |

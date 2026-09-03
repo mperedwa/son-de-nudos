@@ -140,7 +140,6 @@ export function CouponFormModal({ coupon, isOpen, onClose, onSuccess }: CouponFo
         // UPDATE existing coupon
         const { data: updatedCoupon, error } = await supabase
           .from('coupons')
-          // @ts-expect-error - Supabase types don't properly infer Update type
           .update({
             code: data.code,
             percent: data.percent,
@@ -168,7 +167,6 @@ export function CouponFormModal({ coupon, isOpen, onClose, onSuccess }: CouponFo
         // CREATE new coupon
         const { data: newCoupon, error } = await supabase
           .from('coupons')
-          // @ts-expect-error - Supabase types don't properly infer Insert type
           .insert({
             code: data.code,
             percent: data.percent,
@@ -177,7 +175,6 @@ export function CouponFormModal({ coupon, isOpen, onClose, onSuccess }: CouponFo
             valid_from: data.valid_from || null,
             valid_until: data.valid_until || null,
             active: data.active,
-            current_uses: 0,
           })
           .select()
           .single()

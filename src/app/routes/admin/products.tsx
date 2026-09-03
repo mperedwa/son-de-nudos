@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -591,11 +591,7 @@ function VariantsSection({ productId, productTitle, productHandle, productPrice,
   const [deletingVariant, setDeletingVariant] = useState<Variant | null>(null)
 
   // Fetch variants
-  useEffect(() => {
-    fetchVariants()
-  }, [productId])
-
-  async function fetchVariants() {
+  const fetchVariants = useCallback(async () => {
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -611,7 +607,11 @@ function VariantsSection({ productId, productTitle, productHandle, productPrice,
     } finally {
       setLoading(false)
     }
-  }
+  }, [productId])
+
+  useEffect(() => {
+    fetchVariants()
+  }, [fetchVariants])
 
   function handleCloseModals() {
     setIsCreateModalOpen(false)
@@ -891,13 +891,11 @@ function ProductFormModal({ mode, product, onClose, onSave }: ProductFormModalPr
 
     try {
       if (mode === 'create' || mode === 'clone') {
-        // @ts-expect-error - Supabase generated types have circular references
         const { error: insertError } = await supabase.from('products').insert(data as ProductInsert)
         if (insertError) throw insertError
       } else {
         const { error: updateError } = await supabase
           .from('products')
-          // @ts-expect-error - Supabase generated types have circular references
           .update(data as ProductUpdate)
           .eq('id', product!.id)
         if (updateError) throw updateError
@@ -1475,7 +1473,6 @@ function VariantFormModal({ mode, productId, productHandle, existingVariants, va
       }
 
       if (mode === 'create' || mode === 'clone') {
-        // @ts-expect-error - Supabase generated types have circular references
         const { error: insertError } = await supabase.from('variants').insert(variantData)
         if (insertError) throw insertError
       } else {
@@ -1483,7 +1480,6 @@ function VariantFormModal({ mode, productId, productHandle, existingVariants, va
         const { sku: _sku, ...updateData } = variantData
         const { error: updateError } = await supabase
           .from('variants')
-          // @ts-expect-error - Supabase generated types have circular references
           .update(updateData)
           .eq('id', variant!.id)
         if (updateError) throw updateError

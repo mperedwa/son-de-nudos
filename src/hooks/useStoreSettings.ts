@@ -43,10 +43,9 @@ const DEFAULT_SETTINGS: StoreSettings = {
   contact_phone: null,
   // Banner
   announcement_messages: [
-    { text_es: '✨ ENVÍO GRATIS en compras +$150', text_en: '✨ FREE SHIPPING on orders +$150', active: true },
-    { text_es: '🎁 Usa código WELCOME10 para 10% de descuento', text_en: '🎁 Use code WELCOME10 for 10% off', active: true },
-    { text_es: '🌿 100% Hecho a mano con amor', text_en: '🌿 100% Handmade with love', active: true },
-    { text_es: '📦 Envíos a USA, Canadá y México', text_en: '📦 Shipping to USA, Canada and Mexico', active: true },
+    { text_es: '✨ ENTREGA LOCAL GRATIS en el área aprobada', text_en: '✨ FREE LOCAL DELIVERY in eligible areas', active: true },
+    { text_es: '🌿 Hecho a mano con amor', text_en: '🌿 Handmade with love', active: true },
+    { text_es: '📦 Envíos a los Estados Unidos contiguos', text_en: '📦 Shipping within the contiguous United States', active: true },
   ],
   // Analytics
   google_analytics_id: null,
@@ -71,6 +70,38 @@ let cachedSettings: StoreSettings | null = null
 let cacheTimestamp: number = 0
 const CACHE_DURATION = 5 * 60 * 1000 // 5 minutos
 
+const PUBLIC_SETTINGS_COLUMNS = [
+  'id',
+  'meta_title',
+  'meta_description',
+  'meta_title_es',
+  'meta_title_en',
+  'meta_description_es',
+  'meta_description_en',
+  'meta_keywords',
+  'og_image',
+  'instagram_url',
+  'facebook_url',
+  'pinterest_url',
+  'tiktok_url',
+  'whatsapp_number',
+  'contact_email',
+  'store_name',
+  'store_description',
+  'announcement_messages',
+  'google_analytics_id',
+  'logo_url',
+  'favicon_url',
+  'return_policy_es',
+  'return_policy_en',
+  'robots_txt',
+  'sitemap_enabled',
+  'schema_enabled',
+  'canonical_base_url',
+  'created_at',
+  'updated_at',
+].join(',')
+
 /**
  * Hook principal para obtener store settings
  */
@@ -92,7 +123,7 @@ export function useStoreSettings() {
       try {
         const { data, error: fetchError } = await supabase
           .from('store_settings')
-          .select('*')
+          .select(PUBLIC_SETTINGS_COLUMNS)
           .limit(1)
           .single()
 
@@ -106,9 +137,15 @@ export function useStoreSettings() {
           }
         } else if (data) {
           // Actualizar cache
-          cachedSettings = data as StoreSettings
+          const publicSettings = {
+            ...DEFAULT_SETTINGS,
+            ...(data as Partial<StoreSettings>),
+            notification_email: null,
+            contact_phone: null,
+          } as StoreSettings
+          cachedSettings = publicSettings
           cacheTimestamp = Date.now()
-          setSettings(data as StoreSettings)
+          setSettings(publicSettings)
         }
       } catch (err) {
         console.error('[useStoreSettings] Error fetching settings:', err)

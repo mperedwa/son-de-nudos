@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useMemo } from 'react'
-import { supabase, type Database } from '@/lib/supabase'
+import { supabase, type Database, type Json } from '@/lib/supabase'
 import { OrderStatusBadge, type OrderStatus } from '@/components/admin/OrderStatusBadge'
 import { OrderDetailModal } from '@/components/admin/OrderDetailModal'
 
@@ -44,9 +44,12 @@ function formatMoney(amount: number): string {
   return `$${Number(amount).toFixed(2)}`
 }
 
-function getItemsCount(items: Record<string, any>): number {
+function getItemsCount(items: Json): number {
   if (Array.isArray(items)) {
-    return items.reduce((sum, item) => sum + (item.quantity || 1), 0)
+    return items.reduce<number>((sum, item) => {
+      if (typeof item !== 'object' || item === null || Array.isArray(item)) return sum
+      return sum + (typeof item.quantity === 'number' ? item.quantity : 1)
+    }, 0)
   }
   return 0
 }

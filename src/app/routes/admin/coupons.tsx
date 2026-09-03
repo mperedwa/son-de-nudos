@@ -176,7 +176,6 @@ export default function AdminCoupons() {
     try {
       const { error: updateError } = await supabase
         .from('coupons')
-        // @ts-expect-error - Supabase types don't properly infer Update type for coupons table
         .update({ active: !currentActive })
         .eq('id', couponId)
 

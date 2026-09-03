@@ -40,6 +40,21 @@ interface ShippingAddress {
   country?: string
 }
 
+function isOrderItem(value: unknown): value is OrderItem {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return false
+
+  const item = value as Record<string, unknown>
+  return (
+    typeof item.productId === 'string' &&
+    typeof item.variantId === 'string' &&
+    typeof item.title === 'string' &&
+    typeof item.variantTitle === 'string' &&
+    typeof item.price === 'number' &&
+    typeof item.quantity === 'number' &&
+    (item.image === undefined || typeof item.image === 'string')
+  )
+}
+
 // ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
@@ -83,7 +98,12 @@ export function OrderDetailModal({
   if (!isOpen || !order) return null
 
   // Parse items from JSON
-  const items: OrderItem[] = Array.isArray(order.items) ? order.items : []
+  const items: OrderItem[] = Array.isArray(order.items)
+    ? order.items.reduce<OrderItem[]>((validItems, item) => {
+        if (isOrderItem(item)) validItems.push(item)
+        return validItems
+      }, [])
+    : []
 
   // Parse shipping address
   const shippingAddress: ShippingAddress | null = order.shipping_address as ShippingAddress | null
@@ -104,7 +124,6 @@ export function OrderDetailModal({
 
       const { error } = await supabase
         .from('orders')
-        // @ts-expect-error - Supabase types don't properly infer Update type
         .update({ status: newStatus })
         .eq('id', order.id)
 

@@ -12,6 +12,14 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js'
 // TYPES
 // ==============================================================================
 
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
 export type Database = {
   public: {
     Tables: {
@@ -34,6 +42,15 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['products']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['products']['Insert']>
+        Relationships: [
+          {
+            foreignKeyName: 'products_collection_id_fkey'
+            columns: ['collection_id']
+            isOneToOne: false
+            referencedRelation: 'collections'
+            referencedColumns: ['id']
+          },
+        ]
       }
       collections: {
         Row: {
@@ -51,6 +68,7 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['collections']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['collections']['Insert']>
+        Relationships: []
       }
       variants: {
         Row: {
@@ -62,13 +80,37 @@ export type Database = {
           compare_at_price: number | null
           available: boolean
           stock: number
+          fulfillment_mode: 'ready_to_ship' | 'made_to_order'
+          preparation_days_min: number
+          preparation_days_max: number
           options: Record<string, string>
           image: string | null
           created_at: string
           updated_at: string
         }
-        Insert: Omit<Database['public']['Tables']['variants']['Row'], 'id' | 'created_at' | 'updated_at'>
+        Insert: Omit<
+          Database['public']['Tables']['variants']['Row'],
+          | 'id'
+          | 'created_at'
+          | 'updated_at'
+          | 'fulfillment_mode'
+          | 'preparation_days_min'
+          | 'preparation_days_max'
+        > & {
+          fulfillment_mode?: 'ready_to_ship' | 'made_to_order'
+          preparation_days_min?: number
+          preparation_days_max?: number
+        }
         Update: Partial<Database['public']['Tables']['variants']['Insert']>
+        Relationships: [
+          {
+            foreignKeyName: 'variants_product_id_fkey'
+            columns: ['product_id']
+            isOneToOne: false
+            referencedRelation: 'products'
+            referencedColumns: ['id']
+          },
+        ]
       }
       coupons: {
         Row: {
@@ -78,14 +120,27 @@ export type Database = {
           min_amount: number | null
           max_uses: number | null
           current_uses: number
-          valid_from: string
+          valid_from: string | null
           valid_until: string | null
           active: boolean
           created_at: string
           updated_at: string
         }
-        Insert: Omit<Database['public']['Tables']['coupons']['Row'], 'id' | 'current_uses' | 'created_at' | 'updated_at'>
+        Insert: {
+          id?: string
+          code: string
+          percent: number
+          min_amount?: number | null
+          max_uses?: number | null
+          current_uses?: number
+          valid_from?: string | null
+          valid_until?: string | null
+          active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
         Update: Partial<Database['public']['Tables']['coupons']['Insert']>
+        Relationships: []
       }
       orders: {
         Row: {
@@ -93,8 +148,8 @@ export type Database = {
           stripe_session_id: string | null
           customer_email: string
           customer_name: string | null
-          shipping_address: Record<string, any> | null
-          items: Record<string, any>
+          shipping_address: Json | null
+          items: Json
           subtotal: number
           discount: number
           shipping: number
@@ -105,12 +160,12 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['orders']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['orders']['Insert']>
+        Relationships: []
       }
       admins: {
         Row: {
           id: string
           email: string
-          password_hash: string
           name: string
           role: 'admin' | 'superadmin'
           active: boolean
@@ -121,19 +176,18 @@ export type Database = {
         Insert: {
           id?: string
           email: string
-          password_hash?: string | null
           name: string
           role: 'admin' | 'superadmin'
           active?: boolean
         }
         Update: {
           email?: string
-          password_hash?: string | null
           name?: string
           role?: 'admin' | 'superadmin'
           active?: boolean
           last_login_at?: string | null
         }
+        Relationships: []
       }
       shipping_config: {
         Row: {
@@ -146,6 +200,7 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['shipping_config']['Row'], 'id' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['shipping_config']['Insert']>
+        Relationships: []
       }
       stock_history: {
         Row: {
@@ -160,6 +215,22 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['stock_history']['Row'], 'id' | 'created_at'>
         Update: never
+        Relationships: [
+          {
+            foreignKeyName: 'stock_history_variant_id_fkey'
+            columns: ['variant_id']
+            isOneToOne: false
+            referencedRelation: 'variants'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'stock_history_admin_id_fkey'
+            columns: ['admin_id']
+            isOneToOne: false
+            referencedRelation: 'admins'
+            referencedColumns: ['id']
+          },
+        ]
       }
       store_settings: {
         Row: {
@@ -208,6 +279,18 @@ export type Database = {
         }
         Insert: Omit<Database['public']['Tables']['store_settings']['Row'], 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['store_settings']['Insert']>
+        Relationships: []
+      }
+    }
+    Views: Record<string, never>
+    Functions: {
+      admin_set_variant_stock: {
+        Args: {
+          target_variant_id: string
+          target_stock: number
+          change_reason: StockChangeReason
+        }
+        Returns: Database['public']['Tables']['variants']['Row']
       }
     }
   }
@@ -267,16 +350,6 @@ export function getStockLevel(stock: number): StockLevel {
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-// Debug logs para verificar que las variables se cargan correctamente
-console.log('[Supabase] Environment check:', {
-  mode: import.meta.env.MODE,
-  prod: import.meta.env.PROD,
-  dev: import.meta.env.DEV,
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  urlValue: supabaseUrl ? `${supabaseUrl.substring(0, 30)}...` : 'MISSING',
-})
 
 if (!supabaseUrl || !supabaseAnonKey) {
   const errorMsg = `[Supabase] Missing environment variables:
@@ -360,66 +433,17 @@ export async function updateStockWithHistory(
     throw new Error('Stock no puede ser negativo')
   }
 
-  // 1. Get current variant to calculate change
-  const { data: currentVariant, error: fetchError } = await supabase
-    .from('variants')
-    .select('stock')
-    .eq('id', variantId)
-    .single<{ stock: number }>()
+  const { data, error } = await supabase.rpc('admin_set_variant_stock', {
+    target_variant_id: variantId,
+    target_stock: newStock,
+    change_reason: reason,
+  })
 
-  if (fetchError || !currentVariant) {
-    throw new Error('Variante no encontrada')
+  if (error || !data) {
+    throw new Error(`Error al actualizar stock: ${error?.message || 'Variante no encontrada'}`)
   }
 
-  const previousStock = currentVariant.stock
-  const change = newStock - previousStock
-
-  // If no change, just return current variant
-  if (change === 0) {
-    const { data } = await supabase
-      .from('variants')
-      .select('*')
-      .eq('id', variantId)
-      .single<Database['public']['Tables']['variants']['Row']>()
-    return data!
-  }
-
-  // 2. Update variant stock
-  const { data: updatedVariant, error: updateError } = (await supabase
-    .from('variants')
-    // @ts-expect-error - Supabase types don't properly infer Update type for variants table
-    .update({ stock: newStock })
-    .eq('id', variantId)
-    .select()
-    .single()) as { data: Database['public']['Tables']['variants']['Row'] | null; error: any }
-
-  if (updateError || !updatedVariant) {
-    throw new Error(`Error al actualizar stock: ${updateError?.message || 'Unknown error'}`)
-  }
-
-  // 3. Get current admin user ID
-  const { data: userData } = await supabase.auth.getUser()
-  const adminId = userData?.user?.id || null
-
-  // 4. Register in stock_history
-  const { error: historyError } = (await supabase
-    .from('stock_history')
-    // @ts-expect-error - Supabase types don't properly infer Insert type for stock_history table
-    .insert({
-      variant_id: variantId,
-      change,
-      reason,
-      previous_stock: previousStock,
-      new_stock: newStock,
-      admin_id: adminId,
-    })) as { error: any }
-
-  if (historyError) {
-    console.error('[updateStockWithHistory] Failed to log history:', historyError)
-    // No throw - we don't want to fail the whole operation if logging fails
-  }
-
-  return updatedVariant
+  return data as Database['public']['Tables']['variants']['Row']
 }
 
 /**
